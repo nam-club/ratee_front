@@ -2,6 +2,18 @@
 
 Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
+## Nuxt3のインストール & プロジェクトの作成
+```bash
+npx nuxi init ratee_front
+```
+※コマンドを実行できない場合はNode.jsをインストールしてください。
+
+JSのライブラリをインストールしてください。
+```bash
+cd ratee_front
+npm install
+```
+
 ## Setup
 
 Make sure to install the dependencies:
