@@ -6,9 +6,32 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "devDependencies": {
-    "nuxt": "^3.3.2"
+    "@babel/core": "^7.21.3",
+    "@mdi/js": "^7.2.96",
+    "@nuxtjs/tailwindcss": "^6.6.5",
+    "@storybook/addon-actions": "^6.5.16",
+    "@storybook/addon-essentials": "^6.5.16",
+    "@storybook/addon-interactions": "^6.5.16",
+    "@storybook/addon-links": "^6.5.16",
+    "@storybook/addon-postcss": "^2.0.0",
+    "@storybook/addon-styling": "^0.3.2",
+    "@storybook/builder-vite": "^0.4.2",
+    "@storybook/testing-library": "^0.0.13",
+    "@storybook/vue3": "^6.5.16",
+    "autoprefixer": "^10.4.14",
+    "babel-loader": "^8.3.0",
+    "nuxt": "^3.3.2",
+    "postcss": "^8.4.21",
+    "postcss-loader": "^7.1.0",
+    "sass": "^1.61.0",
+    "ts-node": "^10.9.1",
+    "vite-plugin-vuetify": "^1.0.2",
+    "vue-loader": "^16.8.3",
+    "vuetify": "^3.1.4"
   }
 }
