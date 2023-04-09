@@ -4,6 +4,9 @@ import { defineNuxtConfig } from 'nuxt/config'
 import vuetify from 'vite-plugin-vuetify'
 
 export default defineNuxtConfig({
+    buildModules: [
+        '@nuxtjs/composition-api/module'
+    ],
     build: {
         transpile: ['vuetify'],
     },

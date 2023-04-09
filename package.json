@@ -13,6 +13,7 @@
   "devDependencies": {
     "@babel/core": "^7.21.3",
     "@mdi/js": "^7.2.96",
+    "@nuxt/types": "^2.16.3",
     "@nuxtjs/tailwindcss": "^6.6.5",
     "@storybook/addon-actions": "^6.5.16",
     "@storybook/addon-essentials": "^6.5.16",
@@ -31,7 +32,11 @@
     "sass": "^1.61.0",
     "ts-node": "^10.9.1",
     "vite-plugin-vuetify": "^1.0.2",
+    "vue-class-component": "^7.2.6",
     "vue-loader": "^16.8.3",
     "vuetify": "^3.1.4"
+  },
+  "dependencies": {
+    "@nuxtjs/composition-api": "^0.33.1"
   }
 }

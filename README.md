@@ -269,6 +269,68 @@ export default defineNuxtPlugin((nuxtApp) => {
 })
 ```
 
+## Composition APIをインストール
+```bash
+npm install @nuxtjs/composition-api --save
+```
+@nuxt/typesをインストール
+```bash
+npm install --save-dev @nuxt/types
+```
+tsconfig.jsonを開き、compilerOptionsに以下の設定を追加
+```
+  "compilerOptions": {
+    "types": [
+      "@nuxt/types"
+    ]
+  }
+```
+vue-class-component をインストール
+```bash
+npm install --save-dev vue-class-component
+```
+plugins/composition-api.tsファイルを作成し、以下のように設定
+```
+import Vue from 'vue';
+import { reactive, computed, watchEffect } from '@nuxtjs/composition-api';
+import { VueClass } from 'vue-class-component/lib/declarations';
+
+declare module 'vue/types/vue' {
+  interface Vue {
+    $reactive: typeof reactive;
+    $computed: typeof computed;
+    $watchEffect: typeof watchEffect;
+  }
+}
+
+declare module '@vue/runtime-core' {
+  interface ComponentCustomProperties {
+    $reactive: typeof reactive;
+    $computed: typeof computed;
+    $watchEffect: typeof watchEffect;
+  }
+}
+
+const plugin = (Vue: VueClass<Vue>) => {
+  Vue.prototype.$reactive = reactive;
+  Vue.prototype.$computed = computed;
+  Vue.prototype.$watchEffect = watchEffect;
+};
+
+export default plugin;
+```
+nuxt.config.tsファイルで、.ts拡張子のファイルを読み込むように設定を追加
+```
+export default {
+  // ...
+  buildModules: [
+    '@nuxtjs/composition-api/module'
+  ]
+  // ...
+}
+```
+
+
 ## ここから下は無視して良い
 
 ## TailwindCSSのインストール

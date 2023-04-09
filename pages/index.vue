@@ -2,23 +2,22 @@
     <div>
         <h1>Main Page</h1>
         <VBtn>Vuetify のボタン</VBtn>
-        <button class="couponButton" @click="handleClick">Coupon Get</button>
-        <LazyCoupon v-if="show" />
+        <IconButton icon="mdi-heart" color="red" onClick="handleClick" />
+        <IconButton icon="mdi-star" color="yellow" onClick="handleClick" />
+        <IconButton icon="mdi-share-variant" color="green" onClick="handleClick" />
+        <IconButton icon="mdi-plus" label="Count Up" onClick="increment" />
+        <p>{{ count }}</p>
     </div>
 </template>
 <script setup>
-const show = ref(false);
+import { ref } from '@nuxtjs/composition-api'
+import IconButton from './components/atoms/IconButton.vue'
 
-const handleClick = () => {
-    show.value = true;
-};
-</script>
+const count = ref <number> (0)
 
-<style lang="postcss" scoped>
-.couponButton {
-  @apply inline-block bg-blue-100 rounded-full px-3 py-1 text-sm font-semibold text-yellow-500;
-  &:hover {
-    @apply bg-blue-200;
-  }
+const increment = () => count.value++;
+
+function handleClick() {
+    alert('IconButton is clicked!')
 }
-</style>
+</script>
