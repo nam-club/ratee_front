@@ -188,6 +188,11 @@ export const mainDarkTheme: ThemeDefinition = {
 }
 ```
 
+mdiのフォントをインストール
+```
+npm install @mdi/font
+```
+
 plugins/vuetify.tsにプラグインを読み込み
 ```
 import { createVuetify } from 'vuetify'
