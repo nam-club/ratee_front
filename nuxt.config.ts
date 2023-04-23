@@ -25,5 +25,6 @@ export default defineNuxtConfig({
         '~/components/atoms',
         '~/components/molecules',
         '~/components/organisms',
-    ]
+    ],
+    plugins: ['~/plugins/vuetify.ts'],
 })
