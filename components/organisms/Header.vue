@@ -3,13 +3,13 @@
         <v-btn v-if="isMobile" icon @click="toggleMenu">
             <v-icon>{{ icons.mdiMenu }}</v-icon>
         </v-btn>
-        <v-img :src="logo" alt="Logo" height="40"></v-img>
+        <img :src="logo" alt="Logo" height="50%" class="logo-img"/>
         <v-app-bar-title>{{ title }}</v-app-bar-title>
 
         <v-spacer></v-spacer>
 
         <v-btn icon>
-            <v-icon>{{ icons.mdiGoogleAnalytics }}</v-icon>
+            <v-icon size="x-large">{{ icons.mdiGoogleAnalytics }}</v-icon>
         </v-btn>
     </v-app-bar>
 </template>
@@ -76,5 +76,8 @@ export default defineComponent({
 <style scoped>
 .app-bar {
   border-bottom: 1px solid #ccc;
+}
+.logo-img {
+    margin-left: 2%;
 }
 </style>
