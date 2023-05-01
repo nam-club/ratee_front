@@ -1,5 +1,5 @@
 <template>
-    <p :class="['text--' + color, 'text-' + size]">
+    <p :class="['text--' + color, 'font-weight-' + fontWeight]" :style="{fontSize: size}">
         <slot></slot>
     </p>
 </template>
@@ -16,7 +16,11 @@ export default defineComponent({
         },
         size: {
             type: String,
-            default: 'body-1'
+            default: '1em'
+        },
+        fontWeight: {
+            type: String,
+            default: 'normal'
         }
     }
 });

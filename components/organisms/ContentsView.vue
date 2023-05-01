@@ -1,5 +1,5 @@
 <template>
-    <v-card>
+    <v-card :style="{backgroundColor: contentsBg}">
         <v-tabs v-model="tab" color="#3A98B9" align-tabs="center">
             <v-tab :value="1">新着</v-tab>
             <v-tab :value="2">トレンド</v-tab>
@@ -19,6 +19,12 @@ import AnswerBox from '@/components/organisms/AnswerBox.vue'
 export default {
     components: {
         AnswerBox
+    },
+    props: {
+        contentsBg: {
+            type: String,
+            default: '#FFFFFF'
+        },
     },
     data: () => ({
         tab: null,

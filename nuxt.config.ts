@@ -20,6 +20,9 @@ export default defineNuxtConfig({
         },
     },
     css: ['@/assets/main.scss'],
+    vuetify: {
+        defaultAssets: false,
+    },
     components: [
         '~/components/templates',
         '~/components/atoms',
