@@ -8,21 +8,18 @@
         </v-tabs>
         <v-window v-model="tab">
             <v-window-item v-for="n in 4" :key="n" :value="n">
-                <v-container fluid>
-                    <v-row>
-                        <v-col v-for="i in 6" :key="i" cols="12" md="4">
-                            <v-img :src="`https://picsum.photos/500/300?image=${i * n * 5 + 10}`"
-                                :lazy-src="`https://picsum.photos/10/6?image=${i * n * 5 + 10}`" aspect-ratio="1"></v-img>
-                        </v-col>
-                    </v-row>
-                </v-container>
+                <AnswerBox style="margin:5%"/>
             </v-window-item>
         </v-window>
     </v-card>
 </template>
 
 <script>
+import AnswerBox from '@/components/organisms/AnswerBox.vue'
 export default {
+    components: {
+        AnswerBox
+    },
     data: () => ({
         tab: null,
     }),
