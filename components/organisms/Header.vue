@@ -1,13 +1,11 @@
 <template>
-    <v-app-bar :color="color" class="px-0 app-bar">
+    <v-app-bar class="px-0 app-bar">
         <v-btn v-if="isMobile" icon @click="toggleMenu">
             <v-icon>{{ icons.mdiMenu }}</v-icon>
         </v-btn>
-        <img :src="logo" alt="Logo" height="50%" class="logo-img"/>
+        <img :src="logo" alt="Logo" height="50%" class="logo-img" />
         <v-app-bar-title>{{ title }}</v-app-bar-title>
-
         <v-spacer></v-spacer>
-
         <v-btn icon>
             <v-icon size="x-large">{{ icons.mdiGoogleAnalytics }}</v-icon>
         </v-btn>
@@ -18,16 +16,11 @@
 import { defineComponent } from 'vue'
 import {
     mdiMenu,
-    mdiGoogleAnalytics
+    mdiGoogleAnalytics,
 } from '@mdi/js'
 
 export default defineComponent({
     props: {
-        // ヘッダーの背景色を定義
-        color: {
-            type: String,
-            required: true,
-        },
         // ヘッダーのロゴを定義
         logo: {
             type: String,
@@ -42,7 +35,7 @@ export default defineComponent({
     setup() {
         const icons = ref({
             mdiMenu,
-            mdiGoogleAnalytics
+            mdiGoogleAnalytics,
         })
 
         const isMobile = ref(false)
@@ -67,7 +60,7 @@ export default defineComponent({
         return {
             icons,
             isMobile,
-            toggleMenu
+            toggleMenu,
         }
     }
 })
@@ -75,8 +68,9 @@ export default defineComponent({
 
 <style scoped>
 .app-bar {
-  border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
 }
+
 .logo-img {
     margin-left: 2%;
 }

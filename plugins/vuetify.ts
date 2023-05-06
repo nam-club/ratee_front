@@ -19,7 +19,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         },
         // add theme
         theme: {
-            defaultTheme: MAIN_THEME,
+            defaultTheme: MAIN_DARK_THEME,
             themes: {
                 mainTheme,
                 mainDarkTheme,

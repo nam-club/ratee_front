@@ -8,8 +8,8 @@ export const mainTheme: ThemeDefinition = {
   colors: {
     background: '#FFFFFF',
     surface: '#FFFFFF',
-    primary: '#4f46e5',
-    secondary: '#9333ea',
+    primary: '#3A98B9',
+    secondary: '#E8D5C4',
     error: '#ef4444',
     info: '#3b82f6',
     success: '#22c55e',
@@ -23,10 +23,10 @@ export const MAIN_DARK_THEME = 'mainDarkTheme'
 export const mainDarkTheme: ThemeDefinition = {
   dark: true,
   colors: {
-    background: '#0C111B',
+    background: '#1f2937',
     surface: '#1f2937',
-    primary: '#6366f1',
-    secondary: '#9333ea',
+    primary: '#E8D5C4',
+    secondary: '#546E7A',
     error: '#ef4444',
     info: '#3b82f6',
     success: '#22c55e',

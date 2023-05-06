@@ -1,6 +1,6 @@
 <template>
-    <v-card :style="{backgroundColor: contentsBg}">
-        <v-tabs v-model="tab" color="#3A98B9" align-tabs="center">
+    <v-card class="bg-secondary" dark>
+        <v-tabs v-model="tab" color="primary" dark align-tabs="center">
             <v-tab :value="1">新着</v-tab>
             <v-tab :value="2">トレンド</v-tab>
             <v-tab :value="3">人気</v-tab>
@@ -8,7 +8,7 @@
         </v-tabs>
         <v-window v-model="tab">
             <v-window-item v-for="n in 4" :key="n" :value="n">
-                <AnswerBox style="margin:5%"/>
+                <AnswerBox v-if="n==1" style="margin:5%"/>
             </v-window-item>
         </v-window>
     </v-card>

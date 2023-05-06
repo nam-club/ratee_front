@@ -18,7 +18,6 @@ export default defineComponent({
         },
         color: {
             type: String,
-            required: true,
         },
     },
 })
