@@ -9,7 +9,7 @@
                     <v-container>
                         <v-row class="justify-center" v-for="(choice, index) in questionnaire.choices" :key="index">
                             <v-col xs12 sm12 md12 align-self="center">
-                                <Button :color="btnColor" :textColor="btnTextColor" :variant="btnVariant" :width="btnWidth">
+                                <Button :color="btnColor" :variant="btnVariant" :buttonStyle="btnStyle">
                                     {{ choice.name }}
                                 </Button>
                             </v-col>
@@ -62,16 +62,14 @@ export default defineComponent({
         );
 
         const btnColor = ref("#3A98B9");
-        const btnTextColor = ref("white");
         const btnVariant = ref("elevated");
-        const btnWidth = ref("100%");
+        const btnStyle = ref({width: '100%', color: 'white'});
 
         return {
             questionnaires,
             btnColor,
-            btnTextColor,
             btnVariant,
-            btnWidth
+            btnStyle
         }
     }
 })
