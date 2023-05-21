@@ -44,7 +44,16 @@ export const useQuestionnaires = () => {
         },
     ])
 
+    const countUp = (state: Ref<Questionnaire[]>, id: string, name: string) => {
+        let count: number | undefined = state.value.find((e => e.id === id))?.choices.find(e => e.name === name)?.voteCount !== undefined ? state.value.find((e => e.id === id))?.choices.find(e => e.name === name)?.voteCount + 1 : undefined;
+         
+        return {
+            count
+        }
+    };
+
     return {
-        state: readonly(state)
+        state: readonly(state),
+        countUp
     }
 }
