@@ -283,3 +283,8 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(vuetify)
 })
 ```
+
+## Chart.jsのインストール
+```bash
+npm install vue-chartjs chart.js --save
+```

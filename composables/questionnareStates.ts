@@ -10,6 +10,7 @@ interface Questionnaire {
     choices: Choice[];
     category: string;
     tags: string[];
+    answeredFlg: boolean;
     createdAt: string;
 }
 
@@ -27,6 +28,7 @@ export const useQuestionnaires = () => {
             ],
             category: "生物",
             tags: ["ペット", "犬", "猫", "動物"],
+            answeredFlg: false,
             createdAt: "2019-08-24T14:15:22Z"
         },
         {
@@ -40,17 +42,21 @@ export const useQuestionnaires = () => {
             ],
             category: "旅行",
             tags: ["国内旅行", "都道府県", "日本"],
+            answeredFlg: false,
             createdAt: "2019-08-26T10:22:09Z"
         },
     ])
 
     const incrementVoteCount = (questionId: string, choiceName: string) => {
+
+        // 該当アンケートの存在チェック
         const question = state.value.find(q => q.id === questionId)
         if (!question) {
             console.error(`Question with ID "${questionId}" not found`)
             return
         }
 
+        // 該当選択肢の存在チェック
         const choice = question.choices.find(c => c.name === choiceName)
         if (!choice) {
             console.error(`Choice with name "${choiceName}" not found in question "${questionId}"`)
@@ -58,6 +64,7 @@ export const useQuestionnaires = () => {
         }
 
         choice.voteCount++
+        question.answeredFlg = true;
 
         return choice.voteCount;
     }
