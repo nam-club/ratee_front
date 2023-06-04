@@ -44,16 +44,26 @@ export const useQuestionnaires = () => {
         },
     ])
 
-    const countUp = (state: Ref<Questionnaire[]>, id: string, name: string) => {
-        let count: number | undefined = state.value.find((e => e.id === id))?.choices.find(e => e.name === name)?.voteCount !== undefined ? state.value.find((e => e.id === id))?.choices.find(e => e.name === name)?.voteCount + 1 : undefined;
-         
-        return {
-            count
+    const incrementVoteCount = (questionId: string, choiceName: string) => {
+        const question = state.value.find(q => q.id === questionId)
+        if (!question) {
+            console.error(`Question with ID "${questionId}" not found`)
+            return
         }
-    };
+
+        const choice = question.choices.find(c => c.name === choiceName)
+        if (!choice) {
+            console.error(`Choice with name "${choiceName}" not found in question "${questionId}"`)
+            return
+        }
+
+        choice.voteCount++
+
+        return choice.voteCount;
+    }
 
     return {
         state: readonly(state),
-        countUp
+        incrementVoteCount
     }
 }
