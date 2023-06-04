@@ -6,7 +6,7 @@
                     <Msg fontWeight="normal" size="2em">{{ questionnaire.content }}</Msg>
                 </v-col>
                 <v-col xs12 sm6 md6>
-                    <v-container v-if="questionnaire.answeredFlg === false">
+                    <v-container v-if="questionnaire.isAnswered === false">
                         <v-row class="justify-center" v-for="(choice, index) in questionnaire.choices" :key="index">
                             <v-col xs12 sm12 md12 align-self="center">
                                 <Button :color="btnColor" :variant="btnVariant" :buttonStyle="btnStyle"
@@ -16,8 +16,8 @@
                             </v-col>
                         </v-row>
                     </v-container>
-                    <v-container v-if="questionnaire.answeredFlg === true">
-                        <BarChart :data="chartData" :options="options" />
+                    <v-container v-if="questionnaire.isAnswered === true">
+                        <QuestionnaireBarChart :questionnaire="questionnaire" :options="options" />
                     </v-container>
                 </v-col>
             </v-row>
@@ -28,14 +28,14 @@
 <script>
 import Msg from '@/components/atoms/Msg.vue'
 import Button from '@/components/atoms/Button.vue'
-import BarChart from '@/components/molecules/BarChart.vue'
-import { useQuestionnaires } from '@/composables/questionnareStates';
+import QuestionnaireBarChart from '@/components/organisms/QuestionnaireBarChart.vue'
+import { useQuestionnaires } from '~/composables/questionnaireStates';
 
 export default defineComponent({
     components: {
         Msg,
         Button,
-        BarChart
+        QuestionnaireBarChart
     },
     setup() {
         const qStore = useQuestionnaires();
@@ -44,14 +44,7 @@ export default defineComponent({
         const btnColor = ref("#3A98B9");
         const btnVariant = ref("elevated");
         const btnStyle = ref({ width: '100%', color: 'white' });
-        const chartData = ref({
-            labels: ['イヌ', 'ネコ', 'ゾウ', 'キリン'],
-            datasets: [{
-                data: [12, 10, 6, 8],
-                fill: true,
-                backgroundColor: '#3A98B9',
-            }]
-        });
+
         const options = ref({
             responsive: true,
             indexAxis: 'y',
@@ -68,6 +61,7 @@ export default defineComponent({
             },
         });
 
+        // 投票した項目をカウントアップ
         const incrementVoteCount = (id, name) => {
             console.log("id:" + id + " name:" + name)
             console.log(qStore.incrementVoteCount(id, name));
@@ -79,7 +73,6 @@ export default defineComponent({
             btnColor,
             btnVariant,
             btnStyle,
-            chartData,
             options
         }
     }

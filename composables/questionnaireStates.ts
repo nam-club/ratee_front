@@ -10,7 +10,7 @@ interface Questionnaire {
     choices: Choice[];
     category: string;
     tags: string[];
-    answeredFlg: boolean;
+    isAnswered: boolean;
     createdAt: string;
 }
 
@@ -28,7 +28,7 @@ export const useQuestionnaires = () => {
             ],
             category: "生物",
             tags: ["ペット", "犬", "猫", "動物"],
-            answeredFlg: false,
+            isAnswered: false,
             createdAt: "2019-08-24T14:15:22Z"
         },
         {
@@ -42,7 +42,7 @@ export const useQuestionnaires = () => {
             ],
             category: "旅行",
             tags: ["国内旅行", "都道府県", "日本"],
-            answeredFlg: false,
+            isAnswered: false,
             createdAt: "2019-08-26T10:22:09Z"
         },
     ])
@@ -64,7 +64,7 @@ export const useQuestionnaires = () => {
         }
 
         choice.voteCount++
-        question.answeredFlg = true;
+        question.isAnswered = true;
 
         return choice.voteCount;
     }
