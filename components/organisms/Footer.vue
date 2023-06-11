@@ -2,9 +2,11 @@
     <v-footer class="footer" style="height: 12%; width: 100%;">
         <v-row class="fill-height" align="center" justify="center">
             <v-col cols="auto" style="width: 20%;">
-                <Button :color="btnColor" :variant="btnVariant" :buttonStyle="btnStyle">
-                    {{ buttonText }}
-                </Button>
+                <nuxt-link to="/questionnaire/create" style="text-decoration: none; color: inherit;">
+                    <Button :color="btnColor" :variant="btnVariant" :buttonStyle="btnStyle">
+                        {{ buttonText }}
+                    </Button>
+                </nuxt-link>
             </v-col>
         </v-row>
     </v-footer>
@@ -27,7 +29,7 @@ export default defineComponent({
     setup() {
         const btnColor = ref("#3A98B9");
         const btnVariant = ref("elevated");
-        const btnStyle = ref({color: 'white', fontSize:'1.5em', height: '100%', width: '100%', padding: '6%', display: 'block'});
+        const btnStyle = ref({ color: 'white', fontSize: '1.5em', height: '100%', width: '100%', padding: '6%', display: 'block' });
 
         return {
             btnColor,

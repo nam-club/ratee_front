@@ -4,7 +4,9 @@
             <v-icon>{{ icons.mdiMenu }}</v-icon>
         </v-btn>
         <img :src="logo" alt="Logo" height="50%" class="logo-img" />
-        <v-app-bar-title>{{ title }}</v-app-bar-title>
+        <nuxt-link to="/" style="text-decoration: none; color: inherit;">
+            <v-app-bar-title>{{ title }}</v-app-bar-title>
+        </nuxt-link>
         <v-spacer></v-spacer>
         <v-btn icon>
             <v-icon size="x-large">{{ icons.mdiGoogleAnalytics }}</v-icon>
