@@ -25,14 +25,14 @@
     <div v-else-if="type === 'selectBox'">
         <v-select :label="labelText" :items="selectItems"></v-select>
     </div>
-    <div v-else-if="type === 'chipBox'">
+    <div v-else-if="type === 'tagBox'">
         <v-container>
             <v-row no-gutters>
-                <v-col cols="8">
+                <v-col cols="9">
                     <v-text-field v-model="newChip" :label="labelText" />
                 </v-col>
                 <v-col cols="1" />
-                <v-col cols="3" justify="center">
+                <v-col cols="2" justify="center">
                     <Button :onClick="addChip" :buttonStyle="tagBtnStyle">追加</Button>
                 </v-col>
             </v-row>
@@ -44,6 +44,9 @@
                 </v-col>
             </v-row>
         </v-container>
+    </div>
+    <div v-else-if="type === 'checkBox'">
+        <v-checkbox :label="labelText" type="checkbox"></v-checkbox>
     </div>
 </template>
 
