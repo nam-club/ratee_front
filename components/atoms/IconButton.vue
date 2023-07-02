@@ -1,8 +1,5 @@
 <template>
-    <v-btn :color="color" :dark="dark" :fab="fab" :large="large" :left="left" :right="right" :round="round"
-        :small="small" :tile="tile" :disabled="disabled" @click="onClick">
-        <v-icon>{{ icon }}</v-icon>
-    </v-btn>
+    <v-btn :icon="icon" :color="color" :size="size"></v-btn>
 </template>
   
 <script>
@@ -15,6 +12,10 @@ export default defineComponent({
             required: true,
         },
         icon: {
+            type: String,
+            required: true,
+        },
+        size: {
             type: String,
             required: true,
         }
