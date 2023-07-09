@@ -1,7 +1,6 @@
 <template>
-    <v-btn :color="color" :fab="fab" :large="large" :left="left" :right="right" :round="round" :small="small" :tile="tile"
-        :disabled="disabled" :valiant="variant" :style="buttonStyle" :class="['font-weight-' + fontWeight]"
-        @click="onClick">
+    <v-btn v-bind="attrs" v-on="listeners" :color="color" :disabled="disabled" :valiant="variant" :style="buttonStyle"
+        :class="['font-weight-' + fontWeight]" @click="onClick">
         <slot></slot>
     </v-btn>
 </template>
@@ -27,6 +26,10 @@ export default defineComponent({
             type: String,
             default: "black"
         },
+        disabled: {
+            type: Boolean,
+            default: false
+        },
         buttonStyle: {
             type: Object,
             default: () => ({}),
@@ -34,7 +37,7 @@ export default defineComponent({
         onClick: {
             type: Function,
             default: () => { },
-        }
+        },
     },
 })
 </script>

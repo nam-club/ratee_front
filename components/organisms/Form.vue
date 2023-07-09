@@ -1,28 +1,53 @@
 <template>
     <form @submit.prevent="submit" style="margin:5% 20%">
-        <InputSet type="textField" :listNum="1" :caption="titleText" :labelText="titleLabel" />
-        <InputSet type="textField" :listNum="choiceListNum" :caption="choiceText" :addText="addChoiceText" />
+        <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
+            <template v-slot:activator="{ on, attrs }">
+                <div>
+                    <InputSet type="textField" :listNum="1" :caption="titleText" :labelText="titleLabel" />
+                    <InputSet type="textField" :listNum="choiceListNum" :caption="choiceText" :addText="addChoiceText" />
 
-        <InputSet type="selectBox" :listNum="1" :caption="categoryText" :selectItems="categoryItems" />
-        <InputSet type="tagBox" :listNum="1" :caption="tagText" :labelText="tagLabel" />
+                    <InputSet type="selectBox" :listNum="1" :caption="categoryText" :selectItems="categoryItems" />
+                    <InputSet type="tagBox" :listNum="1" :caption="tagText" :labelText="tagLabel" />
 
-        <InputSet type="checkBox" :listNum="1" :labelText="commentLabel" />
-        <InputSet type="checkBox" :listNum="1" :labelText="multiAnsLabel" />
+                    <InputSet type="checkBox" :listNum="1" :labelText="commentLabel" />
+                    <InputSet type="checkBox" :listNum="1" :labelText="multiAnsLabel" />
 
-        <v-container>
-            <v-row no-gutters>
-                <v-col cols="5" justify="center">
-                    <nuxt-link to="/" style="text-decoration: none; color: inherit;">
-                        <Button :color="cancelBtnColor" :buttonStyle="cancelBtnStyle">キャンセル</Button>
-                    </nuxt-link>
-
-                </v-col>
-                <v-col cols="2" />
-                <v-col cols="5" justify="center">
-                    <Button :color="confirmBtnColor" :buttonStyle="confirmBtnStyle">確認画面に移動</Button>
-                </v-col>
-            </v-row>
-        </v-container>
+                    <v-container>
+                        <v-row no-gutters>
+                            <v-col cols="5" justify="center">
+                                <nuxt-link to="/" style="text-decoration: none; color: inherit;">
+                                    <Button :color="cancelBtnColor" :buttonStyle="cancelBtnStyle">キャンセル</Button>
+                                </nuxt-link>
+                            </v-col>
+                            <v-col cols="2" />
+                            <v-col cols="5" justify="center">
+                                <Button :color="confirmBtnColor" :buttonStyle="confirmBtnStyle" v-bind="attrs" @click="openDialog">確認画面を開く</Button>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                </div>
+            </template>
+            <v-card>
+                <v-toolbar dark color="primary">
+                    <v-toolbar-title>確認画面</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                </v-toolbar>
+                <v-divider></v-divider>
+                <v-container>
+                    <v-row no-gutters>
+                        <v-col cols="5" justify="center">
+                            <Button :color="cancelBtnColor" :buttonStyle="cancelBtnStyle" @click="dialog = false">キャンセル</Button>
+                        </v-col>
+                        <v-col cols="2" />
+                        <v-col cols="5" justify="center">
+                            <nuxt-link to="/" style="text-decoration: none; color: inherit;">
+                                <Button :color="confirmBtnColor" :buttonStyle="confirmBtnStyle">投稿する</Button>
+                            </nuxt-link>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </v-card>
+        </v-dialog>
     </form>
 </template>
 
@@ -60,6 +85,12 @@ export default defineComponent({
         const confirmBtnColor = ref("#3A98B9");
         const confirmBtnStyle = ref({ color: 'white', fontSize: '1.2em', height: '100%', width: '100%', padding: '5%', display: 'block' });
 
+        const dialog = ref(false);
+        const openDialog = () => {
+            dialog.value = true
+            console.log(dialog)
+        }
+
         return {
             titleText,
             titleLabel,
@@ -76,7 +107,9 @@ export default defineComponent({
             cancelBtnStyle,
             cancelBtnColor,
             confirmBtnStyle,
-            confirmBtnColor
+            confirmBtnColor,
+            dialog,
+            openDialog
         }
     }
 })
