@@ -1,27 +1,28 @@
 <template>
     <h2>{{ caption }}</h2>
     <div v-if="type === 'textField'">
-        <v-container v-if="listNum > 1">
-            <v-row v-for="n in listNum" :key="n" no-gutters>
+        <v-text-field v-model="computedTextModel" :label="labelText" />
+    </div>
+    <div v-else-if="type === 'textsField'">
+        <v-container>
+            <v-row v-for="(t,i) in computedTextsModel" :key="i" no-gutters>
                 <v-col cols="1">
-                    <p>{{ n }}</p>
+                    <p>{{ i+1 }}</p>
                 </v-col>
                 <v-col cols="11">
-                    <v-text-field :label="labelText" />
+                    <v-text-field v-model="computedTextsModel[i]" />
                 </v-col>
             </v-row>
             <v-row no-gutters>
                 <v-col cols="1" />
                 <v-col cols="1">
-                    <IconButton :icon="icons.mdiPlus" :size="small" />
+                    <IconButton :icon="icons.mdiPlus" :size="small" :onClick="addTexts" />
                 </v-col>
                 <v-col cols="auto">
                     <Msg fontWeight="normal" size="1.5em">{{ addText }}</Msg>
                 </v-col>
             </v-row>
         </v-container>
-        <v-text-field v-else-if="listNum === 1" v-model="computedModel" :label="labelText" />
-        <p>{{ inputValue }}</p>
     </div>
     <div v-else-if="type === 'selectBox'">
         <v-select :label="labelText" :items="selectItems"></v-select>
@@ -64,11 +65,6 @@ export default defineComponent({
         IconButton,
         Msg
     },
-    // modelの設定を行う
-    model: {
-        prop: 'textModel', //　親モデルの値を'textModel'というkeyで受け取る
-        event: 'input' // イベント種別
-    },
     props: {
         type: {
             type: String,
@@ -76,7 +72,6 @@ export default defineComponent({
         },
         listNum: {
             type: Number,
-            required: true
         },
         caption: {
             type: String,
@@ -96,26 +91,34 @@ export default defineComponent({
             default: () => ({}),
         },
         textModel: {
-            type: String,
-            required: true,
+            type: String
+        },
+        textsModel: {
+            type: []
         },
     },
     computed: {
-        computedModel: {
+        computedTextModel: {
             get() {
-                // propsで受け取った親モデルの値をcomputedModelに反映する
-                console.log(this.textModel)
+                // propsで受け取った親モデルの値をcomputedTextModelに反映する
                 return this.textModel
             },
             set(value) {
-                console.log(value);
-                // computedModelの値が変更された際はここに入ってくる
+                // computedTextModelの値が変更された際はここに入ってくる
                 // $emitで親コンポーネントのmodelに反映する
                 this.$emit('input', value)
             }
-        }
+        },
+        computedTextsModel: {
+            get() {
+                return this.textsModel
+            },
+            set(value) {
+                this.$emit('update:textsModel', value);
+            }
+        },
     },
-    setup() {
+    setup(props) {
         const icons = ref({
             mdiPlus
         })
@@ -123,12 +126,17 @@ export default defineComponent({
         const newChip = ref('');
         const chips = ref([]);
 
-        function addChip() {
+        const addTexts = () => {
+            props.textsModel.push('');
+            this.$emit('update:textsModel', props.textsModel);
+        }
+
+        const addChip = () => {
             chips.value.push(newChip.value);
             newChip.value = '';
         }
 
-        function removeChip(index) {
+        const removeChip = (index) => {
             chips.value.splice(index, 1);
         }
 
@@ -139,6 +147,7 @@ export default defineComponent({
             tagBtnStyle,
             newChip,
             chips,
+            addTexts,
             addChip,
             removeChip
         }

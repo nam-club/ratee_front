@@ -3,14 +3,14 @@
         <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
             <template v-slot:activator="{ attrs }">
                 <div>
-                    <InputSet type="textField" :listNum="1" :caption="titleText" :labelText="titleLabel" :textModel="title" @input="title = $event" />
-                    <InputSet type="textField" :listNum="choiceListNum" :caption="choiceText" :addText="addChoiceText" />
+                    <InputSet type="textField" :caption="titleText" :labelText="titleLabel" :textModel="title" @input="title = $event" />
+                    <InputSet type="textsField" :caption="choiceText" :textsModel="choices" @update:textsModel="choices = $event" :addText="addChoiceText" />
 
-                    <InputSet type="selectBox" :listNum="1" :caption="categoryText" :selectItems="categoryItems" />
-                    <InputSet type="tagBox" :listNum="1" :caption="tagText" :labelText="tagLabel" />
+                    <InputSet type="selectBox" :caption="categoryText" :selectItems="categoryItems" />
+                    <InputSet type="tagBox" :caption="tagText" :labelText="tagLabel" />
 
-                    <InputSet type="checkBox" :listNum="1" :labelText="commentLabel" />
-                    <InputSet type="checkBox" :listNum="1" :labelText="multiAnsLabel" />
+                    <InputSet type="checkBox" :labelText="commentLabel" />
+                    <InputSet type="checkBox" :labelText="multiAnsLabel" />
 
                     <v-container>
                         <v-row no-gutters>
@@ -34,8 +34,8 @@
                     <v-spacer></v-spacer>
                 </v-toolbar>
                 <v-divider></v-divider>
-                <Paragraph :caption="titleText" :text="title" />
-                <Paragraph :caption="choiceText" text="いいいい" />
+                <Paragraph type="text" :caption="titleText" :text="title" />
+                <Paragraph type="multiText" :caption="choiceText" :texts="choices" />
                 <Paragraph :caption="categoryText" text="うううう" />
                 <Paragraph :caption="tagText" text="ええええ" />
                 <Paragraph :text="commentLabel" />
@@ -76,10 +76,9 @@ export default defineComponent({
         const title = ref('')
 
         const choiceText = ref('選択肢内容')
-        const choiceListNum = ref(4);
         const choiceStyle = ref({ margin: 0 })
         const addChoiceText = ref('選択肢を追加する')
-        const choices = ref([])
+        const choices = ref(['', '', '', ''])
 
         const categoryText = ref('カテゴリ')
         const categoryItems = ref(["社会", "政治経済", "地域", "文化", "会社・職業", "テクノロジー", "医療・ヘルスケア", "学問", "教育", "生活", "食文化", "スポーツ", "旅行", "趣味", "テレビ・映画・芸能", "本", "アニメ", "音楽", "ゲーム", "悩み", "雑談"])
@@ -104,8 +103,6 @@ export default defineComponent({
         const dialog = ref(false)
         const openDialog = () => {
             dialog.value = true
-            console.log("タイトル：")
-            console.log(title)
         }
 
         return {
@@ -113,7 +110,6 @@ export default defineComponent({
             titleLabel,
             title,
             choiceText,
-            choiceListNum,
             choiceStyle,
             choices,
             addChoiceText,
