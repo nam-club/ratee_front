@@ -20,7 +20,8 @@
                 </v-col>
             </v-row>
         </v-container>
-        <v-text-field v-else-if="listNum === 1" :label="labelText" />
+        <v-text-field v-else-if="listNum === 1" v-model="computedModel" :label="labelText" />
+        <p>{{ inputValue }}</p>
     </div>
     <div v-else-if="type === 'selectBox'">
         <v-select :label="labelText" :items="selectItems"></v-select>
@@ -63,6 +64,11 @@ export default defineComponent({
         IconButton,
         Msg
     },
+    // modelの設定を行う
+    model: {
+        prop: 'textModel', //　親モデルの値を'textModel'というkeyで受け取る
+        event: 'input' // イベント種別
+    },
     props: {
         type: {
             type: String,
@@ -89,6 +95,25 @@ export default defineComponent({
             type: Object,
             default: () => ({}),
         },
+        textModel: {
+            type: String,
+            required: true,
+        },
+    },
+    computed: {
+        computedModel: {
+            get() {
+                // propsで受け取った親モデルの値をcomputedModelに反映する
+                console.log(this.textModel)
+                return this.textModel
+            },
+            set(value) {
+                console.log(value);
+                // computedModelの値が変更された際はここに入ってくる
+                // $emitで親コンポーネントのmodelに反映する
+                this.$emit('input', value)
+            }
+        }
     },
     setup() {
         const icons = ref({

@@ -1,5 +1,5 @@
 <template>
-    <v-btn v-bind="attrs" v-on="listeners" :color="color" :disabled="disabled" :valiant="variant" :style="buttonStyle"
+    <v-btn v-bind="attrs" :color="color" :disabled="disabled" :valiant="variant" :style="buttonStyle"
         :class="['font-weight-' + fontWeight]" @click="onClick">
         <slot></slot>
     </v-btn>

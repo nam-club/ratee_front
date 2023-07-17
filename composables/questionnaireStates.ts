@@ -14,6 +14,7 @@ interface Questionnaire {
     createdAt: string;
 }
 
+// アンケート一覧
 export const useQuestionnaires = () => {
 
     const state = useState<Questionnaire[]>('questionnaires', () => [

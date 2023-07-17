@@ -39,7 +39,6 @@ export default defineComponent({
     },
     setup() {
         const qStore = useQuestionnaires();
-        console.log(qStore)
         const questionnaires = qStore.state;
         const btnColor = ref("#3A98B9");
         const btnVariant = ref("elevated");
