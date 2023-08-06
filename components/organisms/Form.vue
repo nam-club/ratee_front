@@ -12,8 +12,8 @@
                         :selectModel="categoryName" @update:selectModel="setCategoryName" />
                     <InputSet type="tagBox" :caption="tagText" :labelText="tagLabel" :chipsModel="tags" @update:chipsModel="tags = $event"/>
 
-                    <InputSet type="checkBox" :labelText="commentLabel" />
-                    <InputSet type="checkBox" :labelText="multiAnsLabel" />
+                    <InputSet type="checkBox" :labelText="commentLabel" :checkModel="enableComment" @update:checkModel="enableComment = $event" />
+                    <InputSet type="checkBox" :labelText="multiAnsLabel" :checkModel="enableMultiAns" @update:checkModel="enableMultiAns = $event" />
 
                     <v-container>
                         <v-row no-gutters>
@@ -41,8 +41,8 @@
                 <Paragraph type="multiText" :caption="choiceText" :texts="choices" />
                 <Paragraph type="text" :caption="categoryText" :text="categoryName" />
                 <Paragraph type="chips" :caption="tagText" :chips="tags" />
-                <Paragraph :text="commentLabel" />
-                <Paragraph :text="multiAnsLabel" />
+                <Paragraph type="checkBox" :isChecked="enableComment" :labelText="commentLabel" />
+                <Paragraph type="checkBox" :isChecked="enableMultiAns" :labelText="multiAnsLabel" />
                 <v-container>
                     <v-row no-gutters>
                         <v-col cols="5" justify="center">

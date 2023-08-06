@@ -40,7 +40,7 @@
             </v-row>
             <v-row no-gutters>
                 <v-col cols="auto" v-for="(c, i) in computedChipsModel" :key="i">
-                    <v-chip :v-model="computedChipsModel[i]" class="ma-2" closable @close="removeChip(i)">
+                    <v-chip v-model="computedChipsModel[i]" class="ma-2" closable @close="removeChip(i)">
                         {{ computedChipsModel[i] }}
                     </v-chip>
                 </v-col>
@@ -48,7 +48,7 @@
         </v-container>
     </div>
     <div v-else-if="type === 'checkBox'">
-        <v-checkbox :label="labelText" type="checkbox"></v-checkbox>
+        <v-checkbox v-model="computedCheckModel" :label="labelText" type="checkbox" hide-details/>
     </div>
 </template>
 
@@ -101,6 +101,10 @@ export default defineComponent({
         },
         chipsModel: {
             type: []
+        },
+        checkModel: {
+            type: Boolean,
+            default: false
         }
     },
     computed: {
@@ -137,6 +141,14 @@ export default defineComponent({
             },
             set(value) {
                 this.$emit('update', value)
+            }
+        },
+        computedCheckModel: {
+            get() {
+                return this.checkModel
+            },
+            set(value) {
+                this.$emit('update:checkModel', value)
             }
         },
     },

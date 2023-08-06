@@ -13,6 +13,9 @@
             {{ chip }}
         </v-chip>
     </div>
+    <div v-else-if="type === 'checkBox'">
+        <v-checkbox :label="labelText" type="checkbox" v-model="isChecked" readonly hide-details class="no-focus"/>
+    </div>
 </template>
 
 <script>
@@ -39,7 +42,20 @@ export default defineComponent({
         },
         chips: {
             type: []
+        },
+        labelText: {
+            type: String
+        },
+        isChecked: {
+            type: Boolean,
+            default: false
         }
     }
 })
 </script>
+
+<style scoped>
+.no-focus {
+    pointer-events: none;
+}
+</style>
