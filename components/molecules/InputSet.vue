@@ -39,9 +39,9 @@
                 </v-col>
             </v-row>
             <v-row no-gutters>
-                <v-col cols="12">
-                    <v-chip v-for="(chip, i) in chips" :key="i" class="ma-2" closable @close="removeChip(i)">
-                        {{ chip }}
+                <v-col cols="auto" v-for="(c, i) in computedChipsModel" :key="i">
+                    <v-chip :v-model="computedChipsModel[i]" class="ma-2" closable @close="removeChip(i)">
+                        {{ computedChipsModel[i] }}
                     </v-chip>
                 </v-col>
             </v-row>
@@ -98,6 +98,9 @@ export default defineComponent({
         },
         selectModel: {
             type: String
+        },
+        chipsModel: {
+            type: []
         }
     },
     computed: {
@@ -122,12 +125,18 @@ export default defineComponent({
         },
         computedSelectModel: {
             get() {
-                console.log(this.selectModel)
                 return this.selectModel
             },
             set(value) {
-                console.log(value)
                 this.$emit('update:selectModel', value)
+            }
+        },
+        computedChipsModel: {
+            get() {
+                return this.chipsModel
+            },
+            set(value) {
+                this.$emit('update', value)
             }
         },
     },
@@ -145,8 +154,9 @@ export default defineComponent({
         }
 
         const addChip = () => {
-            chips.value.push(newChip.value)
+            props.chipsModel.push(newChip.value)
             newChip.value = ''
+            this.$emit('update:chipsModel', props.chipsModel)
         }
 
         const removeChip = (index) => {

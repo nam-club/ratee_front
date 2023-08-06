@@ -10,7 +10,7 @@
 
                     <InputSet type="selectBox" :caption="categoryText" :selectItems="categoryNames"
                         :selectModel="categoryName" @update:selectModel="setCategoryName" />
-                    <InputSet type="tagBox" :caption="tagText" :labelText="tagLabel" />
+                    <InputSet type="tagBox" :caption="tagText" :labelText="tagLabel" :chipsModel="tags" @update:chipsModel="tags = $event"/>
 
                     <InputSet type="checkBox" :labelText="commentLabel" />
                     <InputSet type="checkBox" :labelText="multiAnsLabel" />
@@ -40,7 +40,7 @@
                 <Paragraph type="text" :caption="titleText" :text="title" />
                 <Paragraph type="multiText" :caption="choiceText" :texts="choices" />
                 <Paragraph type="text" :caption="categoryText" :text="categoryName" />
-                <Paragraph :caption="tagText" text="ええええ" />
+                <Paragraph type="chips" :caption="tagText" :chips="tags" />
                 <Paragraph :text="commentLabel" />
                 <Paragraph :text="multiAnsLabel" />
                 <v-container>

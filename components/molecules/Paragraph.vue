@@ -8,6 +8,11 @@
             {{ i + 1 + ": " + t }}
         </Msg>
     </div>
+    <div v-else-if="type === 'chips'">
+        <v-chip v-for="(chip, i) in chips" :key="i" class="ma-2">
+            {{ chip }}
+        </v-chip>
+    </div>
 </template>
 
 <script>
@@ -30,6 +35,9 @@ export default defineComponent({
             type: String
         },
         texts: {
+            type: []
+        },
+        chips: {
             type: []
         }
     }
