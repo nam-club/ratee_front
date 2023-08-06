@@ -5,9 +5,9 @@
     </div>
     <div v-else-if="type === 'textsField'">
         <v-container>
-            <v-row v-for="(t,i) in computedTextsModel" :key="i" no-gutters>
+            <v-row v-for="(t, i) in computedTextsModel" :key="i" no-gutters>
                 <v-col cols="1">
-                    <p>{{ i+1 }}</p>
+                    <p>{{ i + 1 }}</p>
                 </v-col>
                 <v-col cols="11">
                     <v-text-field v-model="computedTextsModel[i]" />
@@ -25,7 +25,7 @@
         </v-container>
     </div>
     <div v-else-if="type === 'selectBox'">
-        <v-select :label="labelText" :items="selectItems"></v-select>
+        <v-select :label="labelText" :items="selectItems" v-model="computedSelectModel"></v-select>
     </div>
     <div v-else-if="type === 'tagBox'">
         <v-container>
@@ -96,6 +96,9 @@ export default defineComponent({
         textsModel: {
             type: []
         },
+        selectModel: {
+            type: String
+        }
     },
     computed: {
         computedTextModel: {
@@ -114,7 +117,17 @@ export default defineComponent({
                 return this.textsModel
             },
             set(value) {
-                this.$emit('update:textsModel', value);
+                this.$emit('update', value)
+            }
+        },
+        computedSelectModel: {
+            get() {
+                console.log(this.selectModel)
+                return this.selectModel
+            },
+            set(value) {
+                console.log(value)
+                this.$emit('update:selectModel', value)
             }
         },
     },
@@ -123,24 +136,24 @@ export default defineComponent({
             mdiPlus
         })
 
-        const newChip = ref('');
-        const chips = ref([]);
+        const newChip = ref('')
+        const chips = ref([])
 
         const addTexts = () => {
             props.textsModel.push('');
-            this.$emit('update:textsModel', props.textsModel);
+            this.$emit('update:textsModel', props.textsModel)
         }
 
         const addChip = () => {
-            chips.value.push(newChip.value);
-            newChip.value = '';
+            chips.value.push(newChip.value)
+            newChip.value = ''
         }
 
         const removeChip = (index) => {
-            chips.value.splice(index, 1);
+            chips.value.splice(index, 1)
         }
 
-        const tagBtnStyle = ref({ color: '#515254', fontSize: '1.2em', height: '70%', width: '100%', display: 'block' });
+        const tagBtnStyle = ref({ color: '#515254', fontSize: '1.2em', height: '70%', width: '100%', display: 'block' })
 
         return {
             icons,
@@ -149,8 +162,8 @@ export default defineComponent({
             chips,
             addTexts,
             addChip,
-            removeChip
+            removeChip,
         }
-    }
+    },
 })
 </script>
