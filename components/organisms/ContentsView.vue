@@ -8,7 +8,7 @@
         </v-tabs>
         <v-window v-model="tab">
             <v-window-item v-for="n in 4" :key="n" :value="n">
-                <AnswerBox v-if="n==1" style="margin:5%" :questionnaires="questionnaires" :incrementVoteCount="incrementVoteCount"/>
+                <AnswerBox v-if="n==1" style="margin:5%" :questionnaires="questionnaires" :answerQuestionnaire="answerQuestionnaire"/>
             </v-window-item>
         </v-window>
     </v-card>
@@ -35,15 +35,15 @@ export default {
         const qStore = useQuestionnaires();
         const questionnaires = qStore.state;
 
-        // 投票した項目をカウントアップ
-        const incrementVoteCount = (id: string, name: string) => {
-            console.log("id:" + id + " name:" + name)
-            //console.log(qStore.incrementVoteCount(id, name));
+        // アンケート回答
+        const answerQuestionnaire = (id: string, name: string) => {
+            console.log("questionnaireId:" + id + " choiceId:" + name)
+            qStore.answerQuestionnaire(id, [name])
         }
 
         return {
             questionnaires,
-            incrementVoteCount
+            answerQuestionnaire
         }
     }
 }

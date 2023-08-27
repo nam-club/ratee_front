@@ -10,7 +10,7 @@
                         <v-row class="justify-center" v-for="(choice, index) in questionnaire.choices" :key="index">
                             <v-col xs12 sm12 md12 align-self="center">
                                 <Button :color="btnColor" :variant="btnVariant" :buttonStyle="btnStyle"
-                                    :onClick="() => incrementVoteCount(questionnaire.id, choice.name)">
+                                    :onClick="() => answerQuestionnaire(questionnaire.id, choice.id)">
                                     {{ choice.name }}
                                 </Button>
                             </v-col>
@@ -44,7 +44,7 @@ export default defineComponent({
         sortType: {
             type: String
         },
-        incrementVoteCount: {
+        answerQuestionnaire: {
             type: Function,
             required: true
         }
