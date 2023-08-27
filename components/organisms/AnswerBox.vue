@@ -43,6 +43,10 @@ export default defineComponent({
         },
         sortType: {
             type: String
+        },
+        incrementVoteCount: {
+            type: Function,
+            required: true
         }
     },
     setup() {
@@ -66,14 +70,7 @@ export default defineComponent({
             },
         });
 
-        // 投票した項目をカウントアップ
-        const incrementVoteCount = (id: string, name: string) => {
-            console.log("id:" + id + " name:" + name)
-            //console.log(qStore.incrementVoteCount(id, name));
-        }
-
         return {
-            incrementVoteCount,
             btnColor,
             btnVariant,
             btnStyle,

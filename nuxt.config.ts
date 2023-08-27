@@ -1,7 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
 import vuetify from 'vite-plugin-vuetify'
-import vue from '@vitejs/plugin-vue'
 
 export default defineNuxtConfig({
     build: {
@@ -31,7 +30,4 @@ export default defineNuxtConfig({
         '~/components/organisms',
     ],
     plugins: ['~/plugins/vuetify.ts'],
-    http: {
-        baseURL: 'https://6qwkjs22n6.execute-api.ap-northeast-1.amazonaws.com/dev/v1' // ここには使用するAPIのベースURLを設定します
-    }
 })

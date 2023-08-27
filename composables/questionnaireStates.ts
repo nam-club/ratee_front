@@ -1,3 +1,5 @@
+import { ref, onMounted } from 'vue'
+
 export interface Choice {
     name: string;
     voteCount: number;
@@ -18,10 +20,12 @@ export interface Questionnaire {
 export const useQuestionnaires = () => {
 
     const state = ref<Questionnaire[]>([]); // 初期値は空の配列
+    const baseURL = import.meta.env.VITE_BASE_URL;
+    console.log(baseURL)
 
     const fetchData = async () => {
         try {
-            const response = await fetch('https://6qwkjs22n6.execute-api.ap-northeast-1.amazonaws.com/dev/v1/questionnaires');
+            const response = await fetch(`${baseURL}/questionnaires`);
             if (response.ok) {
                 const data = await response.json();
                 state.value = data.questionnaires;  // ここでquestionnairesキーのデータを取得

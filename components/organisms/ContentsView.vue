@@ -8,13 +8,13 @@
         </v-tabs>
         <v-window v-model="tab">
             <v-window-item v-for="n in 4" :key="n" :value="n">
-                <AnswerBox v-if="n==1" style="margin:5%" :questionnaires="questionnaires"/>
+                <AnswerBox v-if="n==1" style="margin:5%" :questionnaires="questionnaires" :incrementVoteCount="incrementVoteCount"/>
             </v-window-item>
         </v-window>
     </v-card>
 </template>
 
-<script>
+<script lang="ts">
 import AnswerBox from '@/components/organisms/AnswerBox.vue'
 import { useQuestionnaires } from '~/composables/questionnaireStates';
 
@@ -34,10 +34,16 @@ export default {
     setup() {
         const qStore = useQuestionnaires();
         const questionnaires = qStore.state;
-        console.log(questionnaires)
+
+        // 投票した項目をカウントアップ
+        const incrementVoteCount = (id: string, name: string) => {
+            console.log("id:" + id + " name:" + name)
+            //console.log(qStore.incrementVoteCount(id, name));
+        }
 
         return {
-            questionnaires
+            questionnaires,
+            incrementVoteCount
         }
     }
 }
