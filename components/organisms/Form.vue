@@ -10,10 +10,13 @@
 
                     <InputSet type="selectBox" :caption="categoryText" :selectItems="categoryNames"
                         :selectModel="categoryName" @update:selectModel="setCategoryName" />
-                    <InputSet type="tagBox" :caption="tagText" :labelText="tagLabel" :chipsModel="tags" @update:chipsModel="tags = $event"/>
+                    <InputSet type="tagBox" :caption="tagText" :labelText="tagLabel" :chipsModel="tags"
+                        @update:chipsModel="tags = $event" />
 
-                    <InputSet type="checkBox" :labelText="commentLabel" :checkModel="enableComment" @update:checkModel="enableComment = $event" />
-                    <InputSet type="checkBox" :labelText="multiAnsLabel" :checkModel="enableMultiAns" @update:checkModel="enableMultiAns = $event" />
+                    <InputSet type="checkBox" :labelText="commentLabel" :checkModel="enableComment"
+                        @update:checkModel="enableComment = $event" />
+                    <InputSet type="checkBox" :labelText="multiAnsLabel" :checkModel="enableMultiAns"
+                        @update:checkModel="enableMultiAns = $event" />
 
                     <v-container>
                         <v-row no-gutters>
@@ -62,18 +65,26 @@
     </form>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, ref } from 'vue'
 
 import InputSet from '@/components/molecules/InputSet.vue'
 import Paragraph from '@/components/molecules/Paragraph.vue'
+import { Category } from '@/types';
 
 export default defineComponent({
     components: {
         InputSet,
         Paragraph
     },
-    setup() {
+    props: {
+        categories: {
+            type: Array as () => Category[],
+            required: true,
+        }
+    },
+    setup(props) {
+        console.log(props.categories)
         const titleText = ref('アンケート内容')
         const titleLabel = ref('アンケート内容を入力してください。')
         const title = ref('')
@@ -84,34 +95,23 @@ export default defineComponent({
         const choices = ref(['', '', '', ''])
 
         const categoryText = ref('カテゴリ')
-        const categoryItems = ref([
-            { id: "c1", name: "社会" },
-            { id: "c2", name: "政治経済" },
-            { id: "c3", name: "地域" },
-            { id: "c4", name: "文化" },
-            { id: "c5", name: "会社・職業" },
-            { id: "c6", name: "テクノロジー" },
-            { id: "c7", name: "医療・ヘルスケア" },
-            { id: "c8", name: "学問" },
-            { id: "c9", name: "教育" },
-            { id: "c10", name: "生活" },
-            { id: "c11", name: "食文化" },
-            { id: "c12", name: "スポーツ" },
-            { id: "c13", name: "旅行" },
-            { id: "c14", name: "趣味" },
-            { id: "c15", name: "テレビ・映画・芸能" },
-            { id: "c16", name: "本" },
-            { id: "c17", name: "アニメ" },
-            { id: "c18", name: "音楽" },
-            { id: "c19", name: "ゲーム" },
-            { id: "c20", name: "悩み" },
-            { id: "c21", name: "雑談" }
-        ])
-        const categoryNames = categoryItems.value.map((item) => item.name)
+        const categoryNames = ref<string[]>([])
+        if (props.categories) {
+            categoryNames.value = props.categories.map((item: Category) => item.name)
+        }
         const categoryId = ref('')
         const categoryName = ref('')
-        const setCategoryName = (value) => {
+        const setCategoryId = (name: string) => {
+            const category = props.categories.find((item: Category) => item.name === name);
+            if (category) {
+                categoryId.value = category.id;
+            } else {
+                console.error(`Category with name "${name}" not found`);
+            }
+        }
+        const setCategoryName = (value: string) => {
             categoryName.value = value;
+            setCategoryId(value);
         }
 
         const tagText = ref('タグ')

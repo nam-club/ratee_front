@@ -1,5 +1,6 @@
-import { ref, onMounted } from 'vue'
+import { ref, onMounted } from 'vue';
 
+// 選択肢情報のインタフェース
 export interface Choice {
     id: string;
     name: string;
@@ -7,6 +8,7 @@ export interface Choice {
     reasons: string[];
 }
 
+// アンケート情報のインタフェース
 export interface Questionnaire {
     id: string;
     content: string;
@@ -17,8 +19,11 @@ export interface Questionnaire {
     createdAt: string;
 }
 
-const baseURL = import.meta.env.VITE_BASE_URL;
 
+// ベースURLの読み込み
+const baseURL = import.meta.env.VITE_BASE_URL
+
+// アンケート一覧取得API
 const getQuestionnaires = async () => {
     try {
         const response = await fetch(`${baseURL}/questionnaires`);
@@ -34,8 +39,34 @@ const getQuestionnaires = async () => {
     return []; // エラーが発生した場合やレスポンスがOKでない場合は空の配列を返す
 }
 
+// アンケート回答API
+const postAnswer = async (questionId: string, choices: string[]) => {
+    console.log(questionId)
+    console.log(choices)
 
-// アンケート一覧
+    try {
+        const response = await fetch(`${baseURL}/questionnaire/answer`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                questionnaireId: questionId,
+                answers: choices
+            })
+        });
+        if (response.ok) {
+            const data = await response.json();
+        } else {
+            console.error('APIの呼び出しに失敗しました:', response.statusText);
+        }
+    } catch (error) {
+        console.error('APIの呼び出しに失敗しました:', error);
+    }
+};
+
+
+// アンケート一覧のStore定義
 export const useQuestionnaires = () => {
 
     const state = ref<Questionnaire[]>([]); // 初期値は空の配列
@@ -45,7 +76,7 @@ export const useQuestionnaires = () => {
     });
 
     // アンケート回答
-    const answerQuestionnaire = (questionId: string, choices: string[]) => {
+    const answerQuestionnaire = async (questionId: string, choices: string[]) => {
 
         /*// 該当アンケートの存在チェック
         const question = state.value.find(q => q.id === questionId)
@@ -61,36 +92,23 @@ export const useQuestionnaires = () => {
             return
         }*/
 
-        const answerQuestion = async () => {
-            try {
-                const response = await fetch(`${baseURL}/questionnaire/answer`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        questionnaireId: questionId,
-                        answers: choices
-                    })
-                });
-                if (response.ok) {
-                    const data = await response.json();
+        // postAnswerを実行
+        await postAnswer(questionId, choices);
 
-                    // getQuestionnairesを非同期で呼び出し、結果をstate.valueにセット
-                    state.value = await getQuestionnaires();
-                } else {
-                    console.error('APIの呼び出しに失敗しました:', response.statusText);
-                }
-            } catch (error) {
-                console.error('APIの呼び出しに失敗しました:', error);
-            }
-        };
+        // postAnswerが完了した後にgetQuestionnairesを実行
+        state.value = await getQuestionnaires();
+    }
 
-        answerQuestion();
+
+    // アンケート作成
+    const createQuestionnaire = (questionId: string, choices: string[]) => {
+
+
     }
 
     return {
         state: readonly(state),
-        answerQuestionnaire
+        answerQuestionnaire,
+        createQuestionnaire
     }
 }
