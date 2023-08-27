@@ -8,7 +8,7 @@
         </v-tabs>
         <v-window v-model="tab">
             <v-window-item v-for="n in 4" :key="n" :value="n">
-                <AnswerBox v-if="n==1" style="margin:5%"/>
+                <AnswerBox v-if="n==1" style="margin:5%" :questionnaires="questionnaires"/>
             </v-window-item>
         </v-window>
     </v-card>
@@ -16,6 +16,8 @@
 
 <script>
 import AnswerBox from '@/components/organisms/AnswerBox.vue'
+import { useQuestionnaires } from '~/composables/questionnaireStates';
+
 export default {
     components: {
         AnswerBox
@@ -29,5 +31,14 @@ export default {
     data: () => ({
         tab: null,
     }),
+    setup() {
+        const qStore = useQuestionnaires();
+        const questionnaires = qStore.state;
+        console.log(questionnaires)
+
+        return {
+            questionnaires
+        }
+    }
 }
 </script>

@@ -1,10 +1,10 @@
-interface Choice {
+export interface Choice {
     name: string;
     voteCount: number;
     reasons: string[];
 }
 
-interface Questionnaire {
+export interface Questionnaire {
     id: string;
     content: string;
     choices: Choice[];
@@ -17,36 +17,24 @@ interface Questionnaire {
 // アンケート一覧
 export const useQuestionnaires = () => {
 
-    const state = useState<Questionnaire[]>('questionnaires', () => [
-        {
-            id: "A01",
-            content: "好きな動物は？",
-            choices: [
-                { name: "イヌ", voteCount: 12, reasons: ["可愛いから"] },
-                { name: "ネコ", voteCount: 10, reasons: ["猫しか勝たん"] },
-                { name: "ゾウ", voteCount: 6, reasons: ["強いから"] },
-                { name: "キリン", voteCount: 8, reasons: ["イカしてるから"] },
-            ],
-            category: "生物",
-            tags: ["ペット", "犬", "猫", "動物"],
-            isAnswered: false,
-            createdAt: "2019-08-24T14:15:22Z"
-        },
-        {
-            id: "A02",
-            content: "国内旅行するならどこ？",
-            choices: [
-                { name: "北海道", voteCount: 22, reasons: ["ご飯が美味しいから"] },
-                { name: "沖縄", voteCount: 18, reasons: ["海が綺麗だから"] },
-                { name: "京都", voteCount: 16, reasons: ["日本人だから"] },
-                { name: "福岡", voteCount: 17, reasons: ["博多グルメ最強"] },
-            ],
-            category: "旅行",
-            tags: ["国内旅行", "都道府県", "日本"],
-            isAnswered: false,
-            createdAt: "2019-08-26T10:22:09Z"
-        },
-    ])
+    const state = ref<Questionnaire[]>([]); // 初期値は空の配列
+
+    const fetchData = async () => {
+        try {
+            const response = await fetch('https://6qwkjs22n6.execute-api.ap-northeast-1.amazonaws.com/dev/v1/questionnaires');
+            if (response.ok) {
+                const data = await response.json();
+                state.value = data.questionnaires;  // ここでquestionnairesキーのデータを取得
+                console.log(state.value);
+            } else {
+                console.error('APIの呼び出しに失敗しました:', response.statusText);
+            }
+        } catch (error) {
+            console.error('APIの呼び出しに失敗しました:', error);
+        }
+    };
+
+    onMounted(fetchData); // コンポーネントがマウントされたときにAPIを呼び出す
 
     const incrementVoteCount = (questionId: string, choiceName: string) => {
 

@@ -24,7 +24,7 @@
                             </v-col>
                             <v-col cols="2" />
                             <v-col cols="5" justify="center">
-                                <Button :color="confirmBtnColor" :buttonStyle="confirmBtnStyle" v-bind="attrs"
+                                <Button :color="confirmBtnColor" :buttonStyle="confirmBtnStyle"
                                     @click="openDialog">確認画面を開く</Button>
                             </v-col>
                         </v-row>

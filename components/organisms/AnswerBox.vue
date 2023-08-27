@@ -25,21 +25,27 @@
     </v-card>
 </template>
 
-<script>
+<script lang="ts">
 import Msg from '@/components/atoms/Msg.vue'
 import Button from '@/components/atoms/Button.vue'
 import QuestionnaireBarChart from '@/components/organisms/QuestionnaireBarChart.vue'
-import { useQuestionnaires } from '~/composables/questionnaireStates';
+import { Questionnaire } from '~/composables/questionnaireStates';
 
 export default defineComponent({
     components: {
         Msg,
         Button,
-        QuestionnaireBarChart
+        QuestionnaireBarChart,
+    },
+    props: {
+        questionnaires: {
+            type: Array as PropType<Questionnaire[]>
+        },
+        sortType: {
+            type: String
+        }
     },
     setup() {
-        const qStore = useQuestionnaires();
-        const questionnaires = qStore.state;
         const btnColor = ref("#3A98B9");
         const btnVariant = ref("elevated");
         const btnStyle = ref({ width: '100%', color: 'white' });
@@ -61,13 +67,12 @@ export default defineComponent({
         });
 
         // 投票した項目をカウントアップ
-        const incrementVoteCount = (id, name) => {
+        const incrementVoteCount = (id: string, name: string) => {
             console.log("id:" + id + " name:" + name)
-            console.log(qStore.incrementVoteCount(id, name));
+            //console.log(qStore.incrementVoteCount(id, name));
         }
 
         return {
-            questionnaires,
             incrementVoteCount,
             btnColor,
             btnVariant,
