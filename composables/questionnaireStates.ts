@@ -65,6 +65,33 @@ const postAnswer = async (questionId: string, choices: string[]) => {
     }
 };
 
+//アンケート投稿API
+const postQuestionnaire = async (title: string, choices: string[], categoryId: string, tags: string[], options: object) => {
+
+    try {
+        const response = await fetch(`${baseURL}/questionnaire`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                content: title,
+                choices: choices,
+                categoryId: categoryId,
+                tags: tags,
+                options: options
+            })
+        });
+        if (response.ok) {
+            const data = await response.json();
+        } else {
+            console.error('APIの呼び出しに失敗しました:', response.statusText);
+        }
+    } catch (error) {
+        console.error('APIの呼び出しに失敗しました:', error);
+    }
+};
+
 
 // アンケート一覧のStore定義
 export const useQuestionnaires = () => {
@@ -92,18 +119,22 @@ export const useQuestionnaires = () => {
             return
         }*/
 
-        // postAnswerを実行
+        // アンケート回答APIを実行
         await postAnswer(questionId, choices);
 
-        // postAnswerが完了した後にgetQuestionnairesを実行
+        // アンケート回答APIが完了した後にアンケート一覧取得APIを実行
         state.value = await getQuestionnaires();
     }
 
 
     // アンケート作成
-    const createQuestionnaire = (questionId: string, choices: string[]) => {
+    const createQuestionnaire = async (title: string, choices: string[], categoryId: string, tags: string[], options: object) => {
 
+        // アンケート投稿APIを実行
+        await postQuestionnaire(title, choices, categoryId, tags, options)
 
+        // アンケート投稿APIが完了した後にアンケート一覧取得APIを実行
+        state.value = await getQuestionnaires();
     }
 
     return {

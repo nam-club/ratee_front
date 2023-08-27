@@ -55,7 +55,8 @@
                         <v-col cols="2" />
                         <v-col cols="5" justify="center">
                             <nuxt-link to="/" style="text-decoration: none; color: inherit;">
-                                <Button :color="confirmBtnColor" :buttonStyle="confirmBtnStyle">投稿する</Button>
+                                <Button :color="confirmBtnColor" :buttonStyle="confirmBtnStyle"
+                                    :onClick="() => createQuestionnaire(title, choices, categoryId, tags, options)">投稿する</Button>
                             </nuxt-link>
                         </v-col>
                     </v-row>
@@ -71,6 +72,7 @@ import { defineComponent, ref } from 'vue'
 import InputSet from '@/components/molecules/InputSet.vue'
 import Paragraph from '@/components/molecules/Paragraph.vue'
 import { Category } from '@/types';
+import { useQuestionnaires } from '~/composables/questionnaireStates';
 
 export default defineComponent({
     components: {
@@ -124,6 +126,9 @@ export default defineComponent({
         const multiAnsLabel = ref('複数の回答を有効にする')
         const enableMultiAns = ref(false)
 
+        const options = ref({})
+        options.value = { "enableComment": enableComment, "enableMultiAns": enableMultiAns }
+
         const cancelBtnColor = ref("#f5f5f5")
         const cancelBtnStyle = ref({ color: '#515254', fontSize: '1.2em', height: '100%', width: '100%', padding: '5%', display: 'block' });
 
@@ -133,6 +138,13 @@ export default defineComponent({
         const dialog = ref(false)
         const openDialog = () => {
             dialog.value = true
+        }
+
+        const qStore = useQuestionnaires();
+
+        // アンケート投稿
+        const createQuestionnaire = (title: string, choices: string[], categoryId: string, tags: string[], options: object) => {
+            qStore.createQuestionnaire(title, choices, categoryId, tags, options);
         }
 
         return {
@@ -155,12 +167,14 @@ export default defineComponent({
             enableComment,
             multiAnsLabel,
             enableMultiAns,
+            options,
             cancelBtnStyle,
             cancelBtnColor,
             confirmBtnStyle,
             confirmBtnColor,
             dialog,
-            openDialog
+            openDialog,
+            createQuestionnaire
         }
     }
 })
