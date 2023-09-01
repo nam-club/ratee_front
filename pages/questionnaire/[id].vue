@@ -1,25 +1,30 @@
 <template>
     <v-card>
-        
+        <v-container>
+            <v-row>
+                <QuestionnaireBarChart :questionnaire="questionnaire" :options="options" />
+            </v-row>
+        </v-container>
     </v-card>
 </template>
 
 <script lang="ts">
 import QuestionnaireBarChart from '@/components/organisms/QuestionnaireBarChart.vue'
-import { Questionnaire } from '~/composables/questionnaireStates';
+import { useQuestionnaire } from '~/composables/questionnaireStates';
 
 export default defineComponent({
     components: {
         QuestionnaireBarChart,
     },
-    props: {
-        questionnaire: {
-            type: Object as PropType<Questionnaire>
-        },
-    },
     setup() {
         const router = useRoute();
-        console.log(router.params.id);
+        const questionId = Array.isArray(router.params.id) ? router.params.id[0] : router.params.id;
+
+        const qStore = useQuestionnaire(questionId);
+        const questionnaire = qStore.state;
+
+        console.log(questionnaire)
+
         const options = ref({
             responsive: true,
             indexAxis: 'y',
@@ -37,6 +42,7 @@ export default defineComponent({
         });
 
         return {
+            questionnaire,
             options
         }
     }
