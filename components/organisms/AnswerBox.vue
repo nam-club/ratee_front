@@ -17,7 +17,18 @@
                         </v-row>
                     </v-container>
                     <v-container v-if="questionnaire.isAnswered === true">
-                        <QuestionnaireBarChart :questionnaire="questionnaire" :options="options" />
+                        <v-row>
+                            <v-col class="text-end">
+                                <nuxt-link :to="`/questionnaire/${questionnaire.id}`">
+                                    <Button>
+                                        詳細を見る
+                                    </Button>
+                                </nuxt-link>
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <QuestionnaireBarChart :questionnaire="questionnaire" :options="options" />
+                        </v-row>
                     </v-container>
                 </v-col>
             </v-row>
