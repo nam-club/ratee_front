@@ -1,7 +1,7 @@
 <template>
     <v-app>
         <Header :logo="logo" :title="headerTitle" />
-        <ContentsView :contentsBg="contentsBg" style="margin:5%" :questionnaires="questionnaires" />
+        <ContentsView style="margin:5%" :questionnaires="questionnaires" />
         <Footer :buttonText="footerButtonText" />
     </v-app>
 </template>
@@ -26,13 +26,11 @@ export default defineComponent({
     setup() {
         const logo = '/logo.png' // 画像のパスを指定してください
         const headerTitle = ref('ratee')
-        const contentsBg = ref('#E8D5C4')
         const footerButtonText = ref('アンケートを作る')
 
         return {
             logo,
             headerTitle,
-            contentsBg,
             footerButtonText,
         }
     },

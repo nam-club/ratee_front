@@ -1,20 +1,14 @@
 <template>
-    <v-card>
-        <v-container>
-            <v-row>
-                <QuestionnaireBarChart :questionnaire="questionnaire" :options="options" />
-            </v-row>
-        </v-container>
-    </v-card>
+    <Questionnaire v-if="questionnaire" :questionnaire="questionnaire" />
 </template>
 
 <script lang="ts">
-import QuestionnaireBarChart from '@/components/organisms/QuestionnaireBarChart.vue'
+import Questionnaire from '@/components/templates/Questionnaire.vue'
 import { useQuestionnaire } from '~/composables/questionnaireStates';
 
 export default defineComponent({
     components: {
-        QuestionnaireBarChart,
+        Questionnaire,
     },
     setup() {
         const router = useRoute();
@@ -23,27 +17,8 @@ export default defineComponent({
         const qStore = useQuestionnaire(questionId);
         const questionnaire = qStore.state;
 
-        console.log(questionnaire)
-
-        const options = ref({
-            responsive: true,
-            indexAxis: 'y',
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false // レジェンド（ラベル）を非表示にする
-                }
-            },
-            scales: {
-                x: {
-                    display: false, // x軸の目盛りと数値を非表示にする
-                },
-            },
-        });
-
         return {
             questionnaire,
-            options
         }
     }
 })

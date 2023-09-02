@@ -8,9 +8,6 @@
             <v-app-bar-title>{{ title }}</v-app-bar-title>
         </nuxt-link>
         <v-spacer></v-spacer>
-        <v-btn icon>
-            <v-icon size="x-large">{{ icons.mdiGoogleAnalytics }}</v-icon>
-        </v-btn>
     </v-app-bar>
 </template>
   
@@ -18,7 +15,6 @@
 import { defineComponent } from 'vue'
 import {
     mdiMenu,
-    mdiGoogleAnalytics,
 } from '@mdi/js'
 
 export default defineComponent({
@@ -37,7 +33,6 @@ export default defineComponent({
     setup() {
         const icons = ref({
             mdiMenu,
-            mdiGoogleAnalytics,
         })
 
         const isMobile = ref(false)

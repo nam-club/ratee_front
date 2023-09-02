@@ -23,12 +23,6 @@ export default {
     components: {
         AnswerBox
     },
-    props: {
-        contentsBg: {
-            type: String,
-            default: '#FFFFFF'
-        },
-    },
     data: () => ({
         tab: null,
     }),
