@@ -1,10 +1,10 @@
 <template>
     <h2>{{ caption }}</h2>
     <div v-if="type === 'text'">
-        <Msg fontWeight="normal" size="1.5em">{{ text }}</Msg>
+        <Msg fontWeight="normal" fontSize="1.5em">{{ text }}</Msg>
     </div>
     <div v-else-if="type === 'multiText'">
-        <Msg v-for="(t, i) in texts" :key="i" fontWeight="normal" size="1.5em">
+        <Msg v-for="(t, i) in texts" :key="i" fontWeight="normal" fontSize="1.5em">
             {{ i + 1 + ": " + t }}
         </Msg>
     </div>

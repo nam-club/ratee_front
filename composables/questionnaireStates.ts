@@ -1,4 +1,6 @@
 import { ref, onMounted } from 'vue';
+import { TARGET_QUESTIONNAIRES, TARGET_RECOMMENDS } from '@/constants';
+
 
 // スタブモードの確認
 const stubMode = import.meta.env.VITE_STUB_MODE;
@@ -52,7 +54,6 @@ const getQuestionnaire = async (questionId: string) => {
         });
         url.search = params.toString();
         const response = await fetch(url);
-        //const response = await fetch(`${baseURL}/questionnaire?id=${questionId}`);
         if (response.ok) {
             const data = await response.json();
             return data;
@@ -67,8 +68,6 @@ const getQuestionnaire = async (questionId: string) => {
 
 // アンケート回答API
 const postAnswer = async (questionId: string, choices: string[]) => {
-    console.log(questionId)
-    console.log(choices)
 
     try {
         const response = await fetch(`${baseURL}/questionnaire/answer`, {
@@ -118,16 +117,50 @@ const postQuestionnaire = async (title: string, choices: string[], categoryId: s
     }
 };
 
+// おすすめアンケート一覧取得API
+const getRecommendQuestionnaires = async (questionId: string) => {
+    try {
+        const url = new URL(`${baseURL}/questionnaire/recommends`);
+        const params = new URLSearchParams({
+            id: questionId,
+        });
+        url.search = params.toString();
+        const response = await fetch(url);
+        if (response.ok) {
+            const data = await response.json();
+            console.log(data)
+            return data;
+        } else {
+            console.error('おすすめアンケート一覧取得APIの実行中にエラーが発生しました:', response.statusText);
+        }
+    } catch (error) {
+        console.error('おすすめアンケート一覧取得APIの実行中にエラーが発生しました:', error);
+    }
+    return []; // エラーが発生した場合やレスポンスがOKでない場合は空の配列を返す
+}
+
+
+
+
 
 // アンケート一覧のStore定義
-export const useQuestionnaires = () => {
+export const useQuestionnaires = (target: string, questionId: string) => {
 
     const state = ref<Questionnaire[]>([]); // 初期値は空の配列
 
 
     if (stubMode === '0') {
         onMounted(async () => {
-            state.value = await getQuestionnaires();
+            switch(target) {
+                case TARGET_QUESTIONNAIRES:
+                    state.value = await getQuestionnaires();
+                    break;
+                case TARGET_RECOMMENDS:
+                    state.value = await getRecommendQuestionnaires(questionId);
+                    break;
+                default:
+                    break;
+            }
         });
     } else {
         // スタブモードの時は直接データを入れる

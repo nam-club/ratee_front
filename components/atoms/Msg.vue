@@ -1,10 +1,10 @@
 <template>
-    <p :class="[color + '--text', 'font-weight-' + fontWeight]" :style="{fontSize: size}">
+    <p :class="[color + '--text', 'font-weight-' + fontWeight]" :style="{fontSize: fontSize, lineHeight: lineHeight}">
         <slot></slot>
     </p>
 </template>
   
-<script>
+<script lang="ts">
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -14,13 +14,17 @@ export default defineComponent({
             type: String,
             default: 'black'
         },
-        size: {
+        fontSize: {
             type: String,
             default: '1em'
         },
         fontWeight: {
             type: String,
             default: 'normal'
+        },
+        lineHeight: {
+            type: String,
+            default: '1'
         }
     }
 });

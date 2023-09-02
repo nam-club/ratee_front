@@ -3,7 +3,7 @@
         <v-container>
             <v-row class="justify-center">
                 <v-col xs12 sm6 md6 align-self="center">
-                    <Msg fontWeight="normal" size="2em">{{ questionnaire.content }}</Msg>
+                    <Msg fontWeight="normal" fontSize="2em">{{ questionnaire.content }}</Msg>
                 </v-col>
                 <v-col xs12 sm6 md6>
                     <v-container v-if="questionnaire.isAnswered === false">

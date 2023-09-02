@@ -3,7 +3,7 @@
         <v-container>
             <v-row>
                 <v-col>
-                    <Msg fontWeight="normal" size="2em">{{ questionnaire.content }}</Msg>
+                    <Msg fontWeight="normal" fontSize="2em">{{ questionnaire.content }}</Msg>
                 </v-col>
             </v-row>
             <v-row>

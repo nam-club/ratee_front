@@ -19,7 +19,7 @@
                     <IconButton :icon="icons.mdiPlus" :size="small" :onClick="addTexts" />
                 </v-col>
                 <v-col cols="auto">
-                    <Msg fontWeight="normal" size="1.5em">{{ addText }}</Msg>
+                    <Msg fontWeight="normal" fontSize="1.5em">{{ addText }}</Msg>
                 </v-col>
             </v-row>
         </v-container>

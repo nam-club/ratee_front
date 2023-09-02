@@ -1,16 +1,17 @@
 <template>
     <v-app>
         <Header :logo="logo" :title="headerTitle" />
-        <ContentsView style="margin:5%" :questionnaires="questionnaires" />
+        <ContentsView style="margin:5%" :questionnaires="questionnaires" :answerQuestionnaire="answerQuestionnaire" />
         <Footer :buttonText="footerButtonText" />
     </v-app>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, ref } from 'vue'
 import Header from '@/components/organisms/Header.vue'
 import ContentsView from '@/components/organisms/ContentsView.vue'
 import Footer from '@/components/organisms/Footer.vue'
+import { Questionnaire } from '~/composables/questionnaireStates';
 
 export default defineComponent({
     components: {
@@ -20,7 +21,11 @@ export default defineComponent({
     },
     props: {
         questionnaires: {
-            type: []
+            type: Array as PropType<Questionnaire[]>
+        },
+        answerQuestionnaire: {
+            type: Function,
+            required: true
         }
     },
     setup() {

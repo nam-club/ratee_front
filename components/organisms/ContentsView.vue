@@ -17,28 +17,23 @@
 
 <script lang="ts">
 import AnswerBox from '@/components/organisms/AnswerBox.vue'
-import { useQuestionnaires } from '~/composables/questionnaireStates';
+import { Questionnaire } from '~/composables/questionnaireStates';
 
 export default {
     components: {
         AnswerBox
     },
+    props: {
+        questionnaires: {
+            type: Array as PropType<Questionnaire[]>
+        },
+        answerQuestionnaire: {
+            type: Function,
+            required: true
+        }
+    },
     data: () => ({
         tab: null,
     }),
-    setup() {
-        const qsStore = useQuestionnaires();
-        const questionnaires = qsStore.state;
-
-        // アンケート回答
-        const answerQuestionnaire = (id: string, name: string) => {
-            qsStore.answerQuestionnaire(id, [name])
-        }
-
-        return {
-            questionnaires,
-            answerQuestionnaire,
-        }
-    }
 }
 </script>
