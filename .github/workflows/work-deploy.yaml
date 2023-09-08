@@ -1,0 +1,14 @@
+name: Deploy to AWS Lambda - ratee functions
+on:
+  push:
+    branches:
+      - feature/add_deploy
+jobs:
+  deploy:
+    # format 1: [organization]/[repo_name]/.github/workflows/[common workflow file]@[branch]
+    # format 2: ./.github/workflows/[common workflow file]
+    uses: ./.github/workflows/deploy-wf.yaml
+    secrets:
+      aws_access_key: ${{ secrets.WORK_AWS_ACCESS_KEY_ID }}
+      aws_secret: ${{ secrets.WORK_AWS_SECRET_ACCESS_KEY }}
+      env: work

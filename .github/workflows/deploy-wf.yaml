@@ -1,0 +1,55 @@
+name: Deploy to AWS Lambda - ratee functions
+on:
+  workflow_call:
+    secrets:
+      aws_access_key:
+        description: AWSのアクセスキー
+        required: true
+      aws_secret:
+        description: AWSのシークレット
+        required: true
+      env:
+        description: 環境名
+        required: true
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      Env: ${{ secrets.env }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.aws_access_key }}
+          aws-secret-access-key: ${{ secrets.aws_secret }}
+          aws-region: ap-northeast-1
+      - name: Init S3 bucket
+        run: |
+          if ! aws s3api head-bucket --bucket ratee-front-$Env-bucket --region ap-northeast-1 > /dev/null 2>&1; then
+
+            aws cloudformation deploy --template-file aws/cfn-front-s3.yaml --stack-name front-s3 --region ap-northeast-1 --parameter-overrides Env=$Env
+
+            echo "Created!"
+          else
+            echo "Skipped."
+          fi
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      
+      - name: Install dependencies
+        run: yarn install
+      
+      - name: Build Nuxt.js
+        run: yarn generate
+      
+      - name: List directory contents
+        run: ls -la
+        
+      - name: Deploy to S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.aws_access_key }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.aws_secret }}
+
+        run: aws s3 cp --recursive --region ap-northeast-1 ./dist s3://ratee-front-$Env-bucket

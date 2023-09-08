@@ -1,0 +1,44 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters:
+  Env:
+    Type: String
+    Default: work
+
+Resources:
+  FrontBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "ratee-front-${Env}-bucket"
+      PublicAccessBlockConfiguration:
+        # これらを設定しないとデプロイ時にエラーが出る。。
+        # 参考: https://zenn.dev/shimo_s3/articles/d5f104ff3bac1f
+        BlockPublicAcls: true
+        IgnorePublicAcls: false
+        BlockPublicPolicy: false
+        RestrictPublicBuckets: false
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        # ErrorDocument: error.html
+
+  FrontBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    DependsOn: FrontBucket
+    Properties:
+      Bucket: !Ref FrontBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal: '*'
+            Action:
+              - s3:GetObject
+              - s3:PutBucketPolicy
+            Resource:
+              - !Sub "arn:aws:s3:::${FrontBucket}"
+              - !Sub "arn:aws:s3:::${FrontBucket}/*"
+
+Outputs:
+  BucketWebsiteURL:
+    Description: The URL of the S3 bucket website.
+    Value: !GetAtt FrontBucket.WebsiteURL
