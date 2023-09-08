@@ -2,7 +2,7 @@ name: Deploy to AWS Lambda - ratee functions
 on:
   push:
     branches:
-      - feature/add_deploy
+      - work
 jobs:
   deploy:
     # format 1: [organization]/[repo_name]/.github/workflows/[common workflow file]@[branch]
