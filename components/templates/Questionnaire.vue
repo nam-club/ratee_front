@@ -2,8 +2,8 @@
     <v-app>
         <Header :logo="logo" :title="headerTitle" />
         <DetailView style="margin:5%" :questionnaire="questionnaire" :answerQuestionnaire="answerQuestionnaire" />
-        <RecommendBox v-if="recommends" style="margin:0 5%" :recommends="recommends" />
-        <CommentBox v-if="comments" style="margin:5%" :comments="comments" />
+        <RecommendBox v-if="recommends && recommends.length !== 0" style="margin:0 5%" :recommends="recommends" />
+        <CommentBox  style="margin:5%" :comments="comments" />
         <Footer :buttonText="footerButtonText" />
     </v-app>
 </template>

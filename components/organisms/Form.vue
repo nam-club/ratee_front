@@ -135,6 +135,7 @@ export default defineComponent({
         const confirmBtnColor = ref("#3A98B9")
         const confirmBtnStyle = ref({ color: 'white', fontSize: '1.2em', height: '100%', width: '100%', padding: '5%', display: 'block' });
 
+        // ダイアログの表示
         const dialog = ref(false)
         const openDialog = () => {
             dialog.value = true

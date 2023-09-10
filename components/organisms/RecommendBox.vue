@@ -1,7 +1,7 @@
 <template>
     <div>
-        <Msg fontWeight="normal" fontSize="1.5em">あなたにおすすめのアンケート</Msg>
         <v-container>
+            <Msg fontWeight="normal" fontSize="1.5em" style="margin:2% 0">あなたにおすすめのアンケート</Msg>
             <v-row>
                 <v-col v-for="(recommend, index) in recommends" :key="index" cols="12" sm="2">
                     <nuxt-link :to="`/questionnaire/${recommend.id}`" style="text-decoration: none; color: inherit;">
