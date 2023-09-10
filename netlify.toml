@@ -1,0 +1,11 @@
+[context.prod]
+  command = "npm run generate:prod"
+  publish = "dist"
+
+[context.develop]
+  command = "npm run generate:dev"
+  publish = "dist"
+
+[context.work]
+  command = "npm run generate:work"
+  publish = "dist"
