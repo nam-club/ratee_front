@@ -4,14 +4,11 @@ import { TARGET_QUESTIONNAIRES, TARGET_RECOMMENDS } from '@/constants';
 
 // スタブモードの確認
 const stubMode = import.meta.env.VITE_STUB_MODE;
-console.log(stubMode + typeof (stubMode))
 
 // 選択肢情報のインタフェース
 export interface Choice {
-    id: string;
     name: string;
     voteCount: number;
-    reasons: string[];
 }
 
 // アンケート情報のインタフェース
@@ -22,6 +19,14 @@ export interface Questionnaire {
     category: string;
     tags: string[];
     isAnswered: boolean;
+    createdAt: string;
+}
+
+// コメント情報のインタフェース
+export interface Comment {
+    iconId: number;
+    comment: string;
+    ipaddrHashed: string;
     createdAt: string;
 }
 
@@ -139,8 +144,38 @@ const getRecommendQuestionnaires = async (questionId: string) => {
     return []; // エラーが発生した場合やレスポンスがOKでない場合は空の配列を返す
 }
 
-
-
+// コメント一覧取得API
+const getComments = async (questionId: string, nextToken: string) => {
+    const limit = 10; // 1リクエストあたりの取得件数
+    try {
+        const url = new URL(`${baseURL}/questionnaire/comments`);
+        let params;
+        if (nextToken !== "") {
+            params = new URLSearchParams({
+                id: questionId,
+                nextToken: nextToken,
+                limit: limit
+            });
+        } else {
+            params = new URLSearchParams({
+                id: questionId,
+                limit: limit
+            });
+        }
+        url.search = params.toString();
+        const response = await fetch(url);
+        if (response.ok) {
+            const data = await response.json();
+            console.log(data)
+            return data;
+        } else {
+            console.error('コメント一覧取得APIの実行中にエラーが発生しました:', response.statusText);
+        }
+    } catch (error) {
+        console.error('コメント一覧取得APIの実行中にエラーが発生しました:', error);
+    }
+    return []; // エラーが発生した場合やレスポンスがOKでない場合は空の配列を返す
+}
 
 
 // アンケート一覧のStore定義
@@ -151,7 +186,7 @@ export const useQuestionnaires = (target: string, questionId: string) => {
 
     if (stubMode === '0') {
         onMounted(async () => {
-            switch(target) {
+            switch (target) {
                 case TARGET_QUESTIONNAIRES:
                     state.value = await getQuestionnaires();
                     break;
@@ -169,10 +204,10 @@ export const useQuestionnaires = (target: string, questionId: string) => {
                 id: "A01",
                 content: "好きな動物は？",
                 choices: [
-                    { name: "イヌ", voteCount: 12, reasons: ["可愛いから"] },
-                    { name: "ネコ", voteCount: 10, reasons: ["猫しか勝たん"] },
-                    { name: "ゾウ", voteCount: 6, reasons: ["強いから"] },
-                    { name: "キリン", voteCount: 8, reasons: ["イカしてるから"] },
+                    { name: "イヌ", voteCount: 12 },
+                    { name: "ネコ", voteCount: 10 },
+                    { name: "ゾウ", voteCount: 6 },
+                    { name: "キリン", voteCount: 8 },
                 ],
                 category: "生物",
                 tags: ["ペット", "犬", "猫", "動物"],
@@ -183,10 +218,10 @@ export const useQuestionnaires = (target: string, questionId: string) => {
                 id: "A02",
                 content: "国内旅行するならどこ？",
                 choices: [
-                    { name: "北海道", voteCount: 22, reasons: ["ご飯が美味しいから"] },
-                    { name: "沖縄", voteCount: 18, reasons: ["海が綺麗だから"] },
-                    { name: "京都", voteCount: 16, reasons: ["日本人だから"] },
-                    { name: "福岡", voteCount: 17, reasons: ["博多グルメ最強"] },
+                    { name: "北海道", voteCount: 22 },
+                    { name: "沖縄", voteCount: 18 },
+                    { name: "京都", voteCount: 16 },
+                    { name: "福岡", voteCount: 17 },
                 ],
                 category: "旅行",
                 tags: ["国内旅行", "都道府県", "日本"],
@@ -198,20 +233,6 @@ export const useQuestionnaires = (target: string, questionId: string) => {
 
     // アンケート回答
     const answerQuestionnaire = async (questionId: string, choices: string[]) => {
-
-        /*// 該当アンケートの存在チェック
-        const question = state.value.find(q => q.id === questionId)
-        if (!question) {
-            console.error(`Question with ID "${questionId}" not found`)
-            return
-        }
-
-        // 該当選択肢の存在チェック
-        const choice = question.choices.find(c => c.name === choiceName)
-        if (!choice) {
-            console.error(`Choice with name "${choiceName}" not found in question "${questionId}"`)
-            return
-        }*/
 
         // アンケート回答APIを実行
         if (stubMode === '0') {
@@ -253,8 +274,37 @@ export const useQuestionnaire = (questionId: string) => {
         state.value = await getQuestionnaire(questionId);
     });
 
+    // アンケート回答
+    const answerQuestionnaire = async (questionId: string, choices: string[]) => {
+
+        // アンケート回答APIを実行
+        if (stubMode === '0') {
+            await postAnswer(questionId, choices);
+
+            // アンケート回答APIが完了した後にアンケート一覧取得APIを実行
+            state.value = await getQuestionnaire(questionId);
+        } else {
+            state.value.isAnswered = true;
+        }
+    }
+
     return {
         state: readonly(state),
+        answerQuestionnaire,
+    }
+
+}
+
+// コメント一覧のStore定義
+export const useComments = (questionId: string, nextToken: string) => {
+    const state = ref<Comment[]>([]); // 初期値は空の配列
+
+    onMounted(async () => {
+        state.value = await getComments(questionId, nextToken);
+    });
+
+    return {
+        state: readonly(state)
     }
 
 }

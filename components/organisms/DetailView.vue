@@ -39,6 +39,10 @@ export default defineComponent({
             type: Object,
             required: true,
         },
+        answerQuestionnaire: {
+            type: Function,
+            required: true
+        }
     },
     setup() {
         const options = ref({

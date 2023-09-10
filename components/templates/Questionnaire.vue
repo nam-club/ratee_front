@@ -1,7 +1,7 @@
 <template>
     <v-app>
         <Header :logo="logo" :title="headerTitle" />
-        <DetailView style="margin:5%" :questionnaire="questionnaire" />
+        <DetailView style="margin:5%" :questionnaire="questionnaire" :answerQuestionnaire="answerQuestionnaire" />
         <RecommendBox style="margin:0 5%" :recommends="recommends" />
         <Footer :buttonText="footerButtonText" />
     </v-app>
@@ -12,7 +12,7 @@ import Header from '@/components/organisms/Header.vue'
 import DetailView from '@/components/organisms/DetailView.vue'
 import RecommendBox from '@/components/organisms/RecommendBox.vue'
 import Footer from '@/components/organisms/Footer.vue'
-import { Questionnaire } from '~/composables/questionnaireStates';
+import { Questionnaire, Comment } from '~/composables/questionnaireStates';
 
 export default defineComponent({
     components: {
@@ -26,8 +26,15 @@ export default defineComponent({
             type: Object,
             required: true,
         },
+        answerQuestionnaire: {
+            type: Function,
+            required: true
+        },
         recommends: {
             type: Array as PropType<Questionnaire[]>
+        },
+        comments: {
+            type: Array as PropType<Comment[]>
         },
     },
     setup() {
