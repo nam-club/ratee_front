@@ -6,9 +6,21 @@
                     <Msg fontWeight="normal" fontSize="2em">{{ questionnaire.content }}</Msg>
                 </v-col>
             </v-row>
-            <v-row>
-                <QuestionnaireBarChart :questionnaire="questionnaire" :options="options" />
-            </v-row>
+            <v-container v-if="questionnaire.isAnswered === false">
+                <v-row class="justify-center" v-for="(choice, index) in questionnaire.choices" :key="index">
+                    <v-col xs12 sm12 md12 align-self="center">
+                        <Button :color="btnColor" :variant="btnVariant" :buttonStyle="btnStyle"
+                            :onClick="() => answerQuestionnaire(questionnaire.id, choice.id)">
+                            {{ choice.name }}
+                        </Button>
+                    </v-col>
+                </v-row>
+            </v-container>
+            <v-container v-if="questionnaire.isAnswered === true">
+                <v-row v-if="questionnaire.isAnswered === true">
+                    <QuestionnaireBarChart :questionnaire="questionnaire" :options="options" />
+                </v-row>
+            </v-container>
         </v-container>
     </v-card>
 </template>
