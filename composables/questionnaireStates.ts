@@ -167,7 +167,7 @@ const getComments = async (questionId: string, nextToken: string) => {
         if (response.ok) {
             const data = await response.json();
             console.log(data)
-            return data;
+            return data.comments;
         } else {
             console.error('コメント一覧取得APIの実行中にエラーが発生しました:', response.statusText);
         }
@@ -301,6 +301,7 @@ export const useComments = (questionId: string, nextToken: string) => {
 
     onMounted(async () => {
         state.value = await getComments(questionId, nextToken);
+        console.log(state)
     });
 
     return {

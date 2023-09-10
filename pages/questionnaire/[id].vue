@@ -1,5 +1,6 @@
 <template>
-    <Questionnaire v-if="questionnaire" :questionnaire="questionnaire" :answerQuestionnaire="answerQuestionnaire" :comments="comments" :recommends="recommends" />
+    <Questionnaire v-if="questionnaire" :questionnaire="questionnaire" :answerQuestionnaire="answerQuestionnaire"
+        :comments="comments" :recommends="recommends" />
 </template>
 
 <script lang="ts">
@@ -20,12 +21,9 @@ export default defineComponent({
         const questionnaire = qStore.state;
 
         // コメント一覧取得
-        const comments = ref<readonly Comment[]>([]);  // 初期値として空のコメント配列をセット
-        if(questionnaire) {
-            const cStore = useComments(questionId, "");
-            comments.value = cStore.state;
-            console.log(comments)
-        }
+        const cStore = useComments(questionId, "");
+        const comments = cStore.state;
+        console.log(comments)
 
         // アンケート回答
         const answerQuestionnaire = (id: string, name: string) => {

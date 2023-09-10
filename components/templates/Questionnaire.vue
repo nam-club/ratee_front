@@ -2,7 +2,8 @@
     <v-app>
         <Header :logo="logo" :title="headerTitle" />
         <DetailView style="margin:5%" :questionnaire="questionnaire" :answerQuestionnaire="answerQuestionnaire" />
-        <RecommendBox style="margin:0 5%" :recommends="recommends" />
+        <RecommendBox v-if="recommends" style="margin:0 5%" :recommends="recommends" />
+        <CommentBox v-if="comments" style="margin:5%" :comments="comments" />
         <Footer :buttonText="footerButtonText" />
     </v-app>
 </template>
@@ -11,6 +12,7 @@
 import Header from '@/components/organisms/Header.vue'
 import DetailView from '@/components/organisms/DetailView.vue'
 import RecommendBox from '@/components/organisms/RecommendBox.vue'
+import CommentBox from '@/components/organisms/CommentBox.vue'
 import Footer from '@/components/organisms/Footer.vue'
 import { Questionnaire, Comment } from '~/composables/questionnaireStates';
 
@@ -19,6 +21,7 @@ export default defineComponent({
         Header,
         DetailView,
         RecommendBox,
+        CommentBox,
         Footer
     },
     props: {
@@ -37,10 +40,11 @@ export default defineComponent({
             type: Array as PropType<Comment[]>
         },
     },
-    setup() {
+    setup(props) {
         const logo = '/logo.png' // 画像のパスを指定してください
         const headerTitle = ref('ratee')
         const footerButtonText = ref('アンケートを作る')
+        console.log(props.comments)
 
         return {
             logo,
