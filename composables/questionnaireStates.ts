@@ -281,7 +281,7 @@ export const useQuestionnaires = (target: string, questionId: string) => {
         await postQuestionnaire(title, choices, categoryId, tags, options)
 
         // アンケート投稿APIが完了した後にアンケート一覧取得APIを実行
-        state.value = await getQuestionnaires();
+        state.value = [...await getQuestionnaires()];
     }
 
     return {
@@ -334,8 +334,8 @@ export const useComments = (questionId: string, nextToken: string) => {
 
         await postComment(questionId, iconId, comment);
 
-        // アンケート回答APIが完了した後にアンケート一覧取得APIを実行
-        state.value = await getComments();
+        // コメント投稿APIが完了した後にコメント一覧取得APIを実行
+        state.value = [...await getComments(questionId, "")];
     }
 
     return {
