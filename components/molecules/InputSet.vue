@@ -24,6 +24,9 @@
             </v-row>
         </v-container>
     </div>
+    <div v-else-if="type === 'textArea'">
+        <v-textarea counter :label="labelText" :rules="rules" v-model="computedTextAreaModel"></v-textarea>
+    </div>
     <div v-else-if="type === 'selectBox'">
         <v-select :label="labelText" :items="selectItems" v-model="computedSelectModel"></v-select>
     </div>
@@ -96,6 +99,9 @@ export default defineComponent({
         textsModel: {
             type: []
         },
+        textAreaModel: {
+            type: String
+        },
         selectModel: {
             type: String
         },
@@ -125,6 +131,17 @@ export default defineComponent({
             },
             set(value) {
                 this.$emit('update', value)
+            }
+        },
+        computedTextAreaModel: {
+            get() {
+                // propsで受け取った親モデルの値をcomputedTextAreaModelに反映する
+                return this.textAreaModel
+            },
+            set(value) {
+                // computedTextAreaModelの値が変更された際はここに入ってくる
+                // $emitで親コンポーネントのmodelに反映する
+                this.$emit('input', value)
             }
         },
         computedSelectModel: {

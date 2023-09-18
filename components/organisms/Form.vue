@@ -69,6 +69,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 
+import Button from '@/components/atoms/Button.vue'
 import InputSet from '@/components/molecules/InputSet.vue'
 import Paragraph from '@/components/molecules/Paragraph.vue'
 import { Category } from '@/types';
@@ -76,6 +77,7 @@ import { useQuestionnaires } from '~/composables/questionnaireStates';
 
 export default defineComponent({
     components: {
+        Button,
         InputSet,
         Paragraph
     },

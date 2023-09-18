@@ -95,7 +95,7 @@ const postAnswer = async (questionId: string, choices: string[]) => {
     }
 };
 
-//アンケート投稿API
+// アンケート投稿API
 const postQuestionnaire = async (title: string, choices: string[], categoryId: string, tags: string[], options: object) => {
 
     try {
@@ -176,6 +176,31 @@ const getComments = async (questionId: string, nextToken: string) => {
     }
     return []; // エラーが発生した場合やレスポンスがOKでない場合は空の配列を返す
 }
+
+// コメント投稿API
+const postComment = async (questionId: string, iconId: number, comment: string) => {
+
+    try {
+        const response = await fetch(`${baseURL}/questionnaire/comments`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                questionnaireId: questionId,
+                iconId: iconId,
+                comment: comment
+            })
+        });
+        if (response.ok) {
+            const data = await response.json();
+        } else {
+            console.error('コメント投稿APIの実行中にエラーが発生しました:', response.statusText);
+        }
+    } catch (error) {
+        console.error('コメント投稿APIの実行中にエラーが発生しました:', error);
+    }
+};
 
 
 // アンケート一覧のStore定義
@@ -304,8 +329,18 @@ export const useComments = (questionId: string, nextToken: string) => {
         console.log(state)
     });
 
+    // コメント投稿
+    const sendComment = async (questionId: string, iconId: number, comment: string) => {
+
+        await postComment(questionId, iconId, comment);
+
+        // アンケート回答APIが完了した後にアンケート一覧取得APIを実行
+        state.value = await getComments();
+    }
+
     return {
-        state: readonly(state)
+        state: readonly(state),
+        sendComment
     }
 
 }

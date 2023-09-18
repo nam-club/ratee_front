@@ -1,6 +1,6 @@
 <template>
     <Questionnaire v-if="questionnaire" :questionnaire="questionnaire" :answerQuestionnaire="answerQuestionnaire"
-        :comments="comments" :recommends="recommends" />
+        :comments="comments" :postComment="postComment" :recommends="recommends" />
 </template>
 
 <script lang="ts">
@@ -20,25 +20,31 @@ export default defineComponent({
         const qStore = useQuestionnaire(questionId);
         const questionnaire = qStore.state;
 
-        // コメント一覧取得
-        const cStore = useComments(questionId, "");
-        const comments = cStore.state;
-        console.log(comments)
-
         // アンケート回答
         const answerQuestionnaire = (id: string, name: string) => {
-            qStore.answerQuestionnaire(id, [name])
+            qStore.answerQuestionnaire(id, [name]);
         }
 
         // おすすめアンケート一覧取得
         const rStore = useQuestionnaires(TARGET_RECOMMENDS, questionId);
         const recommends = rStore.state;
 
+        // コメント一覧取得
+        const cStore = useComments(questionId, "");
+        const comments = cStore.state;
+        console.log(comments)
+
+        // コメント投稿
+        const postComment = (questionId: string, iconId: number, comment: string) => {
+            cStore.sendComment(questionId, iconId, comment);
+        }
+
         return {
             questionnaire,
             answerQuestionnaire,
             recommends,
-            comments
+            comments,
+            postComment
         }
     }
 })

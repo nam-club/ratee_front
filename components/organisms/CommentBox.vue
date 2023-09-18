@@ -32,24 +32,25 @@
         </template>
         <v-card>
             <v-card-text>
-                <v-btn-toggle v-model="toggle_exclusive">
-                    <v-btn v-for="n in 9" :key="n">
+                <v-btn-toggle v-model="toggle" color="primary">
+                    <Button v-for="n in 9" :key="n" @click="setIcon(n)">
                         <v-avatar>
                             <v-img :src="'https://randomuser.me/api/portraits/lego/' + n + '.jpg'" />
                         </v-avatar>
-                    </v-btn>
+                    </Button>
                 </v-btn-toggle>
                 <v-container fluid>
-                    <v-textarea counter label="コメントを入力してください。" :rules="rules" :model-value="value"></v-textarea>
+                    <InputSet type="textArea" :labelText="commentLabel" :textAreaModel="content"
+                        @input="content = $event" />
                 </v-container>
-                <small>*indicates required field</small>
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="grey darken-1" text @click="dialog = false" style="margin: 0 2%">
                     戻る
                 </v-btn>
-                <v-btn color="blue darken-1" text @click="dialog = false">
+                <v-btn color="blue darken-1" text @click="dialog = false"
+                    :onClick="() => postComment(questionId, iconNum, content)">
                     コメントを投稿する
                 </v-btn>
             </v-card-actions>
@@ -58,15 +59,27 @@
 </template>
 
 <script lang="ts">
+import Button from '@/components/atoms/Button.vue'
 import Msg from '@/components/atoms/Msg.vue'
+import InputSet from '@/components/molecules/InputSet.vue'
 
 export default defineComponent({
     components: {
+        Button,
         Msg,
+        InputSet
     },
     props: {
+        questionId: {
+            type: String,
+            required: true
+        },
         comments: {
             type: Array as PropType<Comment[]>
+        },
+        postComment: {
+            type: Function,
+            required: true
         },
     },
     setup(props) {
@@ -80,11 +93,25 @@ export default defineComponent({
             dialog.value = true
         }
 
+        const toggle = ref(null);
+        const iconNum = ref(0);
+        const setIcon = (num: number) => {
+            iconNum.value = num;
+        }
+
+        const content = ref('')
+        const commentLabel = ref('コメントを入力してください。');
+
         return {
             confirmBtnColor,
             confirmBtnStyle,
             dialog,
-            openDialog
+            openDialog,
+            toggle,
+            iconNum,
+            setIcon,
+            content,
+            commentLabel
         }
     }
 })
