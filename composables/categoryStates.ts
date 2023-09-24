@@ -25,7 +25,7 @@ export const useCategories = () => {
     const state = ref<Category[]>([]); // 初期値は空の配列
 
     onMounted(async () => {
-        state.value = await getCategories();
+        state.value = [...await getCategories()];
     });
 
     return {

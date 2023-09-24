@@ -8,8 +8,7 @@
 
 <script lang="ts">
 import CreateForm from '@/components/templates/CreateForm.vue'
-import { useCategories } from '~/composables/categoryStates';
-import { useQuestionnaires } from '~/composables/questionnaireStates';
+import { TARGET_QUESTIONNAIRES } from '@/constants';
 
 export default {
     components: {
@@ -22,7 +21,7 @@ export default {
         const categories = cStore.state;
 
         // アンケート投稿
-        const qStore = useQuestionnaires();
+        const qStore = useQuestionnaires(TARGET_QUESTIONNAIRES, '');
         const createQuestionnaire = (title: string, choices: string[], categoryId: string, tags: string[], options: object) => {
             qStore.createQuestionnaire(title, choices, categoryId, tags, options);
         }

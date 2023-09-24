@@ -5,8 +5,6 @@
 
 <script lang="ts">
 import Questionnaire from '@/components/templates/Questionnaire.vue'
-import { useQuestionnaire } from '~/composables/questionnaireStates';
-import { useComments } from '~/composables/commentStates';
 import { TARGET_RECOMMENDS } from '@/constants';
 
 export default defineComponent({

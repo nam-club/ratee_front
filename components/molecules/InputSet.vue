@@ -57,10 +57,10 @@
         <v-container>
             <v-row>
                 <v-col cols="10">
-                    <v-text-field :label="labelText" />
+                    <v-text-field v-model="computedTextModel" :label="labelText" />
                 </v-col>
                 <v-col cols="2">
-                    <v-btn icon>
+                    <v-btn icon :onClick="() => onClick()">
                         <v-icon>{{ icons.mdiMagnify }}</v-icon>
                     </v-btn>
                 </v-col>
@@ -125,7 +125,11 @@ export default defineComponent({
         checkModel: {
             type: Boolean,
             default: false
-        }
+        },
+        onClick: {
+            type: Function,
+            default: () => { },
+        },
     },
     computed: {
         computedTextModel: {

@@ -1,12 +1,11 @@
 <template>
     <div>
-        <Top :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires" :answerQuestionnaire="answerQuestionnaire" :categories="categories"/>
+        <Top :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires" :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire" :categories="categories"/>
     </div>
 </template>
 
 <script lang="ts">
 import Top from '@/components/templates/Top.vue'
-import { useQuestionnaires } from '~/composables/questionnaireStates';
 import { TARGET_QUESTIONNAIRES } from '@/constants';
 
 export default {
@@ -23,6 +22,11 @@ export default {
             qStore.changeQuestionnaires(order);
         }
 
+        // アンケートタブ検索
+        const searchQuestionnaires = (type: string, word: string) => {
+            qStore.searchQuestionnaires(type, word);
+        }
+
         // アンケート回答
         const answerQuestionnaire = (id: string, name: string[]) => {
             qStore.answerQuestionnaire(id, name)
@@ -35,6 +39,7 @@ export default {
         return {
             questionnaires,
             changeQuestionnaires,
+            searchQuestionnaires,
             answerQuestionnaire,
             categories,
         }

@@ -1,9 +1,5 @@
 import { ref, onMounted } from 'vue';
-import { TARGET_QUESTIONNAIRES, TARGET_RECOMMENDS, TAB_ID1 } from '@/constants';
-
-
-// スタブモードの確認
-const stubMode = import.meta.env.VITE_STUB_MODE;
+import { TARGET_QUESTIONNAIRES, TARGET_RECOMMENDS, TAB_ID1, TAB_ID4, FORM_TITLE_TEXT, FORM_CATEGORY_TEXT, FORM_TAG_TEXT } from '@/constants';
 
 // 選択肢情報のインタフェース
 export interface Choice {
@@ -34,6 +30,50 @@ const getQuestionnaires = async (order: string) => {
         const params = new URLSearchParams({
             order: order
         });
+        url.search = params.toString();
+        const response = await fetch(url);
+        if (response.ok) {
+            const data = await response.json();
+            return data.questionnaires;
+        } else {
+            console.error('アンケート一覧取得APIの実行中にエラーが発生しました:', response.statusText);
+        }
+    } catch (error) {
+        console.error('アンケート一覧取得APIの実行中にエラーが発生しました:', error);
+    }
+    return []; // エラーが発生した場合やレスポンスがOKでない場合は空の配列を返す
+}
+
+// アンケート一覧取得API（検索）
+const getSearchQuestionnaires = async (type: string, word: string) => {
+    try {
+        const url = new URL(`${baseURL}/questionnaires`);
+        let params;
+        switch (type) {
+            case FORM_TITLE_TEXT:
+                params = new URLSearchParams({
+                    order: TAB_ID4,
+                    filterContent: word
+                });
+                break;
+            case FORM_CATEGORY_TEXT:
+                params = new URLSearchParams({
+                    order: TAB_ID4,
+                    filterCategory: word
+                });
+                break;
+            case FORM_TAG_TEXT:
+                params = new URLSearchParams({
+                    order: TAB_ID4,
+                    filterTag: word
+                });
+                break;
+            default:
+                params = new URLSearchParams({
+                    order: TAB_ID4,
+                });
+                break;
+        }
         url.search = params.toString();
         const response = await fetch(url);
         if (response.ok) {
@@ -147,76 +187,38 @@ const getRecommendQuestionnaires = async (questionId: string) => {
 export const useQuestionnaires = (target: string, questionId: string) => {
 
     const state = ref<Questionnaire[]>([]); // 初期値は空の配列
-
-    if (stubMode === '0') {
-        onMounted(async () => {
-            switch (target) {
-                // アンケート一覧を取得
-                case TARGET_QUESTIONNAIRES:
-                    state.value = await getQuestionnaires(TAB_ID1);
-                    break;
-                // おすすめアンケート一覧を取得
-                case TARGET_RECOMMENDS:
-                    state.value = await getRecommendQuestionnaires(questionId);
-                    break;
-                default:
-                    break;
-            }
-        });
-    } else {
-        // スタブモードの時は直接データを入れる
-        state.value = [
-            {
-                id: "A01",
-                content: "好きな動物は？",
-                choices: [
-                    { name: "イヌ", voteCount: 12 },
-                    { name: "ネコ", voteCount: 10 },
-                    { name: "ゾウ", voteCount: 6 },
-                    { name: "キリン", voteCount: 8 },
-                ],
-                category: "生物",
-                tags: ["ペット", "犬", "猫", "動物"],
-                isAnswered: false,
-                createdAt: "2019-08-24T14:15:22Z"
-            },
-            {
-                id: "A02",
-                content: "国内旅行するならどこ？",
-                choices: [
-                    { name: "北海道", voteCount: 22 },
-                    { name: "沖縄", voteCount: 18 },
-                    { name: "京都", voteCount: 16 },
-                    { name: "福岡", voteCount: 17 },
-                ],
-                category: "旅行",
-                tags: ["国内旅行", "都道府県", "日本"],
-                isAnswered: false,
-                createdAt: "2019-08-26T10:22:09Z"
-            },
-        ]
-    }
+    onMounted(async () => {
+        switch (target) {
+            // アンケート一覧を取得
+            case TARGET_QUESTIONNAIRES:
+                state.value = await getQuestionnaires(TAB_ID1);
+                break;
+            // おすすめアンケート一覧を取得
+            case TARGET_RECOMMENDS:
+                state.value = await getRecommendQuestionnaires(questionId);
+                break;
+            default:
+                break;
+        }
+    });
 
     // アンケートタブ切替
     const changeQuestionnaires = async (order: string) => {
         state.value = [...await getQuestionnaires(order)];
     }
 
+    // アンケート検索
+    const searchQuestionnaires = async (type: string, word: string) => {
+        state.value = [...await getSearchQuestionnaires(type, word)];
+    }
+
     // アンケート回答
     const answerQuestionnaire = async (questionId: string, choices: string[]) => {
 
-        // アンケート回答APIを実行
-        if (stubMode === '0') {
-            await postAnswer(questionId, choices);
+        await postAnswer(questionId, choices);
 
-            // アンケート回答APIが完了した後にアンケート一覧取得APIを実行
-            state.value = await getQuestionnaires('news');
-        } else {
-            const target = state.value.find(item => item.id === questionId);
-            if (target) {
-                target.isAnswered = true;
-            }
-        }
+        // アンケート回答APIが完了した後にアンケート一覧取得APIを実行
+        state.value = [...await getQuestionnaires('news')];
     }
 
     // アンケート作成
@@ -226,12 +228,13 @@ export const useQuestionnaires = (target: string, questionId: string) => {
         await postQuestionnaire(title, choices, categoryId, tags, options)
 
         // アンケート投稿APIが完了した後にアンケート一覧取得APIを実行
-        state.value = [...await getQuestionnaires()];
+        state.value = [...await getQuestionnaires(TAB_ID1)];
     }
 
     return {
         state: readonly(state),
         changeQuestionnaires,
+        searchQuestionnaires,
         answerQuestionnaire,
         createQuestionnaire
     }
@@ -248,15 +251,10 @@ export const useQuestionnaire = (questionId: string) => {
     // アンケート回答
     const answerQuestionnaire = async (questionId: string, choices: string[]) => {
 
-        // アンケート回答APIを実行
-        if (stubMode === '0') {
-            await postAnswer(questionId, choices);
+        await postAnswer(questionId, choices);
 
-            // アンケート回答APIが完了した後にアンケート一覧取得APIを実行
-            state.value = await getQuestionnaire(questionId);
-        } else {
-            state.value.isAnswered = true;
-        }
+        // アンケート回答APIが完了した後にアンケート情報取得APIを実行
+        state.value = await getQuestionnaire(questionId);
     }
 
     return {

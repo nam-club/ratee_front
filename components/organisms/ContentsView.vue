@@ -16,8 +16,9 @@
                                     @update:selectModel="setTypeName" />
                             </v-col>
                             <v-col cols="10" class="align-self-center">
-                                <InputSet v-if="typeName !== FORM_CATEGORY_TEXT" type="searchBox"
-                                    :labelText="SEARCH_LABEL" />
+                                <InputSet v-if="typeName !== FORM_CATEGORY_TEXT" type="searchBox" :text="word"
+                                    @input="word = $event" :labelText="SEARCH_LABEL"
+                                    :onClick="() => { searchQuestionnaires(typeName, word); }" />
                                 <v-container v-else>
                                     <v-row>
                                         <v-col cols="10" class="align-self-center">
@@ -25,7 +26,7 @@
                                                 :selectModel="categoryName" @update:selectModel="setCategoryName" />
                                         </v-col>
                                         <v-col cols="2">
-                                            <v-btn icon>
+                                            <v-btn icon @click="searchQuestionnaires(typeName, categoryId)">
                                                 <v-icon>{{ icons.mdiMagnify }}</v-icon>
                                             </v-btn>
                                         </v-col>
@@ -34,7 +35,8 @@
                             </v-col>
                         </v-row>
                     </v-container>
-
+                    <AnswerBox style="margin:5%" :questionnaires="questionnaires"
+                        :answerQuestionnaire="answerQuestionnaire" />
                 </div>
                 <AnswerBox v-else style="margin:5%" :questionnaires="questionnaires"
                     :answerQuestionnaire="answerQuestionnaire" />
@@ -45,12 +47,14 @@
 
 <script lang="ts">
 import { mdiPlus, mdiMagnify } from '@mdi/js';
+import InputSet from '@/components/molecules/InputSet.vue'
 import AnswerBox from '@/components/organisms/AnswerBox.vue'
 import { TAB_ID1, TAB_NAME1, TAB_ID2, TAB_NAME2, TAB_ID3, TAB_NAME3, TAB_ID4, TAB_NAME4, FORM_TITLE_TEXT, FORM_CATEGORY_TEXT, SEARCH_LABEL, SEARCH_TYPES } from '@/constants';
 import { Category } from '@/types';
 
 export default {
     components: {
+        InputSet,
         AnswerBox
     },
     props: {
@@ -61,12 +65,16 @@ export default {
             type: Function,
             required: true
         },
+        searchQuestionnaires: {
+            type: Function,
+            required: true
+        },
         answerQuestionnaire: {
             type: Function,
             required: true
         },
         categories: {
-            type: Array as () => Category[],
+            type: Array as PropType<Category[]>,
             required: true,
         }
     },
@@ -86,11 +94,18 @@ export default {
             typeName.value = value;
         }
 
+        // 検索ワード
+        const word = ref('');
+
         const categoryNames = ref<string[]>([])
-        if (props.categories) {
-            categoryNames.value = props.categories.map((item: Category) => item.name)
-            console.log(categoryNames)
-        }
+        console.log(props.categories);
+
+        watchEffect(() => {
+            if (props.categories && props.categories.length > 0) {
+                categoryNames.value = props.categories.map((item: Category) => item.name);
+            }
+        });
+        
         const categoryId = ref('')
         const categoryName = ref('')
         const setCategoryId = (name: string) => {
@@ -121,6 +136,7 @@ export default {
             SEARCH_TYPES,
             typeName,
             setTypeName,
+            word,
             categoryNames,
             categoryId,
             categoryName,

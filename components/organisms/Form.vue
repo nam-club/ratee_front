@@ -83,7 +83,7 @@ export default defineComponent({
     },
     props: {
         categories: {
-            type: Array as () => Category[],
+            type: Array as PropType<Category[]>,
             required: true,
         },
         createQuestionnaire: {
