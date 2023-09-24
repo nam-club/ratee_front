@@ -35,11 +35,11 @@
                             </v-col>
                         </v-row>
                     </v-container>
-                    <AnswerBox style="margin:5%" :questionnaires="questionnaires"
-                        :answerQuestionnaire="answerQuestionnaire" />
+                    <AnswerBox style="margin:5%" :questionnaires="questionnaires" :answerQuestionnaire="answerQuestionnaire"
+                        :answerSearchQuestionnaire="answerSearchQuestionnaire" :searchType="typeName" :searchWord="word" :searchCategory="categoryId" />
                 </div>
-                <AnswerBox v-else style="margin:5%" :questionnaires="questionnaires"
-                    :answerQuestionnaire="answerQuestionnaire" />
+                <AnswerBox v-else style="margin:5%" :questionnaires="questionnaires" :answerQuestionnaire="answerQuestionnaire"
+                    :answerSearchQuestionnaire="answerSearchQuestionnaire" />
             </v-window-item>
         </v-window>
     </v-card>
@@ -70,6 +70,10 @@ export default {
             required: true
         },
         answerQuestionnaire: {
+            type: Function,
+            required: true
+        },
+        answerSearchQuestionnaire: {
             type: Function,
             required: true
         },
@@ -105,7 +109,7 @@ export default {
                 categoryNames.value = props.categories.map((item: Category) => item.name);
             }
         });
-        
+
         const categoryId = ref('')
         const categoryName = ref('')
         const setCategoryId = (name: string) => {

@@ -59,6 +59,7 @@ import Msg from '@/components/atoms/Msg.vue'
 import Button from '@/components/atoms/Button.vue'
 import QuestionnaireBarChart from '@/components/organisms/QuestionnaireBarChart.vue'
 import { Questionnaire } from '~/composables/questionnaireStates';
+import { FORM_TITLE_TEXT, FORM_CATEGORY_TEXT, FORM_TAG_TEXT } from '@/constants';
 
 export default defineComponent({
     components: {
@@ -76,9 +77,25 @@ export default defineComponent({
         answerQuestionnaire: {
             type: Function,
             required: true
+        },
+        answerSearchQuestionnaire: {
+            type: Function,
+            required: true
+        },
+        searchType: {
+            type: String,
+            default: ''
+        },
+        searchWord: {
+            type: String,
+            default: ''
+        },
+        searchCategory: {
+            type: String,
+            default: ''
         }
     },
-    setup() {
+    setup(props) {
         const btnColor = ref("#3A98B9");
         const btnTextColor = ref('white');
         const btnVariant = ref("elevated");
@@ -96,6 +113,20 @@ export default defineComponent({
                 choices.value.splice(index, 1);
             }
         };
+
+        const answerQuestionnaire = (questionId: string, choices: string[]) => {
+            console.log(props.searchType);
+            console.log(props.searchWord);
+            if(props.searchType === '') {
+                props.answerQuestionnaire(questionId, choices);
+            }else {
+                if(props.searchType === FORM_TITLE_TEXT || props.searchType === FORM_TAG_TEXT) {
+                    props.answerSearchQuestionnaire(questionId, choices, props.searchType, props.searchWord);
+                }else if(props.searchType === FORM_CATEGORY_TEXT) {
+                    props.answerSearchQuestionnaire(questionId, choices, props.searchType, props.searchCategory);
+                }
+            }
+        }
 
         const options = ref({
             responsive: true,
@@ -121,6 +152,7 @@ export default defineComponent({
             clickedMultiTextColor,
             choices,
             toggleChoice,
+            answerQuestionnaire,
             options
         }
     }

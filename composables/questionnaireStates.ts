@@ -218,7 +218,16 @@ export const useQuestionnaires = (target: string, questionId: string) => {
         await postAnswer(questionId, choices);
 
         // アンケート回答APIが完了した後にアンケート一覧取得APIを実行
-        state.value = [...await getQuestionnaires('news')];
+        state.value = [...await getQuestionnaires(TAB_ID1)];
+    }
+
+    // アンケート回答(検索タブ)
+    const answerSearchQuestionnaire = async (questionId: string, choices: string[], type: string, word: string) => {
+
+        await postAnswer(questionId, choices);
+
+        // アンケート回答APIが完了した後にアンケート一覧取得API（検索）を実行
+        state.value = [...await getSearchQuestionnaires(type, word)];
     }
 
     // アンケート作成
@@ -236,6 +245,7 @@ export const useQuestionnaires = (target: string, questionId: string) => {
         changeQuestionnaires,
         searchQuestionnaires,
         answerQuestionnaire,
+        answerSearchQuestionnaire,
         createQuestionnaire
     }
 }

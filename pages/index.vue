@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Top :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires" :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire" :categories="categories"/>
+        <Top :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires" :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire" :answerSearchQuestionnaire="answerSearchQuestionnaire" :categories="categories"/>
     </div>
 </template>
 
@@ -32,6 +32,11 @@ export default {
             qStore.answerQuestionnaire(id, name)
         }
 
+        // アンケート回答(検索タブ)
+        const answerSearchQuestionnaire = (id: string, name: string[], type: string, word: string) => {
+            qStore.answerSearchQuestionnaire(id, name, type, word)
+        }
+
         // カテゴリ一覧取得
         const cStore = useCategories();
         const categories = cStore.state;
@@ -41,6 +46,7 @@ export default {
             changeQuestionnaires,
             searchQuestionnaires,
             answerQuestionnaire,
+            answerSearchQuestionnaire,
             categories,
         }
     }

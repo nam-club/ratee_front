@@ -1,7 +1,7 @@
 <template>
     <v-app>
         <Header :logo="logo" :title="headerTitle" />
-        <ContentsView style="margin:5%" :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires" :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire" :categories="categories" />
+        <ContentsView style="margin:5%" :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires" :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire" :answerSearchQuestionnaire="answerSearchQuestionnaire" :categories="categories" />
         <Footer :buttonText="footerButtonText" />
     </v-app>
 </template>
@@ -33,6 +33,10 @@ export default defineComponent({
             required: true
         },
         answerQuestionnaire: {
+            type: Function,
+            required: true
+        },
+        answerSearchQuestionnaire: {
             type: Function,
             required: true
         },
