@@ -19,6 +19,7 @@ export interface Questionnaire {
     category: string;
     tags: string[];
     isAnswered: boolean;
+    enableMultiAnswer: boolean;
     createdAt: string;
 }
 

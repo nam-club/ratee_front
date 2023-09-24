@@ -7,14 +7,32 @@
                 </v-col>
                 <v-col xs12 sm6 md6>
                     <v-container v-if="questionnaire.isAnswered === false">
-                        <v-row class="justify-center" v-for="(choice, index) in questionnaire.choices" :key="index">
-                            <v-col xs12 sm12 md12 align-self="center">
-                                <Button :color="btnColor" :variant="btnVariant" :buttonStyle="btnStyle"
-                                    :onClick="() => answerQuestionnaire(questionnaire.id, choice.id)">
-                                    {{ choice.name }}
-                                </Button>
-                            </v-col>
-                        </v-row>
+                        <div v-if="questionnaire.enableMultiAnswer">
+                            <v-row class="justify-center" v-for="(choice, index) in questionnaire.choices" :key="index">
+                                <v-col xs12 sm12 md12 align-self="center">
+                                    <Button :clickedTextColor="clickedMultiTextColor"
+                                        :buttonStyle="btnStyle" :onClick="() => toggleChoice(choice.id)">
+                                        {{ choice.name }}
+                                    </Button>
+                                </v-col>
+                            </v-row>
+                            <v-row class="justify-center" v-if="choices.length !== 0">
+                                <v-col class="text-end">
+                                    <Button :color="btnColor" :textColor="btnTextColor" :onClick="() => answerQuestionnaire(questionnaire.id, choices)">確定</Button>
+                                </v-col>
+                            </v-row>
+                        </div>
+                        <div v-else>
+                            <v-row class="justify-center" v-for="(choice, index) in questionnaire.choices" :key="index">
+                                <v-col xs12 sm12 md12 align-self="center">
+                                    <Button :color="btnColor" :textColor="btnTextColor" :variant="btnVariant"
+                                        :buttonStyle="btnStyle"
+                                        :onClick="() => answerQuestionnaire(questionnaire.id, [choice.id])">
+                                        {{ choice.name }}
+                                    </Button>
+                                </v-col>
+                            </v-row>
+                        </div>
                     </v-container>
                     <v-container v-if="questionnaire.isAnswered === true">
                         <v-row>
@@ -62,8 +80,22 @@ export default defineComponent({
     },
     setup() {
         const btnColor = ref("#3A98B9");
+        const btnTextColor = ref('white');
         const btnVariant = ref("elevated");
-        const btnStyle = ref({ width: '100%', color: 'white' });
+        const btnStyle = ref({ width: '100%' });
+        const clickedMultiTextColor = ref("#3A98B9");
+
+        const choices= ref([]);
+
+        // 選択肢をクリックしてchoices配列に追加 or 削除
+        const toggleChoice = (choiceId: string) => {
+            const index = choices.value.indexOf(choiceId);
+            if (index === -1) {
+                choices.value.push(choiceId);
+            } else {
+                choices.value.splice(index, 1);
+            }
+        };
 
         const options = ref({
             responsive: true,
@@ -83,8 +115,12 @@ export default defineComponent({
 
         return {
             btnColor,
+            btnTextColor,
             btnVariant,
             btnStyle,
+            clickedMultiTextColor,
+            choices,
+            toggleChoice,
             options
         }
     }

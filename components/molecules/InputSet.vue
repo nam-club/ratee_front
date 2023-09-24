@@ -38,7 +38,7 @@
                 </v-col>
                 <v-col cols="1" />
                 <v-col cols="2" justify="center">
-                    <Button :onClick="addChip" :buttonStyle="tagBtnStyle">追加</Button>
+                    <Button :onClick="addChip" :textColor="tagTextColor" :buttonStyle="tagBtnStyle">追加</Button>
                 </v-col>
             </v-row>
             <v-row no-gutters>
@@ -192,10 +192,12 @@ export default defineComponent({
             chips.value.splice(index, 1)
         }
 
-        const tagBtnStyle = ref({ color: '#515254', fontSize: '1.2em', height: '70%', width: '100%', display: 'block' })
+        const tagTextColor = ref('#515254');
+        const tagBtnStyle = ref({ fontSize: '1.2em', height: '70%', width: '100%', display: 'block' })
 
         return {
             icons,
+            tagTextColor,
             tagBtnStyle,
             newChip,
             chips,

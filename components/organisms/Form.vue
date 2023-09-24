@@ -22,12 +22,12 @@
                         <v-row no-gutters>
                             <v-col cols="5" justify="center">
                                 <nuxt-link to="/" style="text-decoration: none; color: inherit;">
-                                    <Button :color="cancelBtnColor" :buttonStyle="cancelBtnStyle">キャンセル</Button>
+                                    <Button :color="cancelBtnColor" :textColor="cancelBtnTextColor" :buttonStyle="cancelBtnStyle">キャンセル</Button>
                                 </nuxt-link>
                             </v-col>
                             <v-col cols="2" />
                             <v-col cols="5" justify="center">
-                                <Button :color="confirmBtnColor" :buttonStyle="confirmBtnStyle"
+                                <Button :color="confirmBtnColor" :textColor="confirmBtnTextColor" :buttonStyle="confirmBtnStyle"
                                     @click="openDialog">確認画面を開く</Button>
                             </v-col>
                         </v-row>
@@ -49,13 +49,13 @@
                 <v-container>
                     <v-row no-gutters>
                         <v-col cols="5" justify="center">
-                            <Button :color="cancelBtnColor" :buttonStyle="cancelBtnStyle"
+                            <Button :color="cancelBtnColor" :textColor="cancelBtnTextColor" :buttonStyle="cancelBtnStyle"
                                 @click="dialog = false">キャンセル</Button>
                         </v-col>
                         <v-col cols="2" />
                         <v-col cols="5" justify="center">
                             <nuxt-link to="/" style="text-decoration: none; color: inherit;">
-                                <Button :color="confirmBtnColor" :buttonStyle="confirmBtnStyle"
+                                <Button :color="confirmBtnColor" :textColor="confirmBtnTextColor" :buttonStyle="confirmBtnStyle"
                                     :onClick="() => createQuestionnaire(title, choices, categoryId, tags, options)">投稿する</Button>
                             </nuxt-link>
                         </v-col>
@@ -131,11 +131,13 @@ export default defineComponent({
         const options = ref({})
         options.value = { "enableComment": enableComment, "enableMultiAns": enableMultiAns }
 
-        const cancelBtnColor = ref("#f5f5f5")
-        const cancelBtnStyle = ref({ color: '#515254', fontSize: '1.2em', height: '100%', width: '100%', padding: '5%', display: 'block' });
+        const cancelBtnColor = ref("#f5f5f5");
+        const cancelBtnTextColor = ref('#515254');
+        const cancelBtnStyle = ref({ fontSize: '1.2em', height: '100%', width: '100%', padding: '5%', display: 'block' });
 
-        const confirmBtnColor = ref("#3A98B9")
-        const confirmBtnStyle = ref({ color: 'white', fontSize: '1.2em', height: '100%', width: '100%', padding: '5%', display: 'block' });
+        const confirmBtnColor = ref("#3A98B9");
+        const confirmBtnTextColor = ref('white');
+        const confirmBtnStyle = ref({ fontSize: '1.2em', height: '100%', width: '100%', padding: '5%', display: 'block' });
 
         // ダイアログの表示
         const dialog = ref(false)
@@ -173,8 +175,10 @@ export default defineComponent({
             options,
             cancelBtnStyle,
             cancelBtnColor,
+            cancelBtnTextColor,
             confirmBtnStyle,
             confirmBtnColor,
+            confirmBtnTextColor,
             dialog,
             openDialog,
             createQuestionnaire

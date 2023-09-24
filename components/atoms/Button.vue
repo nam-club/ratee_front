@@ -1,6 +1,6 @@
 <template>
-    <v-btn :color="color" :disabled="disabled" :valiant="variant" :style="buttonStyle"
-        :class="['font-weight-' + fontWeight]" @click="onClick">
+    <v-btn :color="bgColor" :disabled="disabled" :valiant="variant" :style="{ color: textBtnColor, ...buttonStyle }"
+        :class="['font-weight-' + fontWeight]" @click="handleClick">
         <slot></slot>
     </v-btn>
 </template>
@@ -12,7 +12,19 @@ export default defineComponent({
     props: {
         color: {
             type: String,
-            required: true,
+            default: '',
+        },
+        clickedColor: {
+            type: String,
+            default: ''
+        },
+        textColor: {
+            type: String,
+            default: ''
+        },
+        clickedTextColor: {
+            type: String,
+            default: ''
         },
         variant: {
             type: String,
@@ -21,10 +33,6 @@ export default defineComponent({
         fontWeight: {
             type: String,
             default: 'normal'
-        },
-        textColor: {
-            type: String,
-            default: "black"
         },
         disabled: {
             type: Boolean,
@@ -39,5 +47,31 @@ export default defineComponent({
             default: () => { },
         },
     },
+    setup(props) {
+        const bgColor = ref(''); // 背景色
+        bgColor.value = props.color;
+        const textBtnColor = ref(''); // テキスト色
+        textBtnColor.value = props.textColor;
+
+        const handleClick = () => {
+            if (bgColor.value === '') {
+                bgColor.value = props.clickedColor;
+            } else {
+                bgColor.value = props.color; // 元の色に戻す
+            }
+            if (textBtnColor.value === '') {
+                textBtnColor.value  = props.clickedTextColor;
+            } else {
+                textBtnColor.value = props.textColor; // 元の色に戻す
+            }
+            props.onClick();
+        };
+
+        return {
+            bgColor,
+            textBtnColor,
+            handleClick
+        }
+    }
 })
 </script>

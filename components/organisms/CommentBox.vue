@@ -8,13 +8,13 @@
                             <Msg fontWeight="normal" fontSize="1.5em">コメント</Msg>
                         </v-col>
                         <v-col cols="6" class="text-end">
-                            <Button :color="confirmBtnColor" :buttonStyle="confirmBtnStyle"
+                            <Button :color="confirmBtnColor" :textColor="confirmBtnTextColor"
                                 @click="openDialog">コメントを投稿する</Button>
                         </v-col>
                     </v-row>
                     <v-row v-else>
                         <v-col cols="12">
-                            <Button :color="confirmBtnColor" :buttonStyle="confirmBtnStyle"
+                            <Button :color="confirmBtnColor" :textColor="confirmBtnTextColor"
                                 @click="openDialog">コメントを投稿する</Button>
                         </v-col>
                     </v-row>
@@ -84,8 +84,8 @@ export default defineComponent({
     },
     setup(props) {
 
-        const confirmBtnColor = ref("#3A98B9")
-        const confirmBtnStyle = ref({ color: 'white' });
+        const confirmBtnColor = ref("#3A98B9");
+        const confirmBtnTextColor = ref('white');
 
         // ダイアログの表示
         const dialog = ref(false)
@@ -104,7 +104,7 @@ export default defineComponent({
 
         return {
             confirmBtnColor,
-            confirmBtnStyle,
+            confirmBtnTextColor,
             dialog,
             openDialog,
             toggle,

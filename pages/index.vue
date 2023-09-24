@@ -19,8 +19,8 @@ export default {
         const questionnaires = qStore.state;
 
         // アンケート回答
-        const answerQuestionnaire = (id: string, name: string) => {
-            qStore.answerQuestionnaire(id, [name])
+        const answerQuestionnaire = (id: string, name: string[]) => {
+            qStore.answerQuestionnaire(id, name)
         }
 
         return {
