@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Top :questionnaires="questionnaires" :answerQuestionnaire="answerQuestionnaire"/>
+        <Top :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires" :answerQuestionnaire="answerQuestionnaire"/>
     </div>
 </template>
 
@@ -18,6 +18,11 @@ export default {
         const qStore = useQuestionnaires(TARGET_QUESTIONNAIRES, '');
         const questionnaires = qStore.state;
 
+        // アンケートタブ切替
+        const changeQuestionnaires = (order: string) => {
+            qStore.changeQuestionnaires(order);
+        }
+
         // アンケート回答
         const answerQuestionnaire = (id: string, name: string[]) => {
             qStore.answerQuestionnaire(id, name)
@@ -25,6 +30,7 @@ export default {
 
         return {
             questionnaires,
+            changeQuestionnaires,
             answerQuestionnaire,
         }
     }

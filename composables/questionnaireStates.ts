@@ -1,5 +1,5 @@
 import { ref, onMounted } from 'vue';
-import { TARGET_QUESTIONNAIRES, TARGET_RECOMMENDS } from '@/constants';
+import { TARGET_QUESTIONNAIRES, TARGET_RECOMMENDS, TAB_ID1 } from '@/constants';
 
 
 // スタブモードの確認
@@ -36,9 +36,14 @@ export interface Comment {
 const baseURL = import.meta.env.VITE_BASE_URL
 
 // アンケート一覧取得API
-const getQuestionnaires = async () => {
+const getQuestionnaires = async (order: string) => {
     try {
-        const response = await fetch(`${baseURL}/questionnaires`);
+        const url = new URL(`${baseURL}/questionnaires`);
+        const params = new URLSearchParams({
+            order: order
+        });
+        url.search = params.toString();
+        const response = await fetch(url);
         if (response.ok) {
             const data = await response.json();
             return data.questionnaires;
@@ -209,13 +214,14 @@ export const useQuestionnaires = (target: string, questionId: string) => {
 
     const state = ref<Questionnaire[]>([]); // 初期値は空の配列
 
-
     if (stubMode === '0') {
         onMounted(async () => {
             switch (target) {
+                // アンケート一覧を取得
                 case TARGET_QUESTIONNAIRES:
-                    state.value = await getQuestionnaires();
+                    state.value = await getQuestionnaires(TAB_ID1);
                     break;
+                // おすすめアンケート一覧を取得
                 case TARGET_RECOMMENDS:
                     state.value = await getRecommendQuestionnaires(questionId);
                     break;
@@ -257,6 +263,11 @@ export const useQuestionnaires = (target: string, questionId: string) => {
         ]
     }
 
+    // アンケートタブ切替
+    const changeQuestionnaires = async (order: string) => {
+        state.value = [...await getQuestionnaires(order)];
+    }
+
     // アンケート回答
     const answerQuestionnaire = async (questionId: string, choices: string[]) => {
 
@@ -265,7 +276,7 @@ export const useQuestionnaires = (target: string, questionId: string) => {
             await postAnswer(questionId, choices);
 
             // アンケート回答APIが完了した後にアンケート一覧取得APIを実行
-            state.value = await getQuestionnaires();
+            state.value = await getQuestionnaires('news');
         } else {
             const target = state.value.find(item => item.id === questionId);
             if (target) {
@@ -273,7 +284,6 @@ export const useQuestionnaires = (target: string, questionId: string) => {
             }
         }
     }
-
 
     // アンケート作成
     const createQuestionnaire = async (title: string, choices: string[], categoryId: string, tags: string[], options: object) => {
@@ -287,6 +297,7 @@ export const useQuestionnaires = (target: string, questionId: string) => {
 
     return {
         state: readonly(state),
+        changeQuestionnaires,
         answerQuestionnaire,
         createQuestionnaire
     }

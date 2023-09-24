@@ -1,7 +1,7 @@
 <template>
     <v-app>
         <Header :logo="logo" :title="headerTitle" />
-        <ContentsView style="margin:5%" :questionnaires="questionnaires" :answerQuestionnaire="answerQuestionnaire" />
+        <ContentsView style="margin:5%" :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires" :answerQuestionnaire="answerQuestionnaire" />
         <Footer :buttonText="footerButtonText" />
     </v-app>
 </template>
@@ -22,6 +22,10 @@ export default defineComponent({
     props: {
         questionnaires: {
             type: Array as PropType<Questionnaire[]>
+        },
+        changeQuestionnaires: {
+            type: Function,
+            required: true
         },
         answerQuestionnaire: {
             type: Function,

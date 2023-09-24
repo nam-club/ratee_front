@@ -32,7 +32,6 @@ export default defineComponent({
         // コメント一覧取得
         const cStore = useComments(questionId, "");
         const comments = cStore.state;
-        console.log(comments)
 
         // コメント投稿
         const postComment = (questionId: string, iconId: number, comment: string) => {

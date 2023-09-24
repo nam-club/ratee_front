@@ -1,14 +1,14 @@
 <template>
     <v-card class="bg-secondary" dark>
         <v-tabs v-model="tab" color="primary" dark align-tabs="center">
-            <v-tab :value="1">新着</v-tab>
-            <v-tab :value="2">トレンド</v-tab>
-            <v-tab :value="3">人気</v-tab>
-            <v-tab :value="4">全アンケート</v-tab>
+            <v-tab :value="1" @click="changeQuestionnaires(TAB_ID1)">{{ TAB_NAME1 }}</v-tab>
+            <v-tab :value="2" @click="changeQuestionnaires(TAB_ID2)">{{ TAB_NAME2 }}</v-tab>
+            <v-tab :value="3" @click="changeQuestionnaires(TAB_ID3)">{{ TAB_NAME3 }}</v-tab>
+            <v-tab :value="4" @click="changeQuestionnaires(TAB_ID4)">{{ TAB_NAME4 }}</v-tab>
         </v-tabs>
         <v-window v-model="tab">
             <v-window-item v-for="n in 4" :key="n" :value="n">
-                <AnswerBox v-if="n == 1" style="margin:5%" :questionnaires="questionnaires"
+                <AnswerBox style="margin:5%" :questionnaires="questionnaires"
                     :answerQuestionnaire="answerQuestionnaire" />
             </v-window-item>
         </v-window>
@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import AnswerBox from '@/components/organisms/AnswerBox.vue'
-import { Questionnaire } from '~/composables/questionnaireStates';
+import { TAB_ID1, TAB_NAME1, TAB_ID2, TAB_NAME2, TAB_ID3, TAB_NAME3, TAB_ID4, TAB_NAME4 } from '@/constants';
 
 export default {
     components: {
@@ -27,6 +27,10 @@ export default {
         questionnaires: {
             type: Array as PropType<Questionnaire[]>
         },
+        changeQuestionnaires: {
+            type: Function,
+            required: true
+        },
         answerQuestionnaire: {
             type: Function,
             required: true
@@ -35,5 +39,18 @@ export default {
     data: () => ({
         tab: null,
     }),
+    setup(props) {
+
+        return {
+            TAB_ID1,
+            TAB_NAME1,
+            TAB_ID2,
+            TAB_NAME2,
+            TAB_ID3,
+            TAB_NAME3,
+            TAB_ID4,
+            TAB_NAME4,
+        }
+    }
 }
 </script>
