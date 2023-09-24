@@ -4,11 +4,39 @@
             <v-tab :value="1" @click="changeQuestionnaires(TAB_ID1)">{{ TAB_NAME1 }}</v-tab>
             <v-tab :value="2" @click="changeQuestionnaires(TAB_ID2)">{{ TAB_NAME2 }}</v-tab>
             <v-tab :value="3" @click="changeQuestionnaires(TAB_ID3)">{{ TAB_NAME3 }}</v-tab>
-            <v-tab :value="4" @click="changeQuestionnaires(TAB_ID4)">{{ TAB_NAME4 }}</v-tab>
+            <v-tab :value="4">{{ TAB_NAME4 }}</v-tab>
         </v-tabs>
         <v-window v-model="tab">
             <v-window-item v-for="n in 4" :key="n" :value="n">
-                <AnswerBox style="margin:5%" :questionnaires="questionnaires"
+                <div v-if="n === 4">
+                    <v-container>
+                        <v-row>
+                            <v-col cols="2" class="align-self-center">
+                                <InputSet type="selectBox" :selectItems="SEARCH_TYPES" :selectModel="typeName"
+                                    @update:selectModel="setTypeName" />
+                            </v-col>
+                            <v-col cols="10" class="align-self-center">
+                                <InputSet v-if="typeName !== FORM_CATEGORY_TEXT" type="searchBox"
+                                    :labelText="SEARCH_LABEL" />
+                                <v-container v-else>
+                                    <v-row>
+                                        <v-col cols="10" class="align-self-center">
+                                            <InputSet type="selectBox" :selectItems="categoryNames"
+                                                :selectModel="categoryName" @update:selectModel="setCategoryName" />
+                                        </v-col>
+                                        <v-col cols="2">
+                                            <v-btn icon>
+                                                <v-icon>{{ icons.mdiMagnify }}</v-icon>
+                                            </v-btn>
+                                        </v-col>
+                                    </v-row>
+                                </v-container>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+
+                </div>
+                <AnswerBox v-else style="margin:5%" :questionnaires="questionnaires"
                     :answerQuestionnaire="answerQuestionnaire" />
             </v-window-item>
         </v-window>
@@ -16,8 +44,10 @@
 </template>
 
 <script lang="ts">
+import { mdiPlus, mdiMagnify } from '@mdi/js';
 import AnswerBox from '@/components/organisms/AnswerBox.vue'
-import { TAB_ID1, TAB_NAME1, TAB_ID2, TAB_NAME2, TAB_ID3, TAB_NAME3, TAB_ID4, TAB_NAME4 } from '@/constants';
+import { TAB_ID1, TAB_NAME1, TAB_ID2, TAB_NAME2, TAB_ID3, TAB_NAME3, TAB_ID4, TAB_NAME4, FORM_TITLE_TEXT, FORM_CATEGORY_TEXT, SEARCH_LABEL, SEARCH_TYPES } from '@/constants';
+import { Category } from '@/types';
 
 export default {
     components: {
@@ -34,6 +64,10 @@ export default {
         answerQuestionnaire: {
             type: Function,
             required: true
+        },
+        categories: {
+            type: Array as () => Category[],
+            required: true,
         }
     },
     data: () => ({
@@ -41,7 +75,39 @@ export default {
     }),
     setup(props) {
 
+        const icons = ref({
+            mdiPlus,
+            mdiMagnify
+        })
+
+        // 検索タイプ
+        const typeName = ref(FORM_TITLE_TEXT)
+        const setTypeName = (value: string) => {
+            typeName.value = value;
+        }
+
+        const categoryNames = ref<string[]>([])
+        if (props.categories) {
+            categoryNames.value = props.categories.map((item: Category) => item.name)
+            console.log(categoryNames)
+        }
+        const categoryId = ref('')
+        const categoryName = ref('')
+        const setCategoryId = (name: string) => {
+            const category = props.categories.find((item: Category) => item.name === name);
+            if (category) {
+                categoryId.value = category.id;
+            } else {
+                console.error(`Category with name "${name}" not found`);
+            }
+        }
+        const setCategoryName = (value: string) => {
+            categoryName.value = value;
+            setCategoryId(value);
+        }
+
         return {
+            icons,
             TAB_ID1,
             TAB_NAME1,
             TAB_ID2,
@@ -50,6 +116,15 @@ export default {
             TAB_NAME3,
             TAB_ID4,
             TAB_NAME4,
+            FORM_CATEGORY_TEXT,
+            SEARCH_LABEL,
+            SEARCH_TYPES,
+            typeName,
+            setTypeName,
+            categoryNames,
+            categoryId,
+            categoryName,
+            setCategoryName
         }
     }
 }

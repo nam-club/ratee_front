@@ -3,19 +3,19 @@
         <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
             <template v-slot:activator="{ attrs }">
                 <div>
-                    <InputSet type="textField" :caption="titleText" :labelText="titleLabel" :textModel="title"
+                    <InputSet type="textField" :caption="FORM_TITLE_TEXT" :labelText="FORM_TITLE_LABEL" :textModel="title"
                         @input="title = $event" />
-                    <InputSet type="textsField" :caption="choiceText" :textsModel="choices"
-                        @update:textsModel="choices = $event" :addText="addChoiceText" />
+                    <InputSet type="textsField" :caption="FORM_CHOICE_TEXT" :textsModel="choices"
+                        @update:textsModel="choices = $event" :addText="FORM_ADD_CHOICE_TEXT" />
 
-                    <InputSet type="selectBox" :caption="categoryText" :selectItems="categoryNames"
+                    <InputSet type="selectBox" :caption="FORM_CATEGORY_TEXT" :selectItems="categoryNames"
                         :selectModel="categoryName" @update:selectModel="setCategoryName" />
-                    <InputSet type="tagBox" :caption="tagText" :labelText="tagLabel" :chipsModel="tags"
+                    <InputSet type="tagBox" :caption="FORM_TAG_TEXT" :labelText="FORM_TAG_LABEL" :chipsModel="tags"
                         @update:chipsModel="tags = $event" />
 
-                    <InputSet type="checkBox" :labelText="commentLabel" :checkModel="enableComment"
+                    <InputSet type="checkBox" :labelText="FORM_COMMENT_LABEL" :checkModel="enableComment"
                         @update:checkModel="enableComment = $event" />
-                    <InputSet type="checkBox" :labelText="multiAnsLabel" :checkModel="enableMultiAns"
+                    <InputSet type="checkBox" :labelText="FORM_MULTI_LABEL" :checkModel="enableMultiAns"
                         @update:checkModel="enableMultiAns = $event" />
 
                     <v-container>
@@ -40,12 +40,12 @@
                     <v-spacer></v-spacer>
                 </v-toolbar>
                 <v-divider></v-divider>
-                <Paragraph type="text" :caption="titleText" :text="title" />
-                <Paragraph type="multiText" :caption="choiceText" :texts="choices" />
-                <Paragraph type="text" :caption="categoryText" :text="categoryName" />
-                <Paragraph type="chips" :caption="tagText" :chips="tags" />
-                <Paragraph type="checkBox" :isChecked="enableComment" :labelText="commentLabel" />
-                <Paragraph type="checkBox" :isChecked="enableMultiAns" :labelText="multiAnsLabel" />
+                <Paragraph type="text" :caption="FORM_TITLE_TEXT" :text="title" />
+                <Paragraph type="multiText" :caption="FORM_CHOICE_TEXT" :texts="choices" />
+                <Paragraph type="text" :caption="FORM_CATEGORY_TEXT" :text="categoryName" />
+                <Paragraph type="chips" :caption="FORM_TAG_TEXT" :chips="tags" />
+                <Paragraph type="checkBox" :isChecked="enableComment" :labelText="FORM_COMMENT_LABEL" />
+                <Paragraph type="checkBox" :isChecked="enableMultiAns" :labelText="FORM_MULTI_LABEL" />
                 <v-container>
                     <v-row no-gutters>
                         <v-col cols="5" justify="center">
@@ -73,7 +73,7 @@ import Button from '@/components/atoms/Button.vue'
 import InputSet from '@/components/molecules/InputSet.vue'
 import Paragraph from '@/components/molecules/Paragraph.vue'
 import { Category } from '@/types';
-import { useQuestionnaires } from '~/composables/questionnaireStates';
+import { FORM_TITLE_TEXT, FORM_TITLE_LABEL, FORM_CHOICE_TEXT, FORM_ADD_CHOICE_TEXT, FORM_CATEGORY_TEXT, FORM_TAG_TEXT, FORM_TAG_LABEL, FORM_COMMENT_LABEL, FORM_MULTI_LABEL } from '@/constants';
 
 export default defineComponent({
     components: {
@@ -85,20 +85,18 @@ export default defineComponent({
         categories: {
             type: Array as () => Category[],
             required: true,
-        }
+        },
+        createQuestionnaire: {
+            type: Function,
+            required: true
+        },
     },
     setup(props) {
-        console.log(props.categories)
-        const titleText = ref('アンケート内容')
-        const titleLabel = ref('アンケート内容を入力してください。')
         const title = ref('')
 
-        const choiceText = ref('選択肢内容')
         const choiceStyle = ref({ margin: 0 })
-        const addChoiceText = ref('選択肢を追加する')
         const choices = ref(['', '', '', ''])
 
-        const categoryText = ref('カテゴリ')
         const categoryNames = ref<string[]>([])
         if (props.categories) {
             categoryNames.value = props.categories.map((item: Category) => item.name)
@@ -118,14 +116,9 @@ export default defineComponent({
             setCategoryId(value);
         }
 
-        const tagText = ref('タグ')
-        const tagLabel = ref('追加したいタグを入力してください。')
         const tags = ref([])
 
-        const commentLabel = ref('コメントを有効にする')
         const enableComment = ref(false)
-
-        const multiAnsLabel = ref('複数の回答を有効にする')
         const enableMultiAns = ref(false)
 
         const options = ref({})
@@ -145,32 +138,25 @@ export default defineComponent({
             dialog.value = true
         }
 
-        const qStore = useQuestionnaires();
-
-        // アンケート投稿
-        const createQuestionnaire = (title: string, choices: string[], categoryId: string, tags: string[], options: object) => {
-            qStore.createQuestionnaire(title, choices, categoryId, tags, options);
-        }
-
         return {
-            titleText,
-            titleLabel,
+            FORM_TITLE_TEXT,
+            FORM_TITLE_LABEL,
             title,
-            choiceText,
+            FORM_CHOICE_TEXT,
             choiceStyle,
             choices,
-            addChoiceText,
-            categoryText,
+            FORM_ADD_CHOICE_TEXT,
+            FORM_CATEGORY_TEXT,
             categoryNames,
             categoryId,
             categoryName,
             setCategoryName,
-            tagText,
-            tagLabel,
+            FORM_TAG_TEXT,
+            FORM_TAG_LABEL,
             tags,
-            commentLabel,
+            FORM_COMMENT_LABEL,
             enableComment,
-            multiAnsLabel,
+            FORM_MULTI_LABEL,
             enableMultiAns,
             options,
             cancelBtnStyle,
@@ -181,7 +167,6 @@ export default defineComponent({
             confirmBtnTextColor,
             dialog,
             openDialog,
-            createQuestionnaire
         }
     }
 })

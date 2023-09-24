@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Top :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires" :answerQuestionnaire="answerQuestionnaire"/>
+        <Top :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires" :answerQuestionnaire="answerQuestionnaire" :categories="categories"/>
     </div>
 </template>
 
@@ -28,10 +28,15 @@ export default {
             qStore.answerQuestionnaire(id, name)
         }
 
+        // カテゴリ一覧取得
+        const cStore = useCategories();
+        const categories = cStore.state;
+
         return {
             questionnaires,
             changeQuestionnaires,
             answerQuestionnaire,
+            categories,
         }
     }
 }

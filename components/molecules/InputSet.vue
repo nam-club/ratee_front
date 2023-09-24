@@ -1,5 +1,5 @@
 <template>
-    <h2>{{ caption }}</h2>
+    <h2 v-if="caption">{{ caption }}</h2>
     <div v-if="type === 'textField'">
         <v-text-field v-model="computedTextModel" :label="labelText" />
     </div>
@@ -51,13 +51,27 @@
         </v-container>
     </div>
     <div v-else-if="type === 'checkBox'">
-        <v-checkbox v-model="computedCheckModel" :label="labelText" type="checkbox" hide-details/>
+        <v-checkbox v-model="computedCheckModel" :label="labelText" type="checkbox" hide-details />
+    </div>
+    <div v-if="type === 'searchBox'">
+        <v-container>
+            <v-row>
+                <v-col cols="10">
+                    <v-text-field :label="labelText" />
+                </v-col>
+                <v-col cols="2">
+                    <v-btn icon>
+                        <v-icon>{{ icons.mdiMagnify }}</v-icon>
+                    </v-btn>
+                </v-col>
+            </v-row>
+        </v-container>
     </div>
 </template>
 
 <script>
 import { defineComponent } from 'vue'
-import { mdiPlus } from '@mdi/js';
+import { mdiPlus, mdiMagnify } from '@mdi/js';
 import Button from '@/components/atoms/Button.vue'
 import IconButton from '@/components/atoms/IconButton.vue'
 import Msg from '@/components/atoms/Msg.vue'
@@ -171,7 +185,8 @@ export default defineComponent({
     },
     setup(props) {
         const icons = ref({
-            mdiPlus
+            mdiPlus,
+            mdiMagnify
         })
 
         const newChip = ref('')

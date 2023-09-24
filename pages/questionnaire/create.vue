@@ -1,13 +1,15 @@
 <template>
     <div>
         <div v-if="categories.length">
-            <CreateForm :categories="categories" />
+            <CreateForm :categories="categories" :createQuestionnaire="createQuestionnaire" />
         </div>
     </div>
 </template>
 
 <script lang="ts">
 import CreateForm from '@/components/templates/CreateForm.vue'
+import { useCategories } from '~/composables/categoryStates';
+import { useQuestionnaires } from '~/composables/questionnaireStates';
 
 export default {
     components: {
@@ -15,34 +17,19 @@ export default {
     },
 
     setup() {
-        // ベースURLの読み込み
-        const baseURL = import.meta.env.VITE_BASE_URL;
+        // カテゴリ一覧取得
+        const cStore = useCategories();
+        const categories = cStore.state;
 
-        // カテゴリ情報取得API
-        const getCategories = async () => {
-            try {
-                const response = await fetch(`${baseURL}/categories`);
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log(data.categories)
-                    categories.value = data.categories;
-                } else {
-                    console.error('APIの呼び出しに失敗しました:', response.statusText);
-                }
-            } catch (error) {
-                console.error('APIの呼び出しに失敗しました:', error);
-            }
-            return []; // エラーが発生した場合やレスポンスがOKでない場合は空の配列を返す
+        // アンケート投稿
+        const qStore = useQuestionnaires();
+        const createQuestionnaire = (title: string, choices: string[], categoryId: string, tags: string[], options: object) => {
+            qStore.createQuestionnaire(title, choices, categoryId, tags, options);
         }
 
-        const categories = ref([]);  // 初期値として空の配列をセット
-
-        onMounted(() => {
-            getCategories();  // onMountedの中で非同期関数を呼び出す
-        });
-
         return {
-            categories
+            categories,
+            createQuestionnaire
         }
     }
 }

@@ -3,7 +3,7 @@
         <div v-if="categories.length">
             <Header :logo="logo" :title="headerTitle" />
         </div>
-        <Form :categories="categories" />
+        <Form :categories="categories" :createQuestionnaire="createQuestionnaire" />
     </v-app>
 </template>
 
@@ -22,7 +22,11 @@ export default defineComponent({
         categories: {
             type: Array as () => Category[],
             required: true,
-        }
+        },
+        createQuestionnaire: {
+            type: Function,
+            required: true
+        },
     },
     setup() {
         const logo = '/logo.png' // 画像のパスを指定してください
@@ -32,7 +36,7 @@ export default defineComponent({
         return {
             logo,
             headerTitle,
-            contentsBg
+            contentsBg,
         }
     }
 })

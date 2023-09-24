@@ -1,7 +1,7 @@
 <template>
     <v-app>
         <Header :logo="logo" :title="headerTitle" />
-        <ContentsView style="margin:5%" :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires" :answerQuestionnaire="answerQuestionnaire" />
+        <ContentsView style="margin:5%" :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires" :answerQuestionnaire="answerQuestionnaire" :categories="categories" />
         <Footer :buttonText="footerButtonText" />
     </v-app>
 </template>
@@ -30,6 +30,10 @@ export default defineComponent({
         answerQuestionnaire: {
             type: Function,
             required: true
+        },
+        categories: {
+            type: Array as () => Category[],
+            required: true,
         }
     },
     setup() {
