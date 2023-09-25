@@ -10,7 +10,7 @@
 
                     <InputSet type="selectBox" :caption="FORM_CATEGORY_TEXT" :selectItems="categoryNames"
                         :selectModel="categoryName" @update:selectModel="setCategoryName" />
-                    <InputSet type="tagBox" :caption="FORM_TAG_TEXT" :labelText="FORM_TAG_LABEL" :chipsModel="tags"
+                    <InputSet type="chipBox" :caption="FORM_TAG_TEXT" :labelText="FORM_TAG_LABEL" :chipsModel="tags"
                         @update:chipsModel="tags = $event" />
 
                     <InputSet type="checkBox" :labelText="FORM_COMMENT_LABEL" :checkModel="enableComment"

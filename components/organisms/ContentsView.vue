@@ -19,27 +19,26 @@
                                 <InputSet v-if="typeName !== FORM_CATEGORY_TEXT" type="searchBox" :text="word"
                                     @input="word = $event" :labelText="SEARCH_LABEL"
                                     :onClick="() => { searchQuestionnaires(typeName, word); }" />
-                                <v-container v-else>
-                                    <v-row>
-                                        <v-col cols="10" class="align-self-center">
-                                            <InputSet type="selectBox" :selectItems="categoryNames"
-                                                :selectModel="categoryName" @update:selectModel="setCategoryName" />
-                                        </v-col>
-                                        <v-col cols="2">
-                                            <v-btn icon @click="searchQuestionnaires(typeName, categoryId)">
-                                                <v-icon>{{ icons.mdiMagnify }}</v-icon>
-                                            </v-btn>
-                                        </v-col>
-                                    </v-row>
-                                </v-container>
+                                <v-row v-else>
+                                    <v-col cols="10" class="align-self-center">
+                                        <InputSet type="selectBox" :selectItems="categoryNames" :selectModel="categoryName"
+                                            @update:selectModel="setCategoryName" />
+                                    </v-col>
+                                    <v-col cols="2">
+                                        <v-btn icon @click="searchQuestionnaires(typeName, categoryId)">
+                                            <v-icon>{{ icons.mdiMagnify }}</v-icon>
+                                        </v-btn>
+                                    </v-col>
+                                </v-row>
                             </v-col>
                         </v-row>
                     </v-container>
                     <AnswerBox style="margin:5%" :questionnaires="questionnaires" :answerQuestionnaire="answerQuestionnaire"
-                        :answerSearchQuestionnaire="answerSearchQuestionnaire" :searchType="typeName" :searchWord="word" :searchCategory="categoryId" />
+                        :answerSearchQuestionnaire="answerSearchQuestionnaire" :searchType="typeName" :searchWord="word"
+                        :searchCategory="categoryId" :goToSearchTab="goToSearchTab"/>
                 </div>
-                <AnswerBox v-else style="margin:5%" :questionnaires="questionnaires" :answerQuestionnaire="answerQuestionnaire"
-                    :answerSearchQuestionnaire="answerSearchQuestionnaire" />
+                <AnswerBox v-else style="margin:5%" :questionnaires="questionnaires" :searchQuestionnaires="searchQuestionnaires"
+                    :answerQuestionnaire="answerQuestionnaire" :answerSearchQuestionnaire="answerSearchQuestionnaire" :goToSearchTab="goToSearchTab" />
             </v-window-item>
         </v-window>
     </v-card>
@@ -49,7 +48,7 @@
 import { mdiPlus, mdiMagnify } from '@mdi/js';
 import InputSet from '@/components/molecules/InputSet.vue'
 import AnswerBox from '@/components/organisms/AnswerBox.vue'
-import { TAB_ID1, TAB_NAME1, TAB_ID2, TAB_NAME2, TAB_ID3, TAB_NAME3, TAB_ID4, TAB_NAME4, FORM_TITLE_TEXT, FORM_CATEGORY_TEXT, SEARCH_LABEL, SEARCH_TYPES } from '@/constants';
+import { TAB_ID1, TAB_NAME1, TAB_ID2, TAB_NAME2, TAB_ID3, TAB_NAME3, TAB_ID4, TAB_NAME4, FORM_TITLE_TEXT, FORM_CATEGORY_TEXT, FORM_TAG_TEXT, SEARCH_LABEL, SEARCH_TYPES } from '@/constants';
 import { Category } from '@/types';
 
 export default {
@@ -101,8 +100,8 @@ export default {
         // 検索ワード
         const word = ref('');
 
+        // 検索カテゴリ
         const categoryNames = ref<string[]>([])
-        console.log(props.categories);
 
         watchEffect(() => {
             if (props.categories && props.categories.length > 0) {
@@ -125,8 +124,20 @@ export default {
             setCategoryId(value);
         }
 
+        // タブの値をリアクティブにする
+        const tab = ref<number | null>(null);
+
+        // 検索タブに移動する関数
+        const goToSearchTab = (value: string) => {
+            tab.value = 4;
+            word.value = value;
+            typeName.value = FORM_TAG_TEXT;
+        };
+
         return {
             icons,
+            tab,
+            goToSearchTab,
             TAB_ID1,
             TAB_NAME1,
             TAB_ID2,

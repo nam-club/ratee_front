@@ -30,7 +30,7 @@
     <div v-else-if="type === 'selectBox'">
         <v-select :label="labelText" :items="selectItems" v-model="computedSelectModel"></v-select>
     </div>
-    <div v-else-if="type === 'tagBox'">
+    <div v-else-if="type === 'chipBox'">
         <v-container>
             <v-row no-gutters>
                 <v-col cols="9">

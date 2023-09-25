@@ -3,22 +3,30 @@
         <v-container>
             <v-row class="justify-center">
                 <v-col xs12 sm6 md6 align-self="center">
-                    <Msg fontWeight="normal" fontSize="2em">{{ questionnaire.content }}</Msg>
+                    <Msg fontWeight="normal" fontSize="2em" style="margin:2% 0">{{ questionnaire.content }}</Msg>
+                    <v-row no-gutters>
+                        <v-col cols="auto" v-for="(tag, i) in questionnaire.tags" :key="i">
+                            <v-chip class="ma-2" @click="() => {searchQuestionnaires(FORM_TAG_TEXT, tag); goToSearchTab(tag);}">
+                                {{ tag }}
+                            </v-chip>
+                        </v-col>
+                    </v-row>
                 </v-col>
                 <v-col xs12 sm6 md6>
                     <v-container v-if="questionnaire.isAnswered === false">
                         <div v-if="questionnaire.enableMultiAnswer">
                             <v-row class="justify-center" v-for="(choice, index) in questionnaire.choices" :key="index">
                                 <v-col xs12 sm12 md12 align-self="center">
-                                    <Button :clickedTextColor="clickedMultiTextColor"
-                                        :buttonStyle="btnStyle" :onClick="() => toggleChoice(choice.id)">
+                                    <Button :clickedTextColor="clickedMultiTextColor" :buttonStyle="btnStyle"
+                                        :onClick="() => toggleChoice(choice.id)">
                                         {{ choice.name }}
                                     </Button>
                                 </v-col>
                             </v-row>
                             <v-row class="justify-center" v-if="choices.length !== 0">
                                 <v-col class="text-end">
-                                    <Button :color="btnColor" :textColor="btnTextColor" :onClick="() => answerQuestionnaire(questionnaire.id, choices)">確定</Button>
+                                    <Button :color="btnColor" :textColor="btnTextColor"
+                                        :onClick="() => answerQuestionnaire(questionnaire.id, choices)">確定</Button>
                                 </v-col>
                             </v-row>
                         </div>
@@ -82,6 +90,10 @@ export default defineComponent({
             type: Function,
             required: true
         },
+        searchQuestionnaires: {
+            type: Function,
+            required: true
+        },
         searchType: {
             type: String,
             default: ''
@@ -93,6 +105,10 @@ export default defineComponent({
         searchCategory: {
             type: String,
             default: ''
+        },
+        goToSearchTab: {
+            type: Function,
+            required: true
         }
     },
     setup(props) {
@@ -102,7 +118,7 @@ export default defineComponent({
         const btnStyle = ref({ width: '100%' });
         const clickedMultiTextColor = ref("#3A98B9");
 
-        const choices= ref([]);
+        const choices = ref([]);
 
         // 選択肢をクリックしてchoices配列に追加 or 削除
         const toggleChoice = (choiceId: string) => {
@@ -117,12 +133,12 @@ export default defineComponent({
         const answerQuestionnaire = (questionId: string, choices: string[]) => {
             console.log(props.searchType);
             console.log(props.searchWord);
-            if(props.searchType === '') {
+            if (props.searchType === '') {
                 props.answerQuestionnaire(questionId, choices);
-            }else {
-                if(props.searchType === FORM_TITLE_TEXT || props.searchType === FORM_TAG_TEXT) {
+            } else {
+                if (props.searchType === FORM_TITLE_TEXT || props.searchType === FORM_TAG_TEXT) {
                     props.answerSearchQuestionnaire(questionId, choices, props.searchType, props.searchWord);
-                }else if(props.searchType === FORM_CATEGORY_TEXT) {
+                } else if (props.searchType === FORM_CATEGORY_TEXT) {
                     props.answerSearchQuestionnaire(questionId, choices, props.searchType, props.searchCategory);
                 }
             }
@@ -145,6 +161,7 @@ export default defineComponent({
         });
 
         return {
+            FORM_TAG_TEXT,
             btnColor,
             btnTextColor,
             btnVariant,
