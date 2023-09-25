@@ -3,7 +3,14 @@
         <v-container>
             <v-row>
                 <v-col>
-                    <Msg fontWeight="normal" fontSize="2em">{{ questionnaire.content }}</Msg>
+                    <Msg fontWeight="normal" fontSize="2em" style="margin:2% 0">{{ questionnaire.content }}</Msg>
+                    <v-row no-gutters>
+                        <v-col cols="auto" v-for="(tag, i) in questionnaire.tags" :key="i">
+                            <v-chip class="ma-2">
+                                {{ tag }}
+                            </v-chip>
+                        </v-col>
+                    </v-row>
                 </v-col>
             </v-row>
             <v-container v-if="questionnaire.isAnswered === false">

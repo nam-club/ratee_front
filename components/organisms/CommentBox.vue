@@ -18,7 +18,7 @@
                                 @click="openDialog">コメントを投稿する</Button>
                         </v-col>
                     </v-row>
-                    <v-card v-if="comments && comments.length !== 0" style="margin:2% 0">
+                    <v-card v-if="comments && comments.length !== 0" style="margin:2% 0 10% 0">
                         <v-list lines="two" style="width: 100%;">
                             <v-list-item v-for="(comment, index) in comments" :key="index" :title="comment.comment"
                                 :subtitle="comment.createdAt + ' ID:' + comment.ipaddrHashed"
