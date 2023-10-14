@@ -26,3 +26,6 @@ export const FORM_MULTI_LABEL = "複数の回答を有効にする";
 // 検索ボックス
 export const SEARCH_LABEL = "検索ワードを入力";
 export const SEARCH_TYPES = [FORM_TITLE_TEXT, FORM_CATEGORY_TEXT, FORM_TAG_TEXT];
+
+// アンケート取得件数
+export const MAX_COUNT = 9999;

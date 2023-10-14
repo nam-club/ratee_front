@@ -288,3 +288,8 @@ export default defineNuxtPlugin((nuxtApp) => {
 ```bash
 npm install vue-chartjs chart.js --save
 ```
+
+## 無限スクロールのインストール
+```bash
+npm install v3-infinite-loading
+```
