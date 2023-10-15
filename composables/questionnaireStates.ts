@@ -239,8 +239,10 @@ export const useQuestionnaires = (target: string, questionId: string) => {
 
     // 続きのアンケート一覧を取得(無限スクロール)
     const scrollQuestionnaires = async (order: string, nextToken: string) => {
-        const nextQuestionnaires = await getNextQuestionnaires(order, nextToken);
-        state.value?.questionnaires.concat([...nextQuestionnaires.questionnaires]);
+        if(nextToken !== '') {
+            const nextQuestionnaires = await getNextQuestionnaires(order, nextToken);
+            state.value?.questionnaires.concat([...nextQuestionnaires.questionnaires]);
+        }
     }
 
     // アンケートタブ切替
