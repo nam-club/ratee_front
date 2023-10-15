@@ -79,6 +79,9 @@ import { mdiClose, mdiPlus, mdiMagnify } from '@mdi/js';
 import Button from '@/components/atoms/Button.vue'
 import IconButton from '@/components/atoms/IconButton.vue'
 import Msg from '@/components/atoms/Msg.vue'
+import {
+    TAG_MIN_LENGTH, TAG_MAX_LENGTH
+} from '@/constants';
 
 export default defineComponent({
     components: {
@@ -230,7 +233,7 @@ export default defineComponent({
         }
 
         const addChip = () => {
-            if (props.chipsModel) {
+            if (props.chipsModel && newChip.value.length >= TAG_MIN_LENGTH && newChip.value.length <= TAG_MAX_LENGTH ) {
                 props.chipsModel.push(newChip.value)
                 newChip.value = ''
                 context.emit('update:chipsModel', props.chipsModel)
