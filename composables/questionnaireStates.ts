@@ -28,6 +28,25 @@ type ResponseData = {
 // ベースURLの読み込み
 const baseURL = import.meta.env.VITE_BASE_URL
 
+// ユーザID生成・更新
+const updateUserId = async () => {
+    const response = await fetch(`${baseURL}/user/guest/id`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+    });
+
+    if (response.ok) {
+        const resp = await response.json();
+        resp.cookie
+        console.log(resp);
+    } else {
+        console.error('ユーザID生成・更新APIの実行中にエラーが発生しました:', response.statusText);
+    }
+}
+
 // アンケート一覧取得API
 const getQuestionnaires = async (order: string): Promise<ResponseData> => {
     try {
@@ -36,7 +55,9 @@ const getQuestionnaires = async (order: string): Promise<ResponseData> => {
             order: order
         });
         url.search = params.toString();
-        const response = await fetch(url);
+        const response = await fetch(
+            url, { credentials: 'include' }
+        );
         if (response.ok) {
             const data = await response.json();
             return data;
@@ -58,7 +79,9 @@ const getNextQuestionnaires = async (order: string, nextToken: string): Promise<
             order: order
         });
         url.search = params.toString();
-        const response = await fetch(url);
+        const response = await fetch(
+            url, { credentials: 'include' }
+        );
         if (response.ok) {
             const data = await response.json();
             return data;
@@ -102,7 +125,9 @@ const getSearchQuestionnaires = async (type: string, word: string) => {
                 break;
         }
         url.search = params.toString();
-        const response = await fetch(url);
+        const response = await fetch(
+            url, { credentials: 'include' }
+        );
         if (response.ok) {
             const data = await response.json();
             return data.questionnaires;
@@ -123,7 +148,9 @@ const getQuestionnaire = async (questionId: string) => {
             id: questionId,
         });
         url.search = params.toString();
-        const response = await fetch(url);
+        const response = await fetch(
+            url, { credentials: 'include' }
+        );
         if (response.ok) {
             const data = await response.json();
             return data;
@@ -148,7 +175,8 @@ const postAnswer = async (questionId: string, choices: string[]) => {
             body: JSON.stringify({
                 questionnaireId: questionId,
                 answers: choices
-            })
+            }),
+            credentials: 'include'
         });
         if (response.ok) {
             const data = await response.json();
@@ -175,7 +203,8 @@ const postQuestionnaire = async (title: string, choices: string[], categoryId: s
                 categoryId: categoryId,
                 tags: tags,
                 options: options
-            })
+            }),
+            credentials: 'include'
         });
         if (response.ok) {
             const data = await response.json();
@@ -195,10 +224,11 @@ const getRecommendQuestionnaires = async (questionId: string) => {
             id: questionId,
         });
         url.search = params.toString();
-        const response = await fetch(url);
+        const response = await fetch(
+            url, { credentials: 'include' }
+        );
         if (response.ok) {
             const data = await response.json();
-            console.log(data)
             return data;
         } else {
             console.error('おすすめアンケート一覧取得APIの実行中にエラーが発生しました:', response.statusText);
@@ -217,6 +247,7 @@ export const useQuestionnaires = (target: string, questionId: string) => {
     const isLoading = ref(true);
 
     onMounted(async () => {
+        await updateUserId();
         switch (target) {
             // アンケート一覧を取得
             case TARGET_QUESTIONNAIRES:
@@ -237,9 +268,9 @@ export const useQuestionnaires = (target: string, questionId: string) => {
 
     // 続きのアンケート一覧を取得(無限スクロール)
     const scrollQuestionnaires = async (order: string, nextToken: string) => {
-        if(nextToken !== '') {
+        if (nextToken !== '') {
             const qObject = await getNextQuestionnaires(order, nextToken);
-            if(qObject.questionnaires) {
+            if (qObject.questionnaires) {
                 state.value.questionnaires.push(...qObject.questionnaires);
             }
             state.value.nextToken = qObject.nextToken ? qObject.nextToken : '';
