@@ -1,7 +1,8 @@
 <template>
     <h2 v-if="caption">{{ caption }}</h2>
     <div v-if="type === 'textField'">
-        <v-text-field v-model="computedTextModel" :label="labelText" />
+        <v-text-field v-model="computedTextModel" :label="labelText" clearable
+            :rules="[rules.required, rules.textLength]" />
     </div>
     <div v-else-if="type === 'textsField'">
         <v-container>
@@ -9,11 +10,14 @@
                 <v-col cols="1">
                     <p>{{ i + 1 }}</p>
                 </v-col>
-                <v-col cols="11">
-                    <v-text-field v-model="computedTextsModel[i]" />
+                <v-col cols="10">
+                    <v-text-field v-model="computedTextsModel[i]" clearable :rules="[rules.required, rules.textLength]" />
+                </v-col>
+                <v-col cols="1" v-if="computedTextsModel.length > rules.textsMinLength">
+                    <IconButton :icon="icons.mdiClose" :size="small" :onClick="($event: Event) => { $event.stopPropagation(); removeTexts(i); }" />
                 </v-col>
             </v-row>
-            <v-row no-gutters>
+            <v-row no-gutters v-if="computedTextsModel.length < rules.textsMaxLength">
                 <v-col cols="1" />
                 <v-col cols="1">
                     <IconButton :icon="icons.mdiPlus" :size="small" :onClick="addTexts" />
@@ -69,9 +73,9 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from 'vue'
-import { mdiPlus, mdiMagnify } from '@mdi/js';
+import { mdiClose, mdiPlus, mdiMagnify } from '@mdi/js';
 import Button from '@/components/atoms/Button.vue'
 import IconButton from '@/components/atoms/IconButton.vue'
 import Msg from '@/components/atoms/Msg.vue'
@@ -111,7 +115,7 @@ export default defineComponent({
             type: String
         },
         textsModel: {
-            type: []
+            type: Array as () => string[],
         },
         textAreaModel: {
             type: String
@@ -120,7 +124,7 @@ export default defineComponent({
             type: String
         },
         chipsModel: {
-            type: []
+            type: Array as () => string[],
         },
         checkModel: {
             type: Boolean,
@@ -130,65 +134,71 @@ export default defineComponent({
             type: Function,
             default: () => { },
         },
+        // バリデーションルール
+        rules: {
+            type: Object,
+            default: () => ({}),
+        }
     },
     computed: {
         computedTextModel: {
-            get() {
+            get(): string {
                 // propsで受け取った親モデルの値をcomputedTextModelに反映する
-                return this.textModel
+                return this.textModel ? this.textModel : ''
             },
-            set(value) {
+            set(value: string) {
                 // computedTextModelの値が変更された際はここに入ってくる
                 // $emitで親コンポーネントのmodelに反映する
                 this.$emit('input', value)
             }
         },
         computedTextsModel: {
-            get() {
-                return this.textsModel
+            get(): string[] {
+                return this.textsModel ? this.textsModel : []
             },
-            set(value) {
+            set(value: string) {
                 this.$emit('update', value)
             }
         },
         computedTextAreaModel: {
-            get() {
+            get(): string {
                 // propsで受け取った親モデルの値をcomputedTextAreaModelに反映する
-                return this.textAreaModel
+                return this.textAreaModel ? this.textAreaModel : ''
             },
-            set(value) {
+            set(value: string) {
                 // computedTextAreaModelの値が変更された際はここに入ってくる
                 // $emitで親コンポーネントのmodelに反映する
                 this.$emit('input', value)
             }
         },
         computedSelectModel: {
-            get() {
-                return this.selectModel
+            get(): string {
+                return this.selectModel ? this.selectModel : ''
             },
-            set(value) {
+            set(value: string) {
                 this.$emit('update:selectModel', value)
             }
         },
         computedChipsModel: {
-            get() {
-                return this.chipsModel
+            get(): string[] {
+                return this.chipsModel ? this.chipsModel : []
             },
-            set(value) {
+            set(value: string) {
                 this.$emit('update', value)
             }
         },
         computedCheckModel: {
-            get() {
+            get(): boolean {
                 return this.checkModel
             },
-            set(value) {
+            set(value: boolean) {
                 this.$emit('update:checkModel', value)
             }
         },
     },
-    setup(props) {
+    setup(props, context) {
         const icons = ref({
+            mdiClose,
             mdiPlus,
             mdiMagnify
         })
@@ -197,17 +207,37 @@ export default defineComponent({
         const chips = ref([])
 
         const addTexts = () => {
-            props.textsModel.push('');
-            this.$emit('update:textsModel', props.textsModel)
+            if (props.textsModel) {
+                props.textsModel.push('');
+                context.emit('update:textsModel', props.textsModel)
+            }
+        }
+
+        const removeTexts = (index: number) => {
+            console.log('removeTexts called with index:', index);
+            if (props.textsModel) {
+                if (index >= 0 && index < props.textsModel.length) {  // インデックスが有効な範囲にあることを確認
+                    // props.textsModelのクローンを作成
+                    const updatedTextsModel = [...props.textsModel];
+                    // クローン上で要素を削除
+                    updatedTextsModel.splice(index, 1);
+                    // 更新された配列を親コンポーネントに伝播
+                    context.emit('update:textsModel', updatedTextsModel);
+                } else {
+                    console.error('Invalid index:', index);  // インデックスが無効な場合はエラーを表示
+                }
+            }
         }
 
         const addChip = () => {
-            props.chipsModel.push(newChip.value)
-            newChip.value = ''
-            this.$emit('update:chipsModel', props.chipsModel)
+            if (props.chipsModel) {
+                props.chipsModel.push(newChip.value)
+                newChip.value = ''
+                context.emit('update:chipsModel', props.chipsModel)
+            }
         }
 
-        const removeChip = (index) => {
+        const removeChip = (index: number) => {
             chips.value.splice(index, 1)
         }
 
@@ -221,6 +251,7 @@ export default defineComponent({
             newChip,
             chips,
             addTexts,
+            removeTexts,
             addChip,
             removeChip,
         }

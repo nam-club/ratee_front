@@ -4,9 +4,9 @@
             <template v-slot:activator="{ attrs }">
                 <div>
                     <InputSet type="textField" :caption="FORM_TITLE_TEXT" :labelText="FORM_TITLE_LABEL" :textModel="title"
-                        @input="title = $event" />
+                        @input="title = $event" :rules="titleRule" />
                     <InputSet type="textsField" :caption="FORM_CHOICE_TEXT" :textsModel="choices"
-                        @update:textsModel="choices = $event" :addText="FORM_ADD_CHOICE_TEXT" />
+                        @update:textsModel="choices = $event" :addText="FORM_ADD_CHOICE_TEXT" :rules="choiceRule" />
 
                     <InputSet type="selectBox" :caption="FORM_CATEGORY_TEXT" :selectItems="categoryNames"
                         :selectModel="categoryName" @update:selectModel="setCategoryName" />
@@ -22,13 +22,14 @@
                         <v-row no-gutters>
                             <v-col cols="5" justify="center">
                                 <nuxt-link to="/" style="text-decoration: none; color: inherit;">
-                                    <Button :color="cancelBtnColor" :textColor="cancelBtnTextColor" :buttonStyle="cancelBtnStyle">キャンセル</Button>
+                                    <Button :color="cancelBtnColor" :textColor="cancelBtnTextColor"
+                                        :buttonStyle="cancelBtnStyle">キャンセル</Button>
                                 </nuxt-link>
                             </v-col>
                             <v-col cols="2" />
                             <v-col cols="5" justify="center">
-                                <Button :color="confirmBtnColor" :textColor="confirmBtnTextColor" :buttonStyle="confirmBtnStyle"
-                                    @click="openDialog">確認画面を開く</Button>
+                                <Button :color="confirmBtnColor" :textColor="confirmBtnTextColor"
+                                    :buttonStyle="confirmBtnStyle" @click="openDialog">確認画面を開く</Button>
                             </v-col>
                         </v-row>
                     </v-container>
@@ -55,7 +56,8 @@
                         <v-col cols="2" />
                         <v-col cols="5" justify="center">
                             <nuxt-link to="/" style="text-decoration: none; color: inherit;">
-                                <Button :color="confirmBtnColor" :textColor="confirmBtnTextColor" :buttonStyle="confirmBtnStyle"
+                                <Button :color="confirmBtnColor" :textColor="confirmBtnTextColor"
+                                    :buttonStyle="confirmBtnStyle"
                                     :onClick="() => createQuestionnaire(title, choices, categoryId, tags, options)">投稿する</Button>
                             </nuxt-link>
                         </v-col>
@@ -73,7 +75,8 @@ import Button from '@/components/atoms/Button.vue'
 import InputSet from '@/components/molecules/InputSet.vue'
 import Paragraph from '@/components/molecules/Paragraph.vue'
 import { Category } from '@/types';
-import { FORM_TITLE_TEXT, FORM_TITLE_LABEL, FORM_CHOICE_TEXT, FORM_ADD_CHOICE_TEXT, FORM_CATEGORY_TEXT, FORM_TAG_TEXT, FORM_TAG_LABEL, FORM_COMMENT_LABEL, FORM_MULTI_LABEL } from '@/constants';
+import { FORM_TITLE_TEXT, FORM_TITLE_LABEL, FORM_CHOICE_TEXT, FORM_ADD_CHOICE_TEXT, FORM_CATEGORY_TEXT, FORM_TAG_TEXT, FORM_TAG_LABEL, FORM_COMMENT_LABEL, FORM_MULTI_LABEL,
+     TITLE_MIN_LENGTH, TITLE_MAX_LENGTH, CHOICE_MIN_LENGTH, CHOICE_MAX_LENGTH, CHOICES_MAX_LENGTH, CHOICES_MIN_LENGTH } from '@/constants';
 
 export default defineComponent({
     components: {
@@ -92,17 +95,33 @@ export default defineComponent({
         },
     },
     setup(props) {
-        const title = ref('')
+        const title = ref('');
+        const titleRule = ref({
+            required: (value: string) => !!value || 'タイトルを入力してください。',
+            textLength: (value: string) => {
+                const length = value.length;
+                return (length >= TITLE_MIN_LENGTH && length <= TITLE_MAX_LENGTH) || TITLE_MIN_LENGTH + '~' + TITLE_MAX_LENGTH + '文字以内で入力してください。';
+            },
+        });
 
-        const choiceStyle = ref({ margin: 0 })
-        const choices = ref(['', '', '', ''])
+        const choiceStyle = ref({ margin: 0 });
+        const choices = ref(['', '', '', '']);
+        const choiceRule = ref({
+            textsMaxLength: CHOICES_MAX_LENGTH,
+            textsMinLength: CHOICES_MIN_LENGTH,
+            required: (value: string) => !!value || '選択肢を入力してください。',
+            textLength: (value: string) => {
+                const length = value.length;
+                return (length >= CHOICE_MIN_LENGTH && length <= CHOICE_MAX_LENGTH) || CHOICE_MIN_LENGTH + '~' + CHOICE_MAX_LENGTH + '文字以内で入力してください。';
+            },
+        });
 
-        const categoryNames = ref<string[]>([])
+        const categoryNames = ref<string[]>([]);
         if (props.categories) {
-            categoryNames.value = props.categories.map((item: Category) => item.name)
+            categoryNames.value = props.categories.map((item: Category) => item.name);
         }
-        const categoryId = ref('')
-        const categoryName = ref('')
+        const categoryId = ref('');
+        const categoryName = ref('');
         const setCategoryId = (name: string) => {
             const category = props.categories.find((item: Category) => item.name === name);
             if (category) {
@@ -116,12 +135,12 @@ export default defineComponent({
             setCategoryId(value);
         }
 
-        const tags = ref([])
+        const tags = ref([]);
 
-        const enableComment = ref(false)
-        const enableMultiAns = ref(false)
+        const enableComment = ref(false);
+        const enableMultiAns = ref(false);
 
-        const options = ref({})
+        const options = ref({});
         options.value = { "enableComment": enableComment, "enableMultiAns": enableMultiAns }
 
         const cancelBtnColor = ref("#f5f5f5");
@@ -133,18 +152,20 @@ export default defineComponent({
         const confirmBtnStyle = ref({ fontSize: '1.2em', height: '100%', width: '100%', padding: '5%', display: 'block' });
 
         // ダイアログの表示
-        const dialog = ref(false)
+        const dialog = ref(false);
         const openDialog = () => {
-            dialog.value = true
+            dialog.value = true;
         }
 
         return {
             FORM_TITLE_TEXT,
             FORM_TITLE_LABEL,
             title,
+            titleRule,
             FORM_CHOICE_TEXT,
             choiceStyle,
             choices,
+            choiceRule,
             FORM_ADD_CHOICE_TEXT,
             FORM_CATEGORY_TEXT,
             categoryNames,
