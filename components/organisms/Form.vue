@@ -2,8 +2,7 @@
     <form @submit.prevent="submit" style="margin:5% 20%">
         <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
             <template v-slot:activator="{ attrs }">
-                <v-alert v-if="errFlg" type="error" title="Alert title"
-                    text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi, ratione debitis quis est labore voluptatibus! Eaque cupiditate minima, at placeat totam, magni doloremque veniam neque porro libero rerum unde voluptatem!"
+                <v-alert v-if="errFlg" type="error" :title="FORM_ERR_TITLE" :text="FORM_ERR_TEXT"
                     style="position: fixed; top: 0; left: 0; width: 100%; z-index: 10000;"></v-alert>
                 <div>
                     <InputSet type="textField" :caption="FORM_TITLE_TEXT" :labelText="FORM_TITLE_LABEL" :textModel="title"
@@ -79,7 +78,7 @@ import InputSet from '@/components/molecules/InputSet.vue'
 import Paragraph from '@/components/molecules/Paragraph.vue'
 import { Category } from '@/types';
 import {
-    FORM_TITLE_TEXT, FORM_TITLE_LABEL, FORM_CHOICE_TEXT, FORM_ADD_CHOICE_TEXT, FORM_CATEGORY_TEXT, FORM_TAG_TEXT, FORM_TAG_LABEL, FORM_COMMENT_LABEL, FORM_MULTI_LABEL,
+    FORM_TITLE_TEXT, FORM_TITLE_LABEL, FORM_CHOICE_TEXT, FORM_ADD_CHOICE_TEXT, FORM_CATEGORY_TEXT, FORM_TAG_TEXT, FORM_TAG_LABEL, FORM_COMMENT_LABEL, FORM_MULTI_LABEL, FORM_ERR_TITLE, FORM_ERR_TEXT,
     TITLE_MIN_LENGTH, TITLE_MAX_LENGTH, CHOICE_MIN_LENGTH, CHOICE_MAX_LENGTH, CHOICES_MAX_LENGTH, CHOICES_MIN_LENGTH, TAG_MIN_LENGTH, TAG_MAX_LENGTH, TAGS_MAX_LENGTH, TAGS_MIN_LENGTH
 } from '@/constants';
 
@@ -240,6 +239,8 @@ export default defineComponent({
             dialog,
             openDialog,
             errFlg,
+            FORM_ERR_TITLE,
+            FORM_ERR_TEXT,
         }
     }
 })
