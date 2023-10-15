@@ -81,7 +81,6 @@ export default {
 
         const isFirstLoad = ref(true);
         const load = async ($state: InfiniteLoadingState) => {
-            console.log("伊藤純平")
             if (isFirstLoad.value) {
                 isFirstLoad.value = false;
                 $state.loaded();
