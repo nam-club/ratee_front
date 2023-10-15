@@ -1,5 +1,5 @@
-import { ref, onMounted } from 'vue';
 import { TARGET_QUESTIONNAIRES, TARGET_RECOMMENDS } from '@/constants';
+import { onMounted, ref } from 'vue';
 
 
 // スタブモードの確認
@@ -36,8 +36,28 @@ const baseURL = import.meta.env.VITE_BASE_URL
 
 // アンケート一覧取得API
 const getQuestionnaires = async () => {
+
+    const r = await fetch(`${baseURL}/user/guest/id`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            "hoge": "fuga",
+        }),
+        credentials: 'include'
+    });
+
+    if (r.ok) {
+        const resp = await r.json();
+        resp.cookie
+        alert(resp);
+    } else {
+        console.error('アンケート回答APIの実行中にエラーが発生しました:', r.statusText);
+    }
+
     try {
-        const response = await fetch(`${baseURL}/questionnaires`);
+        const response = await fetch(`${baseURL}/questionnaires`, {credentials: 'include'});
         if (response.ok) {
             const data = await response.json();
             return data.questionnaires;
