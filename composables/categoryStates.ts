@@ -7,7 +7,10 @@ const baseURL = import.meta.env.VITE_BASE_URL
 // カテゴリ情報取得API
 const getCategories = async () => {
     try {
-        const response = await fetch(`${baseURL}/categories`);
+        const url = new URL(`${baseURL}/categories`);
+        const response = await fetch(
+            url, { credentials: 'include' }
+        );
         if (response.ok) {
             const data = await response.json();
             return data.categories;

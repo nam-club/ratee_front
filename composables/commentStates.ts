@@ -32,7 +32,9 @@ const getComments = async (questionId: string, nextToken: string) => {
             });
         }
         url.search = params.toString();
-        const response = await fetch(url);
+        const response = await fetch(
+            url, { credentials: 'include' }
+        );
         if (response.ok) {
             const data = await response.json();
             console.log(data)
@@ -59,7 +61,8 @@ const postComment = async (questionId: string, iconId: number, comment: string) 
                 questionnaireId: questionId,
                 iconId: iconId,
                 comment: comment
-            })
+            }),
+            credentials: 'include'
         });
         if (response.ok) {
             const data = await response.json();

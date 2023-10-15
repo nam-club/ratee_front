@@ -11,7 +11,7 @@
                     <InputSet type="selectBox" :caption="FORM_CATEGORY_TEXT" :selectItems="categoryNames"
                         :selectModel="categoryName" @update:selectModel="setCategoryName" />
                     <InputSet type="chipBox" :caption="FORM_TAG_TEXT" :labelText="FORM_TAG_LABEL" :chipsModel="tags"
-                        @update:chipsModel="tags = $event" />
+                        @update:chipsModel="tags = $event" :rules="tagRule" />
 
                     <InputSet type="checkBox" :labelText="FORM_COMMENT_LABEL" :checkModel="enableComment"
                         @update:checkModel="enableComment = $event" />
@@ -76,7 +76,7 @@ import InputSet from '@/components/molecules/InputSet.vue'
 import Paragraph from '@/components/molecules/Paragraph.vue'
 import { Category } from '@/types';
 import { FORM_TITLE_TEXT, FORM_TITLE_LABEL, FORM_CHOICE_TEXT, FORM_ADD_CHOICE_TEXT, FORM_CATEGORY_TEXT, FORM_TAG_TEXT, FORM_TAG_LABEL, FORM_COMMENT_LABEL, FORM_MULTI_LABEL,
-     TITLE_MIN_LENGTH, TITLE_MAX_LENGTH, CHOICE_MIN_LENGTH, CHOICE_MAX_LENGTH, CHOICES_MAX_LENGTH, CHOICES_MIN_LENGTH } from '@/constants';
+     TITLE_MIN_LENGTH, TITLE_MAX_LENGTH, CHOICE_MIN_LENGTH, CHOICE_MAX_LENGTH, CHOICES_MAX_LENGTH, CHOICES_MIN_LENGTH, TAG_MIN_LENGTH, TAG_MAX_LENGTH, TAGS_MAX_LENGTH, TAGS_MIN_LENGTH } from '@/constants';
 
 export default defineComponent({
     components: {
@@ -136,6 +136,14 @@ export default defineComponent({
         }
 
         const tags = ref([]);
+        const tagRule = ref({
+            tagsMaxLength: TAGS_MAX_LENGTH,
+            tagsMinLength: TAGS_MIN_LENGTH,
+            textLength: (value: string) => {
+                const length = value.length;
+                return (length >= TAG_MIN_LENGTH && length <= TAG_MAX_LENGTH) || TAG_MIN_LENGTH + '~' + TAG_MAX_LENGTH + '文字以内で入力してください。';
+            },
+        });
 
         const enableComment = ref(false);
         const enableMultiAns = ref(false);
@@ -175,6 +183,7 @@ export default defineComponent({
             FORM_TAG_TEXT,
             FORM_TAG_LABEL,
             tags,
+            tagRule,
             FORM_COMMENT_LABEL,
             enableComment,
             FORM_MULTI_LABEL,

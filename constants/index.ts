@@ -37,3 +37,7 @@ export const CHOICES_MIN_LENGTH = 2; // アンケート選択肢の最低数
 export const CHOICES_MAX_LENGTH = 10; // アンケート選択肢の最大数
 export const CHOICE_MIN_LENGTH = 1; // アンケート選択肢の最低文字数
 export const CHOICE_MAX_LENGTH = 10; // アンケート選択肢の最大文字数
+export const TAGS_MIN_LENGTH = 0; // アンケートタグの最低数
+export const TAGS_MAX_LENGTH = 10; // アンケートタグの最大数
+export const TAG_MIN_LENGTH = 1; // アンケートタグの最低文字数
+export const TAG_MAX_LENGTH = 10; // アンケートタグの最大文字数

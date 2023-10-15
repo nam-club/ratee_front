@@ -38,16 +38,16 @@
         <v-container>
             <v-row no-gutters>
                 <v-col cols="9">
-                    <v-text-field v-model="newChip" :label="labelText" />
+                    <v-text-field v-model="newChip" :label="labelText" :rules="[rules.textLength]" />
                 </v-col>
                 <v-col cols="1" />
-                <v-col cols="2" justify="center">
+                <v-col cols="2" justify="center" v-if="computedChipsModel.length < rules.tagsMaxLength">
                     <Button :onClick="addChip" :textColor="tagTextColor" :buttonStyle="tagBtnStyle">追加</Button>
                 </v-col>
             </v-row>
             <v-row no-gutters>
                 <v-col cols="auto" v-for="(c, i) in computedChipsModel" :key="i">
-                    <v-chip v-model="computedChipsModel[i]" class="ma-2" closable @close="removeChip(i)">
+                    <v-chip v-model="computedChipsModel[i]" class="ma-2" closable @click:close="($event: Event) => { $event.stopPropagation(); removeChip(i); }">
                         {{ computedChipsModel[i] }}
                     </v-chip>
                 </v-col>
@@ -238,7 +238,20 @@ export default defineComponent({
         }
 
         const removeChip = (index: number) => {
-            chips.value.splice(index, 1)
+            console.log('removeChip called with index:', index);
+            if (props.chipsModel) {
+                if (index >= 0 && index < props.chipsModel.length) {  // インデックスが有効な範囲にあることを確認
+                    // props.chipsModelのクローンを作成
+                    const updatedChipsModel = [...props.chipsModel];
+                    // クローン上で要素を削除
+                    updatedChipsModel.splice(index, 1);
+                    // 更新された配列を親コンポーネントに伝播
+                    context.emit('update:chipsModel', updatedChipsModel);
+                    console.log(props.chipsModel)
+                } else {
+                    console.error('Invalid index:', index);  // インデックスが無効な場合はエラーを表示
+                }
+            }
         }
 
         const tagTextColor = ref('#515254');
