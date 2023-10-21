@@ -2,6 +2,8 @@
     <form @submit.prevent="submit" style="margin:5% 20%">
         <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
             <template v-slot:activator="{ attrs }">
+                <v-alert v-if="errFlg" type="error" :title="FORM_ERR_TITLE" :text="FORM_ERR_TEXT"
+                    style="position: fixed; top: 0; left: 0; width: 100%; z-index: 10000;"></v-alert>
                 <div>
                     <InputSet type="textField" :caption="FORM_TITLE_TEXT" :labelText="FORM_TITLE_LABEL" :textModel="title"
                         @input="title = $event" :rules="titleRule" />
@@ -75,8 +77,10 @@ import Button from '@/components/atoms/Button.vue'
 import InputSet from '@/components/molecules/InputSet.vue'
 import Paragraph from '@/components/molecules/Paragraph.vue'
 import { Category } from '@/types';
-import { FORM_TITLE_TEXT, FORM_TITLE_LABEL, FORM_CHOICE_TEXT, FORM_ADD_CHOICE_TEXT, FORM_CATEGORY_TEXT, FORM_TAG_TEXT, FORM_TAG_LABEL, FORM_COMMENT_LABEL, FORM_MULTI_LABEL,
-     TITLE_MIN_LENGTH, TITLE_MAX_LENGTH, CHOICE_MIN_LENGTH, CHOICE_MAX_LENGTH, CHOICES_MAX_LENGTH, CHOICES_MIN_LENGTH, TAG_MIN_LENGTH, TAG_MAX_LENGTH, TAGS_MAX_LENGTH, TAGS_MIN_LENGTH } from '@/constants';
+import {
+    FORM_TITLE_TEXT, FORM_TITLE_LABEL, FORM_CHOICE_TEXT, FORM_ADD_CHOICE_TEXT, FORM_CATEGORY_TEXT, FORM_TAG_TEXT, FORM_TAG_LABEL, FORM_COMMENT_LABEL, FORM_MULTI_LABEL, FORM_ERR_TITLE, FORM_ERR_TEXT,
+    TITLE_MIN_LENGTH, TITLE_MAX_LENGTH, CHOICE_MIN_LENGTH, CHOICE_MAX_LENGTH, CHOICES_MAX_LENGTH, CHOICES_MIN_LENGTH, TAG_MIN_LENGTH, TAG_MAX_LENGTH, TAGS_MAX_LENGTH, TAGS_MIN_LENGTH
+} from '@/constants';
 
 export default defineComponent({
     components: {
@@ -95,7 +99,9 @@ export default defineComponent({
         },
     },
     setup(props) {
-        const title = ref('');
+        const errFlg = ref<boolean>(false); // バリデーションチェックフラグ
+
+        const title = ref<string>('');
         const titleRule = ref({
             required: (value: string) => !!value || 'タイトルを入力してください。',
             textLength: (value: string) => {
@@ -105,7 +111,7 @@ export default defineComponent({
         });
 
         const choiceStyle = ref({ margin: 0 });
-        const choices = ref(['', '', '', '']);
+        const choices = ref(['', '']);
         const choiceRule = ref({
             textsMaxLength: CHOICES_MAX_LENGTH,
             textsMinLength: CHOICES_MIN_LENGTH,
@@ -141,7 +147,7 @@ export default defineComponent({
             tagsMinLength: TAGS_MIN_LENGTH,
             textLength: (value: string) => {
                 const length = value.length;
-                return (length >= TAG_MIN_LENGTH && length <= TAG_MAX_LENGTH) || TAG_MIN_LENGTH + '~' + TAG_MAX_LENGTH + '文字以内で入力してください。';
+                return (length <= TAG_MAX_LENGTH) || TAG_MIN_LENGTH + '~' + TAG_MAX_LENGTH + '文字以内で入力してください。';
             },
         });
 
@@ -162,7 +168,42 @@ export default defineComponent({
         // ダイアログの表示
         const dialog = ref(false);
         const openDialog = () => {
-            dialog.value = true;
+            if (!checkValidate()) {
+                dialog.value = true;
+            } else {
+                console.error('Validation errors present, cannot open dialog.');
+            }
+        }
+
+        // バリデーションチェック関数
+        const checkValidate = (): boolean => {
+            errFlg.value = false;
+
+            console.log(title.value)
+            console.log(choices.value)
+            console.log(categoryId.value)
+            console.log(tags.value)
+
+            // タイトルのエラーチェック
+            if (!title.value || title.value === '' || (title.value.length < TITLE_MIN_LENGTH || title.value.length > TITLE_MAX_LENGTH)) {
+                errFlg.value = true;
+
+                // 選択肢のエラーチェック
+            } else if (!choices.value || choices.value.length < CHOICES_MIN_LENGTH || choices.value.length > CHOICES_MAX_LENGTH || choices.value.some(choice => !choice || choice === '' || choice.length < CHOICE_MIN_LENGTH || choice.length > CHOICE_MAX_LENGTH)) {
+                errFlg.value = true;
+
+                // カテゴリのエラーチェック
+            } else if (!categoryId.value || categoryId.value === '') {
+                errFlg.value = true;
+
+                // タグのエラーチェック
+            } else if (!tags.value || tags.value.length < TAGS_MIN_LENGTH || tags.value.length > TAGS_MAX_LENGTH) {
+                errFlg.value = true;
+            }
+
+            console.log(errFlg.value)
+
+            return errFlg.value;
         }
 
         return {
@@ -197,6 +238,9 @@ export default defineComponent({
             confirmBtnTextColor,
             dialog,
             openDialog,
+            errFlg,
+            FORM_ERR_TITLE,
+            FORM_ERR_TEXT,
         }
     }
 })
