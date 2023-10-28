@@ -1,5 +1,15 @@
 <template>
-    <h2 v-if="caption">{{ caption }}</h2>
+    <div style="display: flex; align-items: center;">
+        <h2 v-if="caption">{{ caption }}</h2>
+        <v-chip v-if="captionLabel"
+          class="ma-2"
+          color="red"
+          label
+          text-color="white"
+        >
+          {{ captionLabel }}
+        </v-chip>
+    </div>
     <div v-if="type === 'textField'">
         <v-text-field v-model="computedTextModel" :label="labelText" clearable
             :rules="[rules.required, rules.textLength]" />
@@ -29,7 +39,7 @@
         </v-container>
     </div>
     <div v-else-if="type === 'textArea'">
-        <v-textarea counter :label="labelText" :rules="rules" v-model="computedTextAreaModel"></v-textarea>
+        <v-textarea counter :label="labelText" :rules="[rules.required, rules.textLength]" v-model="computedTextAreaModel"></v-textarea>
     </div>
     <div v-else-if="type === 'selectBox'">
         <v-select :label="labelText" :items="selectItems" v-model="computedSelectModel"></v-select>
@@ -100,6 +110,9 @@ export default defineComponent({
         caption: {
             type: String,
             required: true,
+        },
+        captionLabel: {
+            type: String,
         },
         labelText: {
             type: String,

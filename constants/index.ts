@@ -12,6 +12,7 @@ export const TAB_ID4 = "search";
 export const TAB_NAME4 = "検索";
 
 // アンケート作成フォーム
+export const FORM_CAPTION_REQUIRED_LABEL = "必須";
 export const FORM_TITLE_TEXT = "質問";
 export const FORM_TITLE_LABEL = "質問を入力してください。";
 export const FORM_CHOICE_TEXT = "選択肢";
@@ -41,5 +42,8 @@ export const TAGS_MIN_LENGTH = 0; // アンケートタグの最低数
 export const TAGS_MAX_LENGTH = 10; // アンケートタグの最大数
 export const TAG_MIN_LENGTH = 1; // アンケートタグの最低文字数
 export const TAG_MAX_LENGTH = 10; // アンケートタグの最大文字数
-export const FORM_ERR_TITLE = '入力エラー'; // アンケート投稿でのエラータイトル
-export const FORM_ERR_TEXT = '入力フォームにエラーがあります。各項目を確認してください。'; // アンケート投稿でのエラーメッセージ
+export const FORM_ERR_TITLE = '入力内容にエラーがあります。'; // アンケート投稿でのエラータイトル
+export const FORM_ERR_TEXT = '各項目を確認してください。'; // アンケート投稿でのエラーメッセージ
+export const COMMENT_MIN_LENGTH = 1; // アンケート質問の最低文字数
+export const COMMENT_MAX_LENGTH = 40; // アンケート質問の最大文字数
+export const COMMENT_NULL_TEXT = 'コメントを入力してください。' // コメントのデフォルトおよびエラーメッセージ

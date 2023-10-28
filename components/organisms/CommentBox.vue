@@ -40,8 +40,8 @@
                     </Button>
                 </v-btn-toggle>
                 <v-container fluid>
-                    <InputSet type="textArea" :labelText="commentLabel" :textAreaModel="content"
-                        @input="content = $event" />
+                    <InputSet type="textArea" :labelText="commentLabel" :textAreaModel="content" @input="content = $event"
+                        :rules="commentRule" />
                 </v-container>
             </v-card-text>
             <v-card-actions>
@@ -50,7 +50,7 @@
                     戻る
                 </v-btn>
                 <v-btn color="blue darken-1" text @click="dialog = false"
-                    :onClick="() => postComment(questionId, iconNum, content)">
+                    :onClick="() => postComment(questionId, iconNum, content)" :disabled="errFlg">
                     コメントを投稿する
                 </v-btn>
             </v-card-actions>
@@ -62,6 +62,9 @@
 import Button from '@/components/atoms/Button.vue'
 import Msg from '@/components/atoms/Msg.vue'
 import InputSet from '@/components/molecules/InputSet.vue'
+import {
+    COMMENT_MIN_LENGTH, COMMENT_MAX_LENGTH, COMMENT_NULL_TEXT
+} from '@/constants';
 
 export default defineComponent({
     components: {
@@ -83,6 +86,20 @@ export default defineComponent({
         },
     },
     setup(props) {
+        const errFlg = computed(() => {
+            const length = content.value.length;
+            return !content.value || length < COMMENT_MIN_LENGTH || length > COMMENT_MAX_LENGTH;
+        });
+
+
+        const content = ref<string>('');
+        const commentRule = ref({
+            required: (value: string) => !!value || COMMENT_NULL_TEXT,
+            textLength: (value: string) => {
+                const length = value.length;
+                return (length >= COMMENT_MIN_LENGTH && length <= COMMENT_MAX_LENGTH) || COMMENT_MIN_LENGTH + '~' + COMMENT_MAX_LENGTH + '文字以内で入力してください。';
+            },
+        });
 
         const confirmBtnColor = ref("#3A98B9");
         const confirmBtnTextColor = ref('white');
@@ -99,8 +116,7 @@ export default defineComponent({
             iconNum.value = num;
         }
 
-        const content = ref('')
-        const commentLabel = ref('コメントを入力してください。');
+        const commentLabel = ref(COMMENT_NULL_TEXT);
 
         return {
             confirmBtnColor,
@@ -111,7 +127,9 @@ export default defineComponent({
             iconNum,
             setIcon,
             content,
-            commentLabel
+            commentLabel,
+            commentRule,
+            errFlg
         }
     }
 })

@@ -2,15 +2,13 @@
     <form @submit.prevent="submit" style="margin:5% 20%">
         <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
             <template v-slot:activator="{ attrs }">
-                <v-alert v-if="errFlg" type="error" :title="FORM_ERR_TITLE" :text="FORM_ERR_TEXT"
-                    style="position: fixed; top: 0; left: 0; width: 100%; z-index: 10000;"></v-alert>
                 <div>
-                    <InputSet type="textField" :caption="FORM_TITLE_TEXT" :labelText="FORM_TITLE_LABEL" :textModel="title"
+                    <InputSet type="textField" :caption="FORM_TITLE_TEXT" :captionLabel="FORM_CAPTION_REQUIRED_LABEL" :labelText="FORM_TITLE_LABEL" :textModel="title"
                         @input="title = $event" :rules="titleRule" />
-                    <InputSet type="textsField" :caption="FORM_CHOICE_TEXT" :textsModel="choices"
+                    <InputSet type="textsField" :caption="FORM_CHOICE_TEXT" :captionLabel="FORM_CAPTION_REQUIRED_LABEL" :textsModel="choices"
                         @update:textsModel="choices = $event" :addText="FORM_ADD_CHOICE_TEXT" :rules="choiceRule" />
 
-                    <InputSet type="selectBox" :caption="FORM_CATEGORY_TEXT" :selectItems="categoryNames"
+                    <InputSet type="selectBox" :caption="FORM_CATEGORY_TEXT" :captionLabel="FORM_CAPTION_REQUIRED_LABEL" :selectItems="categoryNames"
                         :selectModel="categoryName" @update:selectModel="setCategoryName" />
                     <InputSet type="chipBox" :caption="FORM_TAG_TEXT" :labelText="FORM_TAG_LABEL" :chipsModel="tags"
                         @update:chipsModel="tags = $event" :rules="tagRule" />
@@ -31,7 +29,7 @@
                             <v-col cols="2" />
                             <v-col cols="5" justify="center">
                                 <Button :color="confirmBtnColor" :textColor="confirmBtnTextColor"
-                                    :buttonStyle="confirmBtnStyle" @click="openDialog">確認画面を開く</Button>
+                                    :buttonStyle="confirmBtnStyle" @click="openDialog" :disabled="errFlg">確認画面を開く</Button>
                             </v-col>
                         </v-row>
                     </v-container>
@@ -78,6 +76,7 @@ import InputSet from '@/components/molecules/InputSet.vue'
 import Paragraph from '@/components/molecules/Paragraph.vue'
 import { Category } from '@/types';
 import {
+    FORM_CAPTION_REQUIRED_LABEL,
     FORM_TITLE_TEXT, FORM_TITLE_LABEL, FORM_CHOICE_TEXT, FORM_ADD_CHOICE_TEXT, FORM_CATEGORY_TEXT, FORM_TAG_TEXT, FORM_TAG_LABEL, FORM_COMMENT_LABEL, FORM_MULTI_LABEL, FORM_ERR_TITLE, FORM_ERR_TEXT,
     TITLE_MIN_LENGTH, TITLE_MAX_LENGTH, CHOICE_MIN_LENGTH, CHOICE_MAX_LENGTH, CHOICES_MAX_LENGTH, CHOICES_MIN_LENGTH, TAG_MIN_LENGTH, TAG_MAX_LENGTH, TAGS_MAX_LENGTH, TAGS_MIN_LENGTH
 } from '@/constants';
@@ -99,7 +98,9 @@ export default defineComponent({
         },
     },
     setup(props) {
-        const errFlg = ref<boolean>(false); // バリデーションチェックフラグ
+        const errFlg = computed(() => {
+            return !title.value || title.value.length < TITLE_MIN_LENGTH || title.value.length > TITLE_MAX_LENGTH || !choices.value || choices.value.length < CHOICES_MIN_LENGTH || choices.value.length > CHOICES_MAX_LENGTH || choices.value.some(choice => !choice || choice === '' || choice.length < CHOICE_MIN_LENGTH || choice.length > CHOICE_MAX_LENGTH || !categoryId.value || categoryId.value === '');
+        });
 
         const title = ref<string>('');
         const titleRule = ref({
@@ -168,15 +169,15 @@ export default defineComponent({
         // ダイアログの表示
         const dialog = ref(false);
         const openDialog = () => {
-            if (!checkValidate()) {
+            //if (!checkValidate()) {
                 dialog.value = true;
-            } else {
+            /*} else {
                 console.error('Validation errors present, cannot open dialog.');
-            }
+            }*/
         }
 
         // バリデーションチェック関数
-        const checkValidate = (): boolean => {
+        /*const checkValidate = (): boolean => {
             errFlg.value = false;
 
             console.log(title.value)
@@ -189,7 +190,7 @@ export default defineComponent({
                 errFlg.value = true;
 
                 // 選択肢のエラーチェック
-            } else if (!choices.value || choices.value.length < CHOICES_MIN_LENGTH || choices.value.length > CHOICES_MAX_LENGTH || choices.value.some(choice => !choice || choice === '' || choice.length < CHOICE_MIN_LENGTH || choice.length > CHOICE_MAX_LENGTH)) {
+            } else if (!choices.value || choices.value.length < CHOICES_MIN_LENGTH || choices.value.length > CHOICES_MAX_LENGTH || choices.value.some(choice => !choice || choice === '' || choice.length < CHOICE_MIN_LENGTH || choice.length > CHOICE_MAX_LENGTH) || !categoryId.value || categoryId.value === '' || !tags.value || tags.value.length < TAGS_MIN_LENGTH || tags.value.length > TAGS_MAX_LENGTH) {
                 errFlg.value = true;
 
                 // カテゴリのエラーチェック
@@ -204,7 +205,7 @@ export default defineComponent({
             console.log(errFlg.value)
 
             return errFlg.value;
-        }
+        }*/
 
         return {
             FORM_TITLE_TEXT,
@@ -241,6 +242,7 @@ export default defineComponent({
             errFlg,
             FORM_ERR_TITLE,
             FORM_ERR_TEXT,
+            FORM_CAPTION_REQUIRED_LABEL
         }
     }
 })
