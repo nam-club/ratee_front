@@ -49,6 +49,7 @@ const updateUserId = async () => {
 
 // アンケート一覧取得API
 const getQuestionnaires = async (order: string): Promise<ResponseData> => {
+    console.log("アンケート一覧取得API")
     try {
         const url = new URL(`${baseURL}/questionnaires`);
         const params = new URLSearchParams({
@@ -72,6 +73,7 @@ const getQuestionnaires = async (order: string): Promise<ResponseData> => {
 
 // アンケート一覧取得API（続き）
 const getNextQuestionnaires = async (order: string, nextToken: string): Promise<ResponseData> => {
+    console.log("アンケート一覧取得API（続き）")
     try {
         const url = new URL(`${baseURL}/questionnaires`);
         const params = new URLSearchParams({
@@ -95,7 +97,8 @@ const getNextQuestionnaires = async (order: string, nextToken: string): Promise<
 }
 
 // アンケート一覧取得API（検索）
-const getSearchQuestionnaires = async (type: string, word: string) => {
+const getSearchQuestionnaires = async (type: string, word: string): Promise<ResponseData> => {
+    console.log("アンケート一覧取得API（検索）")
     try {
         const url = new URL(`${baseURL}/questionnaires`);
         let params;
@@ -130,14 +133,15 @@ const getSearchQuestionnaires = async (type: string, word: string) => {
         );
         if (response.ok) {
             const data = await response.json();
-            return data.questionnaires;
+            console.log(data)
+            return data;
         } else {
             console.error('アンケート一覧取得APIの実行中にエラーが発生しました:', response.statusText);
         }
     } catch (error) {
         console.error('アンケート一覧取得APIの実行中にエラーが発生しました:', error);
     }
-    return []; // エラーが発生した場合やレスポンスがOKでない場合は空の配列を返す
+    return { questionnaires: [], nextToken: '' }; // エラーが発生した場合やレスポンスがOKでない場合は空の配列を返す
 }
 
 // アンケート情報取得API
@@ -289,7 +293,9 @@ export const useQuestionnaires = (target: string, questionId: string) => {
     // アンケート検索
     const searchQuestionnaires = async (type: string, word: string) => {
         if (state.value) {
-            state.value.questionnaires = [...await getSearchQuestionnaires(type, word)];
+            const qObject = await getSearchQuestionnaires(type, word);
+            state.value.questionnaires = qObject.questionnaires ? [...qObject.questionnaires] : state.value.questionnaires;
+            state.value.nextToken = qObject.nextToken ? qObject.nextToken : '';
         }
     }
 
@@ -313,7 +319,9 @@ export const useQuestionnaires = (target: string, questionId: string) => {
 
         // アンケート回答APIが完了した後にアンケート一覧取得API（検索）を実行
         if (state.value) {
-            state.value.questionnaires = [...await getSearchQuestionnaires(type, word)];
+            const qObject = await getSearchQuestionnaires(type, word);
+            state.value.questionnaires = qObject.questionnaires ? [...qObject.questionnaires] : state.value.questionnaires;
+            state.value.nextToken = qObject.nextToken ? qObject.nextToken : '';
         }
     }
 

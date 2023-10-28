@@ -1,14 +1,14 @@
 <template>
     <v-card class="bg-secondary" dark>
         <v-tabs v-model="tab" color="primary" dark align-tabs="center">
-            <v-tab :value="1" @click="changeQuestionnaires(TAB_ID1)">{{ TAB_NAME1 }}</v-tab>
-            <v-tab :value="2" @click="changeQuestionnaires(TAB_ID2)">{{ TAB_NAME2 }}</v-tab>
-            <v-tab :value="3" @click="changeQuestionnaires(TAB_ID3)">{{ TAB_NAME3 }}</v-tab>
-            <v-tab :value="4">{{ TAB_NAME4 }}</v-tab>
+            <v-tab :value="TAB_NUM1" @click="changeQuestionnaires(TAB_ID1)">{{ TAB_NAME1 }}</v-tab>
+            <v-tab :value="TAB_NUM2" @click="changeQuestionnaires(TAB_ID2)">{{ TAB_NAME2 }}</v-tab>
+            <v-tab :value="TAB_NUM3" @click="changeQuestionnaires(TAB_ID3)">{{ TAB_NAME3 }}</v-tab>
+            <v-tab :value="TAB_NUM4">{{ TAB_NAME4 }}</v-tab>
         </v-tabs>
         <v-window v-model="tab">
-            <v-window-item v-for="n in 4" :key="n" :value="n">
-                <div v-if="n === 4">
+            <v-window-item v-for="n in TAB_LENGTH" :key="n" :value="n">
+                <div v-if="n === TAB_NUM4">
                     <v-container>
                         <v-row>
                             <v-col cols="2" class="align-self-center">
@@ -33,7 +33,7 @@
                             </v-col>
                         </v-row>
                     </v-container>
-                    <AnswerBox style="margin:5%" :questionnaires="questionnaires" :answerQuestionnaire="answerQuestionnaire"
+                    <AnswerBox style="margin:5%" :questionnaires="questionnaires" :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire"
                         :answerSearchQuestionnaire="answerSearchQuestionnaire" :searchType="typeName" :searchWord="word"
                         :searchCategory="categoryId" :goToSearchTab="goToSearchTab"/>
                 </div>
@@ -48,7 +48,7 @@
 import { mdiPlus, mdiMagnify } from '@mdi/js';
 import InputSet from '@/components/molecules/InputSet.vue'
 import AnswerBox from '@/components/organisms/AnswerBox.vue'
-import { TAB_ID1, TAB_NAME1, TAB_ID2, TAB_NAME2, TAB_ID3, TAB_NAME3, TAB_ID4, TAB_NAME4, FORM_TITLE_TEXT, FORM_CATEGORY_TEXT, FORM_TAG_TEXT, SEARCH_LABEL, SEARCH_TYPES } from '@/constants';
+import { TAB_LENGTH, TAB_ID1, TAB_NAME1, TAB_NUM1, TAB_ID2, TAB_NAME2, TAB_NUM2, TAB_ID3, TAB_NAME3, TAB_NUM3, TAB_ID4, TAB_NAME4, TAB_NUM4, FORM_TITLE_TEXT, FORM_CATEGORY_TEXT, FORM_TAG_TEXT, SEARCH_LABEL, SEARCH_TYPES } from '@/constants';
 import { Category } from '@/types';
 
 export default {
@@ -129,7 +129,9 @@ export default {
 
         // 検索タブに移動する関数
         const goToSearchTab = (value: string) => {
-            tab.value = 4;
+            if(tab.value !== TAB_NUM4) {
+                tab.value = TAB_NUM4;
+            }
             word.value = value;
             typeName.value = FORM_TAG_TEXT;
         };
@@ -138,14 +140,19 @@ export default {
             icons,
             tab,
             goToSearchTab,
+            TAB_LENGTH,
             TAB_ID1,
             TAB_NAME1,
+            TAB_NUM1,
             TAB_ID2,
             TAB_NAME2,
+            TAB_NUM2,
             TAB_ID3,
             TAB_NAME3,
+            TAB_NUM3,
             TAB_ID4,
             TAB_NAME4,
+            TAB_NUM4,
             FORM_CATEGORY_TEXT,
             SEARCH_LABEL,
             SEARCH_TYPES,
