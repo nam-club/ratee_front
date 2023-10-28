@@ -86,6 +86,7 @@ export default defineComponent({
         },
     },
     setup(props) {
+        console.log(props.comments)
         const errFlg = computed(() => {
             const length = content.value.length;
             return !content.value || length < COMMENT_MIN_LENGTH || length > COMMENT_MAX_LENGTH;

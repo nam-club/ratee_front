@@ -9,12 +9,16 @@ export interface Comment {
     createdAt: string;
 }
 
+type ResponseData = {
+    comments: Comment[];
+    nextToken: string;
+}
 
 // ベースURLの読み込み
 const baseURL = import.meta.env.VITE_BASE_URL
 
 // コメント一覧取得API
-const getComments = async (questionId: string, nextToken: string) => {
+const getComments = async (questionId: string, nextToken: string): Promise<ResponseData> => {
     const limit = 10; // 1リクエストあたりの取得件数
     try {
         const url = new URL(`${baseURL}/questionnaire/comments`);
@@ -38,14 +42,14 @@ const getComments = async (questionId: string, nextToken: string) => {
         if (response.ok) {
             const data = await response.json();
             console.log(data)
-            return data.comments;
+            return data;
         } else {
             console.error('コメント一覧取得APIの実行中にエラーが発生しました:', response.statusText);
         }
     } catch (error) {
         console.error('コメント一覧取得APIの実行中にエラーが発生しました:', error);
     }
-    return []; // エラーが発生した場合やレスポンスがOKでない場合は空の配列を返す
+    return { comments: [], nextToken: '' };
 }
 
 // コメント投稿API
@@ -77,12 +81,27 @@ const postComment = async (questionId: string, iconId: number, comment: string) 
 
 // コメント一覧のStore定義
 export const useComments = (questionId: string, nextToken: string) => {
-    const state = ref<Comment[]>([]); // 初期値は空の配列
+    const state = ref<ResponseData>({ comments: [], nextToken: '' });
+    const isLoading = ref(true);
 
+    // コメント一覧の取得(初回)
     onMounted(async () => {
-        state.value = await getComments(questionId, nextToken);
-        console.log(state)
+        const cObject = await getComments(questionId, nextToken);
+        state.value.comments = cObject.comments ? [...cObject.comments] : state.value.comments;
+        state.value.nextToken = cObject.nextToken ? cObject.nextToken : '';
+        isLoading.value = false;
     });
+
+    // 続きのコメント一覧を取得(無限スクロール)
+    const scrollComments = async (questionId: string, nextToken: string) => {
+        if (nextToken !== '') {
+            const cObject = await getComments(questionId, nextToken);
+            if (cObject.comments) {
+                state.value.comments.push(...cObject.comments);
+            }
+            state.value.nextToken = cObject.nextToken ? cObject.nextToken : '';
+        }
+    }
 
     // コメント投稿
     const sendComment = async (questionId: string, iconId: number, comment: string) => {
@@ -90,12 +109,18 @@ export const useComments = (questionId: string, nextToken: string) => {
         await postComment(questionId, iconId, comment);
 
         // コメント投稿APIが完了した後にコメント一覧取得APIを実行
-        state.value = [...await getComments(questionId, "")];
+        if (state.value) {
+            const cObject = await getComments(questionId, "");
+            state.value.comments = cObject.comments ? [...cObject.comments] : state.value.comments;
+            state.value.nextToken = cObject.nextToken ? cObject.nextToken : '';
+        }
     }
 
     return {
         state: readonly(state),
-        sendComment
+        isLoading,
+        scrollComments,
+        sendComment,
     }
 
 }
