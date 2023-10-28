@@ -57,6 +57,7 @@ export default defineComponent({
         const comments = ref([]);
         watchEffect(() => {
             comments.value = cStore.state.value.comments;
+            console.log(cStore.state.value.nextToken)
         });
         const isLoading = cStore.isLoading;
 
@@ -80,8 +81,8 @@ export default defineComponent({
                 if (cStore.state.value.nextToken) {
                     scrollComments(cStore.state.value.nextToken);
                 }
-                // 10件未満だったらローディング完了にする
-                if (comments.length < MAX_COUNT) {
+                // 最大件数に達したらローディング完了にする
+                if (comments.length >= MAX_COUNT) {
                     $state.complete();
                 } else {
                     $state.loaded();
@@ -95,6 +96,11 @@ export default defineComponent({
         const postComment = (questionId: string, iconId: number, comment: string) => {
             cStore.sendComment(questionId, iconId, comment);
         }
+
+        //コメントのリセット
+        onBeforeUnmount(() => {
+            cStore.resetComment();
+        });
 
         return {
             questionnaire,

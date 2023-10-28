@@ -116,11 +116,20 @@ export const useComments = (questionId: string, nextToken: string) => {
         }
     }
 
+    // コメントのリセット
+    const resetComment = () => {
+        if (state.value) {
+            state.value.comments = [];
+            state.value.nextToken = '';
+        }
+    }
+
     return {
         state: readonly(state),
         isLoading,
         scrollComments,
         sendComment,
+        resetComment
     }
 
 }

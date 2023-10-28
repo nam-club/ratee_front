@@ -341,6 +341,13 @@ export const useQuestionnaires = (target: string, questionId: string) => {
         }
     }
 
+    const resetQuestionnaires = () => {
+        if (state.value) {
+            state.value.questionnaires = [];
+            state.value.nextToken = '';
+        }
+    }
+
     return {
         state: readonly(state),
         isLoading,
@@ -349,7 +356,8 @@ export const useQuestionnaires = (target: string, questionId: string) => {
         searchQuestionnaires,
         answerQuestionnaire,
         answerSearchQuestionnaire,
-        createQuestionnaire
+        createQuestionnaire,
+        resetQuestionnaires
     }
 }
 

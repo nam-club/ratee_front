@@ -92,8 +92,8 @@ export default {
                 if (qStore.state.value.nextToken) {
                     scrollQuestionnaires(TAB_ID1, qStore.state.value.nextToken);
                 }
-                // 10件未満だったらローディング完了にする
-                if (questionnaires.length < MAX_COUNT) {
+                // 最大件数に達したらローディング完了にする
+                if (questionnaires.length >= MAX_COUNT) {
                     $state.complete();
                 } else {
                     $state.loaded();
@@ -102,6 +102,11 @@ export default {
                 $state.error();
             }
         };
+
+        //コメントのリセット
+        onBeforeUnmount(() => {
+            qStore.resetQuestionnaires();
+        });
 
         return {
             questionnaires,
