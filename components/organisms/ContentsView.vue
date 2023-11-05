@@ -1,10 +1,10 @@
 <template>
     <v-card class="bg-secondary" dark>
         <v-tabs v-model="tab" color="primary" dark align-tabs="center">
-            <v-tab :value="TAB_NUM1" @click="changeQuestionnaires(TAB_ID1)">{{ TAB_NAME1 }}</v-tab>
-            <v-tab :value="TAB_NUM2" @click="changeQuestionnaires(TAB_ID2)">{{ TAB_NAME2 }}</v-tab>
-            <v-tab :value="TAB_NUM3" @click="changeQuestionnaires(TAB_ID3)">{{ TAB_NAME3 }}</v-tab>
-            <v-tab :value="TAB_NUM4">{{ TAB_NAME4 }}</v-tab>
+            <v-tab :value="TAB_NUM1" @click="changeTab(TAB_ID1)">{{ TAB_NAME1 }}</v-tab>
+            <v-tab :value="TAB_NUM2" @click="changeTab(TAB_ID2)">{{ TAB_NAME2 }}</v-tab>
+            <v-tab :value="TAB_NUM3" @click="changeTab(TAB_ID3)">{{ TAB_NAME3 }}</v-tab>
+            <v-tab :value="TAB_NUM4" @click="changeTab(TAB_ID4)">{{ TAB_NAME4 }}</v-tab>
         </v-tabs>
         <v-window v-model="tab">
             <v-window-item v-for="n in TAB_LENGTH" :key="n" :value="n">
@@ -33,12 +33,14 @@
                             </v-col>
                         </v-row>
                     </v-container>
-                    <AnswerBox style="margin:5%" :questionnaires="questionnaires" :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire"
+                    <AnswerBox style="margin:5%" :questionnaires="questionnaires"
+                        :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire"
                         :answerSearchQuestionnaire="answerSearchQuestionnaire" :searchType="typeName" :searchWord="word"
-                        :searchCategory="categoryId" :goToSearchTab="goToSearchTab"/>
+                        :searchCategory="categoryId" :goToSearchTab="goToSearchTab" />
                 </div>
-                <AnswerBox v-else style="margin:5%" :questionnaires="questionnaires" :searchQuestionnaires="searchQuestionnaires"
-                    :answerQuestionnaire="answerQuestionnaire" :answerSearchQuestionnaire="answerSearchQuestionnaire" :goToSearchTab="goToSearchTab" />
+                <AnswerBox v-else style="margin:5%" :questionnaires="questionnaires"
+                    :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire"
+                    :answerSearchQuestionnaire="answerSearchQuestionnaire" :goToSearchTab="goToSearchTab" />
             </v-window-item>
         </v-window>
     </v-card>
@@ -73,6 +75,10 @@ export default {
             required: true
         },
         answerSearchQuestionnaire: {
+            type: Function,
+            required: true
+        },
+        resetQuestionnaires: {
             type: Function,
             required: true
         },
@@ -127,9 +133,17 @@ export default {
         // タブの値をリアクティブにする
         const tab = ref<number | null>(null);
 
-        // 検索タブに移動する関数
+        // タブを移動する
+        const changeTab = async (id: string) => {
+            await props.resetQuestionnaires();
+            if (tab.value !== TAB_NUM4) {
+                await props.changeQuestionnaires(id);
+            }
+        }
+
+        // タグを押下して検索タブに移動する関数
         const goToSearchTab = (value: string) => {
-            if(tab.value !== TAB_NUM4) {
+            if (tab.value !== TAB_NUM4) {
                 tab.value = TAB_NUM4;
             }
             word.value = value;
@@ -139,6 +153,7 @@ export default {
         return {
             icons,
             tab,
+            changeTab,
             goToSearchTab,
             TAB_LENGTH,
             TAB_ID1,

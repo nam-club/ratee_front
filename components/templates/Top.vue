@@ -1,7 +1,7 @@
 <template>
     <v-app>
         <Header :logo="logo" :title="headerTitle" />
-        <ContentsView style="margin:5%" :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires" :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire" :answerSearchQuestionnaire="answerSearchQuestionnaire" :categories="categories" />
+        <ContentsView style="margin:5%" :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires" :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire" :answerSearchQuestionnaire="answerSearchQuestionnaire" :resetQuestionnaires="resetQuestionnaires" :categories="categories" />
         <Footer :buttonText="footerButtonText" />
     </v-app>
 </template>
@@ -43,7 +43,11 @@ export default defineComponent({
         categories: {
             type: Array as PropType<Category[]>,
             required: true,
-        }
+        },
+        resetQuestionnaires: {
+            type: Function,
+            required: true
+        },
     },
     setup() {
         const logo = '/logo.png' // 画像のパスを指定してください

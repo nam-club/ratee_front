@@ -2,7 +2,7 @@
     <div v-if="!isLoading">
         <Questionnaire v-if="questionnaire" :questionnaire="questionnaire" :answerQuestionnaire="answerQuestionnaire"
             :comments="comments" :postComment="postComment" :recommends="recommends" />
-        <InfiniteLoading :comments="comments" @infinite="load" :immediate-check="false" :reverse="false">
+        <InfiniteLoading :comments="comments" @infinite="load" :immediate-check="false" :reverse="false" :disabled="isInfiniteDisabled">
             <template #complete>
                 <span>読み込み終了</span>
             </template>
@@ -55,6 +55,7 @@ export default defineComponent({
         // コメント一覧取得
         const cStore = useComments(questionId, "");
         const comments = ref([]);
+
         watchEffect(() => {
             comments.value = cStore.state.value.comments;
             console.log(cStore.state.value.nextToken)
@@ -62,24 +63,35 @@ export default defineComponent({
         const isLoading = cStore.isLoading;
 
         // 続きのコメント一覧を取得
-        const scrollComments = (nextToken: string) => {
+        const scrollComments = async (nextToken: string) => {
             console.log('==start scrollComments==')
-            cStore.scrollComments(questionId, nextToken)
+            await cStore.scrollComments(questionId, nextToken)
             console.log(cStore.state)
         };
 
-        const isFirstLoad = ref(true);
-        const load = async ($state: InfiniteLoadingState) => {
-            if (isFirstLoad.value) {
-                isFirstLoad.value = false;
-                $state.loaded();
-                return;
-            }
+        const isInfiniteDisabled = ref(false); // 無限スクロール制御変数の定義
 
+        watchEffect(() => {
+            if (cStore.state.value.nextToken === '') {
+                isInfiniteDisabled.value = true;
+            } else {
+                isInfiniteDisabled.value = false;
+            }
+        });
+
+        const load = async ($state: InfiniteLoadingState) => {
+            if (isInfiniteDisabled.value) {
+                return; // 無限ローディングが無効の場合は関数の処理を終了
+            }
             try {
-                console.log(cStore.state.value.nextToken)
-                if (cStore.state.value.nextToken) {
-                    scrollComments(cStore.state.value.nextToken);
+                if (cStore.state.value.nextToken !== '') {
+                    console.log("nextTokenあり")
+                    await scrollComments(cStore.state.value.nextToken);
+                    $state.loaded();
+                } else {
+                    console.log("nextTokenなし")
+                    await scrollComments(cStore.state.value.nextToken);
+                    $state.complete();
                 }
                 // 最大件数に達したらローディング完了にする
                 if (comments.length >= MAX_COUNT) {
@@ -109,6 +121,7 @@ export default defineComponent({
             comments,
             isLoading,
             load,
+            isInfiniteDisabled,
             postComment
         }
     }

@@ -2,8 +2,8 @@
     <div v-if="!isLoading">
         <Top :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires"
             :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire"
-            :answerSearchQuestionnaire="answerSearchQuestionnaire" :categories="categories" />
-        <InfiniteLoading :questionnaires="questionnaires" @infinite="load" :immediate-check="false">
+            :answerSearchQuestionnaire="answerSearchQuestionnaire" :resetQuestionnaires="resetQuestionnaires" :categories="categories" />
+        <InfiniteLoading :questionnaires="questionnaires" @infinite="load" :immediate-check="false" :reverse="false" :disabled="isInfiniteDisabled">
             <template #complete>
                 <span>読み込み終了</span>
             </template>
@@ -73,24 +73,36 @@ export default {
         const categories = cStore.state;
 
         // 続きのアンケート一覧を取得
-        const scrollQuestionnaires = (order: string, nextToken: string) => {
+        const scrollQuestionnaires = async (order: string, nextToken: string) => {
             console.log('==start scrollQuestionnaires===')
-            qStore.scrollQuestionnaires(order, nextToken)
+            await qStore.scrollQuestionnaires(order, nextToken)
             console.log(qStore.state)
         };
 
-        const isFirstLoad = ref(true);
-        const load = async ($state: InfiniteLoadingState) => {
-            if (isFirstLoad.value) {
-                isFirstLoad.value = false;
-                $state.loaded();
-                return;
-            }
+        const isInfiniteDisabled = ref(false); // 無限スクロール制御変数の定義
 
+        watchEffect(() => {
+            if (qStore.state.value.nextToken === '') {
+                isInfiniteDisabled.value = true;
+            } else {
+                isInfiniteDisabled.value = false;
+            }
+        });
+
+        const load = async ($state: InfiniteLoadingState) => {
+            console.log(qStore.state.value.nextToken)
+            if (isInfiniteDisabled.value) {
+                return; // 無限ローディングが無効の場合は関数の処理を終了
+            }
             try {
-                console.log(qStore.state.value.nextToken)
-                if (qStore.state.value.nextToken) {
-                    scrollQuestionnaires(TAB_ID1, qStore.state.value.nextToken);
+                if (qStore.state.value.nextToken !== '') {
+                    console.log("nextTokenあり")
+                    await scrollQuestionnaires(TAB_ID1, qStore.state.value.nextToken);
+                    $state.loaded();
+                } else {
+                    console.log("nextTokenなし")
+                    await scrollQuestionnaires(TAB_ID1, qStore.state.value.nextToken);
+                    $state.complete();
                 }
                 // 最大件数に達したらローディング完了にする
                 if (questionnaires.length >= MAX_COUNT) {
@@ -103,10 +115,15 @@ export default {
             }
         };
 
-        //コメントのリセット
+        //アンケートのリセット
         onBeforeUnmount(() => {
-            qStore.resetQuestionnaires();
+            resetQuestionnaires();
         });
+
+        // アンケートのリセット
+        const resetQuestionnaires = async () => {
+            await qStore.resetQuestionnaires();
+        }
 
         return {
             questionnaires,
@@ -116,7 +133,9 @@ export default {
             answerQuestionnaire,
             answerSearchQuestionnaire,
             categories,
-            load
+            load,
+            isInfiniteDisabled,
+            resetQuestionnaires
         }
     }
 }
