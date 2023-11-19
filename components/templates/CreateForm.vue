@@ -1,7 +1,7 @@
 <template>
     <v-app>
         <div v-if="categories.length">
-            <Header :logo="logo" :title="headerTitle" />
+            <Header />
         </div>
         <Form :categories="categories" :createQuestionnaire="createQuestionnaire" />
     </v-app>
@@ -29,13 +29,9 @@ export default defineComponent({
         },
     },
     setup() {
-        const logo = '/logo.png' // 画像のパスを指定してください
-        const headerTitle = ref('ratee')
         const contentsBg = ref('#E8D5C4')
 
         return {
-            logo,
-            headerTitle,
             contentsBg,
         }
     }

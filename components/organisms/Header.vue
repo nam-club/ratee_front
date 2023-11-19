@@ -3,34 +3,44 @@
         <v-btn v-if="isMobile" icon @click="toggleMenu">
             <v-icon>{{ icons.mdiMenu }}</v-icon>
         </v-btn>
-        <img :src="logo" alt="Logo" height="50%" class="logo-img" />
         <nuxt-link to="/" style="text-decoration: none; color: inherit;">
-            <v-app-bar-title>{{ title }}</v-app-bar-title>
+            <img :src="titleImg" @load="imageLoaded" @error="imageError" class="logo-img" />
         </nuxt-link>
         <v-spacer></v-spacer>
+
     </v-app-bar>
 </template>
+
+<style scoped>
+.logo-img {
+    width: 10%;
+    /* ここで幅を設定 */
+    height: auto;
+    /* 高さは自動調整 */
+}
+</style>
   
 <script>
 import { defineComponent } from 'vue'
 import {
     mdiMenu,
 } from '@mdi/js'
+import { TITLE_IMG } from '@/constants';
 
 export default defineComponent({
-    props: {
-        // ヘッダーのロゴを定義
-        logo: {
-            type: String,
-            required: true,
-        },
-        // ヘッダーのタイトルを定義
-        title: {
-            type: String,
-            required: true,
-        }
-    },
     setup() {
+        const titleImg = TITLE_IMG;
+
+        const imageError = () => {
+            console.error('画像の読み込みに失敗しました。');
+        };
+
+        // 画像が正常にロードされた場合の処理
+        const imageLoaded = () => {
+            imageLoaded.value = true;
+            console.log('画像が正常にロードされました。');
+        };
+
         const icons = ref({
             mdiMenu,
         })
@@ -55,9 +65,12 @@ export default defineComponent({
         }
 
         return {
+            titleImg,
             icons,
             isMobile,
             toggleMenu,
+            imageLoaded,
+            imageError
         }
     }
 })

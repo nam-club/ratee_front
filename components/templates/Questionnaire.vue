@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <Header :logo="logo" :title="headerTitle" />
+        <Header />
         <DetailView style="margin:5%" :questionnaire="questionnaire" :answerQuestionnaire="answerQuestionnaire" />
         <RecommendBox v-if="recommends && recommends.length !== 0" style="margin:0 5%" :recommends="recommends" />
         <CommentBox v-if="questionnaire.enableComment" style="margin:'5%" :questionId="questionnaire.id" :comments="comments" :postComment="postComment" />
@@ -45,14 +45,10 @@ export default defineComponent({
         },
     },
     setup(props) {
-        const logo = '/logo.png' // 画像のパスを指定してください
-        const headerTitle = ref('ratee')
         const footerButtonText = ref('アンケートを作る')
         console.log(props.comments)
 
         return {
-            logo,
-            headerTitle,
             footerButtonText
         }
     }

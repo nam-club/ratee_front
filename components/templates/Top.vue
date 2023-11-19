@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <Header :logo="logo" :title="headerTitle" />
+        <Header />
         <ContentsView style="margin:5%" :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires" :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire" :answerSearchQuestionnaire="answerSearchQuestionnaire" :resetQuestionnaires="resetQuestionnaires" :categories="categories" />
         <Footer :buttonText="footerButtonText" />
     </v-app>
@@ -50,8 +50,6 @@ export default defineComponent({
         },
     },
     setup(props) {
-        const logo = '/logo.png' // 画像のパスを指定してください
-        const headerTitle = ref('ratee')
         const footerButtonText = ref('アンケートを作る')
 
         watchEffect(() => {
@@ -60,8 +58,6 @@ export default defineComponent({
         });
 
         return {
-            logo,
-            headerTitle,
             footerButtonText,
         }
     },

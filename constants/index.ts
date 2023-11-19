@@ -52,3 +52,6 @@ export const FORM_ERR_TEXT = '各項目を確認してください。'; // ア�
 export const COMMENT_MIN_LENGTH = 1; // アンケート質問の最低文字数
 export const COMMENT_MAX_LENGTH = 40; // アンケート質問の最大文字数
 export const COMMENT_NULL_TEXT = 'コメントを入力してください。' // コメントのデフォルトおよびエラーメッセージ
+
+// 画像パス
+export const TITLE_IMG = '/logo.png';
