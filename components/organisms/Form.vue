@@ -1,76 +1,91 @@
 <template>
-    <form @submit.prevent="submit" style="margin:5% 20%">
-        <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
-            <template v-slot:activator="{ attrs }">
-                <div>
-                    <InputSet type="textField" :caption="FORM_TITLE_TEXT" :captionLabel="FORM_CAPTION_REQUIRED_LABEL" :labelText="FORM_TITLE_LABEL" :textModel="title"
-                        @input="title = $event" :rules="titleRule" />
-                    <InputSet type="textsField" :caption="FORM_CHOICE_TEXT" :captionLabel="FORM_CAPTION_REQUIRED_LABEL" :textsModel="choices"
-                        @update:textsModel="choices = $event" :addText="FORM_ADD_CHOICE_TEXT" :rules="choiceRule" />
+    <div v-if="!isLoading">
+        <form @submit.prevent="submit" style="margin:5% 20%">
+            <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
+                <template v-slot:activator="{ attrs }">
+                    <div>
+                        <InputSet type="textField" :caption="FORM_TITLE_TEXT" :captionLabel="FORM_CAPTION_REQUIRED_LABEL"
+                            :labelText="FORM_TITLE_LABEL" :textModel="title" @input="title = $event" :rules="titleRule" />
+                        <InputSet type="textsField" :caption="FORM_CHOICE_TEXT" :captionLabel="FORM_CAPTION_REQUIRED_LABEL"
+                            :textsModel="choices" @update:textsModel="choices = $event" :addText="FORM_ADD_CHOICE_TEXT"
+                            :rules="choiceRule" />
 
-                    <InputSet type="selectBox" :caption="FORM_CATEGORY_TEXT" :captionLabel="FORM_CAPTION_REQUIRED_LABEL" :selectItems="categoryNames"
-                        :selectModel="categoryName" @update:selectModel="setCategoryName" />
-                    <InputSet type="chipBox" :caption="FORM_TAG_TEXT" :labelText="FORM_TAG_LABEL" :chipsModel="tags"
-                        @update:chipsModel="tags = $event" :rules="tagRule" />
+                        <InputSet type="selectBox" :caption="FORM_CATEGORY_TEXT" :captionLabel="FORM_CAPTION_REQUIRED_LABEL"
+                            :selectItems="categoryNames" :selectModel="categoryName"
+                            @update:selectModel="setCategoryName" />
+                        <InputSet type="chipBox" :caption="FORM_TAG_TEXT" :labelText="FORM_TAG_LABEL" :chipsModel="tags"
+                            @update:chipsModel="tags = $event" :rules="tagRule" />
 
-                    <InputSet type="checkBox" :labelText="FORM_COMMENT_LABEL" :checkModel="enableComment"
-                        @update:checkModel="enableComment = $event" />
-                    <InputSet type="checkBox" :labelText="FORM_MULTI_LABEL" :checkModel="enableMultiAns"
-                        @update:checkModel="enableMultiAns = $event" />
+                        <InputSet type="checkBox" :labelText="FORM_COMMENT_LABEL" :checkModel="enableComment"
+                            @update:checkModel="enableComment = $event" />
+                        <InputSet type="checkBox" :labelText="FORM_MULTI_LABEL" :checkModel="enableMultiAns"
+                            @update:checkModel="enableMultiAns = $event" />
 
+                        <v-container>
+                            <v-row no-gutters>
+                                <v-col cols="5" justify="center">
+                                    <nuxt-link to="/" style="text-decoration: none; color: inherit;">
+                                        <Button :color="cancelBtnColor" :textColor="cancelBtnTextColor"
+                                            :buttonStyle="cancelBtnStyle">キャンセル</Button>
+                                    </nuxt-link>
+                                </v-col>
+                                <v-col cols="2" />
+                                <v-col cols="5" justify="center">
+                                    <Button :color="confirmBtnColor" :textColor="confirmBtnTextColor"
+                                        :buttonStyle="confirmBtnStyle" @click="openDialog"
+                                        :disabled="errFlg">確認画面を開く</Button>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                    </div>
+                </template>
+                <v-card>
+                    <v-toolbar dark color="primary">
+                        <v-toolbar-title>確認画面</v-toolbar-title>
+                        <v-spacer></v-spacer>
+                    </v-toolbar>
+                    <v-divider></v-divider>
+                    <Paragraph type="text" :caption="FORM_TITLE_TEXT" :text="title" />
+                    <Paragraph type="multiText" :caption="FORM_CHOICE_TEXT" :texts="choices" />
+                    <Paragraph type="text" :caption="FORM_CATEGORY_TEXT" :text="categoryName" />
+                    <Paragraph type="chips" :caption="FORM_TAG_TEXT" :chips="tags" />
+                    <Paragraph type="checkBox" :isChecked="enableComment" :labelText="FORM_COMMENT_LABEL" />
+                    <Paragraph type="checkBox" :isChecked="enableMultiAns" :labelText="FORM_MULTI_LABEL" />
                     <v-container>
                         <v-row no-gutters>
                             <v-col cols="5" justify="center">
-                                <nuxt-link to="/" style="text-decoration: none; color: inherit;">
-                                    <Button :color="cancelBtnColor" :textColor="cancelBtnTextColor"
-                                        :buttonStyle="cancelBtnStyle">キャンセル</Button>
-                                </nuxt-link>
+                                <Button :color="cancelBtnColor" :textColor="cancelBtnTextColor"
+                                    :buttonStyle="cancelBtnStyle" @click="dialog = false">キャンセル</Button>
                             </v-col>
                             <v-col cols="2" />
                             <v-col cols="5" justify="center">
                                 <Button :color="confirmBtnColor" :textColor="confirmBtnTextColor"
-                                    :buttonStyle="confirmBtnStyle" @click="openDialog" :disabled="errFlg">確認画面を開く</Button>
+                                    :buttonStyle="confirmBtnStyle" @click="onSubmit">投稿する</Button>
                             </v-col>
                         </v-row>
                     </v-container>
-                </div>
-            </template>
-            <v-card>
-                <v-toolbar dark color="primary">
-                    <v-toolbar-title>確認画面</v-toolbar-title>
-                    <v-spacer></v-spacer>
-                </v-toolbar>
-                <v-divider></v-divider>
-                <Paragraph type="text" :caption="FORM_TITLE_TEXT" :text="title" />
-                <Paragraph type="multiText" :caption="FORM_CHOICE_TEXT" :texts="choices" />
-                <Paragraph type="text" :caption="FORM_CATEGORY_TEXT" :text="categoryName" />
-                <Paragraph type="chips" :caption="FORM_TAG_TEXT" :chips="tags" />
-                <Paragraph type="checkBox" :isChecked="enableComment" :labelText="FORM_COMMENT_LABEL" />
-                <Paragraph type="checkBox" :isChecked="enableMultiAns" :labelText="FORM_MULTI_LABEL" />
-                <v-container>
-                    <v-row no-gutters>
-                        <v-col cols="5" justify="center">
-                            <Button :color="cancelBtnColor" :textColor="cancelBtnTextColor" :buttonStyle="cancelBtnStyle"
-                                @click="dialog = false">キャンセル</Button>
-                        </v-col>
-                        <v-col cols="2" />
-                        <v-col cols="5" justify="center">
-                            <nuxt-link to="/" style="text-decoration: none; color: inherit;">
-                                <Button :color="confirmBtnColor" :textColor="confirmBtnTextColor"
-                                    :buttonStyle="confirmBtnStyle"
-                                    :onClick="() => createQuestionnaire(title, choices, categoryId, tags, options)">投稿する</Button>
-                            </nuxt-link>
-                        </v-col>
-                    </v-row>
-                </v-container>
-            </v-card>
-        </v-dialog>
-    </form>
+                </v-card>
+            </v-dialog>
+        </form>
+    </div>
+    <div v-else class="text-center center-content">
+        <v-progress-circular indeterminate color="primary" :size="100" :width="10"></v-progress-circular>
+    </div>
 </template>
+
+<style scoped>
+.center-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    /* 画面の高さに合わせて */
+}
+</style>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-
+import { useRouter } from 'vue-router';
 import Button from '@/components/atoms/Button.vue'
 import InputSet from '@/components/molecules/InputSet.vue'
 import Paragraph from '@/components/molecules/Paragraph.vue'
@@ -98,6 +113,9 @@ export default defineComponent({
         },
     },
     setup(props) {
+        const router = useRouter();
+        const isLoading = ref(false);
+
         const errFlg = computed(() => {
             return !title.value || title.value.length < TITLE_MIN_LENGTH || title.value.length > TITLE_MAX_LENGTH || !choices.value || choices.value.length < CHOICES_MIN_LENGTH || choices.value.length > CHOICES_MAX_LENGTH || choices.value.some(choice => !choice || choice === '' || choice.length < CHOICE_MIN_LENGTH || choice.length > CHOICE_MAX_LENGTH || !categoryId.value || categoryId.value === '');
         });
@@ -169,43 +187,25 @@ export default defineComponent({
         // ダイアログの表示
         const dialog = ref(false);
         const openDialog = () => {
-            //if (!checkValidate()) {
-                dialog.value = true;
-            /*} else {
-                console.error('Validation errors present, cannot open dialog.');
-            }*/
+            dialog.value = true;
         }
 
-        // バリデーションチェック関数
-        /*const checkValidate = (): boolean => {
-            errFlg.value = false;
+        const homeLink: Ref<HTMLAnchorElement | null> = ref(null); // nuxt-linkへの参照を追加
 
-            console.log(title.value)
-            console.log(choices.value)
-            console.log(categoryId.value)
-            console.log(tags.value)
-
-            // タイトルのエラーチェック
-            if (!title.value || title.value === '' || (title.value.length < TITLE_MIN_LENGTH || title.value.length > TITLE_MAX_LENGTH)) {
-                errFlg.value = true;
-
-                // 選択肢のエラーチェック
-            } else if (!choices.value || choices.value.length < CHOICES_MIN_LENGTH || choices.value.length > CHOICES_MAX_LENGTH || choices.value.some(choice => !choice || choice === '' || choice.length < CHOICE_MIN_LENGTH || choice.length > CHOICE_MAX_LENGTH) || !categoryId.value || categoryId.value === '' || !tags.value || tags.value.length < TAGS_MIN_LENGTH || tags.value.length > TAGS_MAX_LENGTH) {
-                errFlg.value = true;
-
-                // カテゴリのエラーチェック
-            } else if (!categoryId.value || categoryId.value === '') {
-                errFlg.value = true;
-
-                // タグのエラーチェック
-            } else if (!tags.value || tags.value.length < TAGS_MIN_LENGTH || tags.value.length > TAGS_MAX_LENGTH) {
-                errFlg.value = true;
+        // 投稿内容を送信する
+        const onSubmit = async () => {
+            isLoading.value = true; // ローディング開始
+            try {
+                console.log(1);
+                await props.createQuestionnaire(title.value, choices.value, categoryId.value, tags.value, options.value);
+                router.push('/');
+                console.log(2);
+            } catch (error) {
+                console.error("アンケート投稿エラーが発生しました:", error);
+            } finally {
+                isLoading.value = false; // ローディング終了
             }
-
-            console.log(errFlg.value)
-
-            return errFlg.value;
-        }*/
+        };
 
         return {
             FORM_TITLE_TEXT,
@@ -242,7 +242,9 @@ export default defineComponent({
             errFlg,
             FORM_ERR_TITLE,
             FORM_ERR_TEXT,
-            FORM_CAPTION_REQUIRED_LABEL
+            FORM_CAPTION_REQUIRED_LABEL,
+            onSubmit,
+            isLoading
         }
     }
 })

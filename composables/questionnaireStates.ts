@@ -61,6 +61,7 @@ const getQuestionnaires = async (order: string): Promise<ResponseData> => {
         );
         if (response.ok) {
             const data = await response.json();
+            console.log(data)
             return data;
         } else {
             console.error('アンケート一覧取得APIの実行中にエラーが発生しました:', response.statusText);
@@ -212,11 +213,14 @@ const postQuestionnaire = async (title: string, choices: string[], categoryId: s
         });
         if (response.ok) {
             const data = await response.json();
+            return true;
         } else {
             console.error('アンケート投稿APIの実行中にエラーが発生しました:', response.statusText);
+            return false;
         }
     } catch (error) {
         console.error('アンケート投稿APIの実行中にエラーが発生しました:', error);
+        return false;
     }
 };
 
@@ -269,6 +273,15 @@ export const useQuestionnaires = (target: string, questionId: string) => {
                 break;
         }
     });
+
+    // アンケート一覧再取得
+    const reloadQuestionnaires = async () => {
+        const qObject = await getQuestionnaires(TAB_ID1);
+        state.value.questionnaires = qObject.questionnaires ? [...qObject.questionnaires] : state.value.questionnaires;
+        state.value.nextToken = qObject.nextToken ? qObject.nextToken : '';
+        isLoading.value = false;
+        return qObject.questionnaires;
+    }
 
     // 続きのアンケート一覧を取得(無限スクロール)
     const scrollQuestionnaires = async (order: string, nextToken: string) => {
@@ -327,19 +340,28 @@ export const useQuestionnaires = (target: string, questionId: string) => {
 
     // アンケート作成
     const createQuestionnaire = async (title: string, choices: string[], categoryId: string, tags: string[], options: object) => {
-
-        // アンケート投稿APIを実行
-        await postQuestionnaire(title, choices, categoryId, tags, options)
-
-        // アンケート投稿APIが完了した後にアンケート一覧取得APIを実行
-        if (state.value) {
+        try {
+            // アンケート投稿APIを実行し、成功したかどうかを確認
+            const postResult = await postQuestionnaire(title, choices, categoryId, tags, options);
+            console.log(postResult)
+            if (!postResult) {
+                return false; // 投稿に失敗した場合は false を返す
+            }
+    
+            // アンケート一覧取得APIを実行
             if (state.value) {
+                console.log("アンケート投稿後の一覧取得API");
                 const qObject = await getQuestionnaires(TAB_ID1);
+                console.log("アンケート再取得完了");
                 state.value.questionnaires = qObject.questionnaires ? [...qObject.questionnaires] : state.value.questionnaires;
                 state.value.nextToken = qObject.nextToken ? qObject.nextToken : '';
             }
+            return true; // 成功時に true を返す
+        } catch (error) {
+            console.error("アンケート作成中にエラーが発生しました:", error);
+            return false; // エラーが発生した場合は false を返す
         }
-    }
+    }    
 
     const resetQuestionnaires = () => {
         if (state.value) {
@@ -357,7 +379,8 @@ export const useQuestionnaires = (target: string, questionId: string) => {
         answerQuestionnaire,
         answerSearchQuestionnaire,
         createQuestionnaire,
-        resetQuestionnaires
+        resetQuestionnaires,
+        reloadQuestionnaires
     }
 }
 

@@ -22,8 +22,8 @@ export default {
 
         // アンケート投稿
         const qStore = useQuestionnaires(TARGET_QUESTIONNAIRES, '');
-        const createQuestionnaire = (title: string, choices: string[], categoryId: string, tags: string[], options: object) => {
-            qStore.createQuestionnaire(title, choices, categoryId, tags, options);
+        const createQuestionnaire = async (title: string, choices: string[], categoryId: string, tags: string[], options: object) => {
+            await qStore.createQuestionnaire(title, choices, categoryId, tags, options);
         }
 
         return {

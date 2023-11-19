@@ -49,10 +49,15 @@ export default defineComponent({
             required: true
         },
     },
-    setup() {
+    setup(props) {
         const logo = '/logo.png' // 画像のパスを指定してください
         const headerTitle = ref('ratee')
         const footerButtonText = ref('アンケートを作る')
+
+        watchEffect(() => {
+            console.log("===Topコンポーネント===")
+            console.log(props.questionnaires)
+        });
 
         return {
             logo,

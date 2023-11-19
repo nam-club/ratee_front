@@ -37,7 +37,7 @@ export const SEARCH_TYPES = [FORM_TITLE_TEXT, FORM_CATEGORY_TEXT, FORM_TAG_TEXT]
 export const MAX_COUNT = 9999;
 
 // バリデーションチェック
-export const TITLE_MIN_LENGTH = 1; // アンケート質問の最低文字数
+export const TITLE_MIN_LENGTH = 4; // アンケート質問の最低文字数
 export const TITLE_MAX_LENGTH = 40; // アンケート質問の最大文字数
 export const CHOICES_MIN_LENGTH = 2; // アンケート選択肢の最低数
 export const CHOICES_MAX_LENGTH = 10; // アンケート選択肢の最大数

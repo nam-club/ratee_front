@@ -113,6 +113,8 @@ export default {
             if (props.categories && props.categories.length > 0) {
                 categoryNames.value = props.categories.map((item: Category) => item.name);
             }
+            console.log("===ContentsViewコンポーネント===")
+            console.log(props.questionnaires)
         });
 
         const categoryId = ref('')

@@ -2,8 +2,10 @@
     <div v-if="!isLoading">
         <Top :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires"
             :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire"
-            :answerSearchQuestionnaire="answerSearchQuestionnaire" :resetQuestionnaires="resetQuestionnaires" :categories="categories" />
-        <InfiniteLoading :questionnaires="questionnaires" @infinite="load" :immediate-check="false" :reverse="false" :disabled="isInfiniteDisabled">
+            :answerSearchQuestionnaire="answerSearchQuestionnaire" :resetQuestionnaires="resetQuestionnaires"
+            :categories="categories" />
+        <InfiniteLoading :questionnaires="questionnaires" @infinite="load" :immediate-check="false" :reverse="false"
+            :disabled="isInfiniteDisabled">
             <template #complete>
                 <span>読み込み終了</span>
             </template>
@@ -26,11 +28,12 @@
 
 <script lang="ts">
 import { ref, watchEffect } from 'vue'
-import Top from '@/components/templates/Top.vue'
-import { TARGET_QUESTIONNAIRES, TAB_ID1, MAX_COUNT } from '@/constants';
 import { InfiniteLoadingState } from '@/types';
 import InfiniteLoading from "v3-infinite-loading";
 import "v3-infinite-loading/lib/style.css";
+import Top from '@/components/templates/Top.vue'
+import { TARGET_QUESTIONNAIRES, TAB_ID1, MAX_COUNT } from '@/constants';
+import { Questionnaire } from '~/composables/questionnaireStates';
 
 export default {
     components: {
@@ -41,12 +44,17 @@ export default {
         // アンケート一覧取得
         const qStore = useQuestionnaires(TARGET_QUESTIONNAIRES, '');
         const isLoading = qStore.isLoading;
-        const questionnaires = ref([]);
+        const questionnaires = ref<Questionnaire[]>([]);
 
-        watchEffect(() => {
-            questionnaires.value = qStore.state.value.questionnaires;
-        });
-
+        watch(() => qStore.state.value.questionnaires, (newVal) => {
+            console.log("アンケート一覧を最新化します。")
+            questionnaires.value = newVal.map(q => ({
+                ...q,
+                choices: q.choices.map(choice => ({ ...choice })),
+                tags: [...q.tags]  // `tags`を新しい配列に展開
+            }));
+            console.log(questionnaires.value)
+        }, { deep: true });
 
         // アンケートタブ切替
         const changeQuestionnaires = (order: string) => {
