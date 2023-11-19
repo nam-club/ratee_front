@@ -1,5 +1,5 @@
 <template>
-    <v-btn :color="bgColor" :disabled="disabled" :valiant="variant" :style="{ color: textBtnColor, ...buttonStyle }"
+    <v-btn :color="bgColor" :disabled="disabled" :variant="variant" :style="{ color: textBtnColor, ...buttonStyle }"
         :class="['font-weight-' + fontWeight]" @click="handleClick">
         <slot></slot>
     </v-btn>
@@ -28,7 +28,7 @@ export default defineComponent({
         },
         variant: {
             type: String,
-            default: "flat"
+            default: "outlined"
         },
         fontWeight: {
             type: String,

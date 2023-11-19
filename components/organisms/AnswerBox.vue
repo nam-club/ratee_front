@@ -17,7 +17,7 @@
                         <div v-if="questionnaire.enableMultiAnswer">
                             <v-row class="justify-center" v-for="(choice, index) in questionnaire.choices" :key="index">
                                 <v-col xs12 sm12 md12 align-self="center">
-                                    <Button :clickedTextColor="clickedMultiTextColor" :buttonStyle="btnStyle"
+                                    <Button :textColor="btnTextColor" :clickedTextColor="clickedMultiTextColor" :buttonStyle="btnStyle" :variant="btnVariant"
                                         :onClick="() => toggleChoice(choice.id)">
                                         {{ choice.name }}
                                     </Button>
@@ -25,7 +25,7 @@
                             </v-row>
                             <v-row class="justify-center" v-if="choices.length !== 0">
                                 <v-col class="text-end">
-                                    <Button :color="btnColor" :textColor="btnTextColor"
+                                    <Button :textColor="confitmBtnTextColor" :variant="btnVariant" :buttonStyle="confirmBtnStyle"
                                         :onClick="() => answerQuestionnaire(questionnaire.id, choices)">確定</Button>
                                 </v-col>
                             </v-row>
@@ -46,7 +46,7 @@
                         <v-row>
                             <v-col class="text-end">
                                 <nuxt-link :to="`/questionnaire/${questionnaire.id}`">
-                                    <Button>
+                                    <Button :textColor="detailBtnTextColor" variant="btnVariant">
                                         詳細を見る
                                     </Button>
                                 </nuxt-link>
@@ -113,10 +113,13 @@ export default defineComponent({
     },
     setup(props) {
         const btnColor = ref("#3A98B9");
-        const btnTextColor = ref('white');
-        const btnVariant = ref("elevated");
-        const btnStyle = ref({ width: '100%' });
+        const btnTextColor = ref("#3A98B9");
+        const btnVariant = ref("outlined");
+        const btnStyle = ref({ width: '100%', "border-color": "#3A98B9" });
         const clickedMultiTextColor = ref("#3A98B9");
+        const confitmBtnTextColor = ref("#FFFFFF");
+        const confirmBtnStyle = ref({ "background-color": "#3A98B9" });
+        const detailBtnTextColor = ref("#3A98B9");
 
         const choices = ref([]);
 
@@ -167,6 +170,9 @@ export default defineComponent({
             btnVariant,
             btnStyle,
             clickedMultiTextColor,
+            confitmBtnTextColor,
+            confirmBtnStyle,
+            detailBtnTextColor,
             choices,
             toggleChoice,
             answerQuestionnaire,
