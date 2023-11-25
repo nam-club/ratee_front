@@ -1,5 +1,5 @@
 <template>
-    <v-btn :color="bgColor" :disabled="disabled" :variant="variant" :style="{ color: textBtnColor, ...buttonStyle }"
+    <v-btn :color="color" :disabled="disabled" :variant="variant" :style="{ color: textColor, ...buttonStyle }"
         :class="['font-weight-' + fontWeight]" @click="handleClick">
         <slot></slot>
     </v-btn>
@@ -28,7 +28,7 @@ export default defineComponent({
         },
         variant: {
             type: String,
-            default: "outlined"
+            default: 'outlined'
         },
         fontWeight: {
             type: String,
@@ -48,28 +48,12 @@ export default defineComponent({
         },
     },
     setup(props) {
-        const bgColor = ref(''); // 背景色
-        bgColor.value = props.color;
-        const textBtnColor = ref(''); // テキスト色
-        textBtnColor.value = props.textColor;
 
         const handleClick = () => {
-            if (bgColor.value === '') {
-                bgColor.value = props.clickedColor;
-            } else {
-                bgColor.value = props.color; // 元の色に戻す
-            }
-            if (textBtnColor.value === '') {
-                textBtnColor.value  = props.clickedTextColor;
-            } else {
-                textBtnColor.value = props.textColor; // 元の色に戻す
-            }
             props.onClick();
         };
 
         return {
-            bgColor,
-            textBtnColor,
             handleClick
         }
     }

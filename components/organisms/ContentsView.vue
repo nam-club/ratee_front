@@ -1,11 +1,11 @@
 <template>
-    <v-card class="bg-secondary" dark>
-        <v-tabs v-model="tab" color="primary" dark align-tabs="center">
-            <v-tab :value="TAB_NUM1" @click="changeTab(TAB_ID1)">{{ TAB_NAME1 }}</v-tab>
-            <v-tab :value="TAB_NUM2" @click="changeTab(TAB_ID2)">{{ TAB_NAME2 }}</v-tab>
-            <v-tab :value="TAB_NUM3" @click="changeTab(TAB_ID3)">{{ TAB_NAME3 }}</v-tab>
-            <v-tab :value="TAB_NUM4" @click="changeTab(TAB_ID4)">{{ TAB_NAME4 }}</v-tab>
-        </v-tabs>
+    <v-tabs v-model="tab" color="primary" dark align-tabs="center" style="margin:4% 0% 0.5% 0%">
+        <v-tab :value="TAB_NUM1" @click="changeTab(TAB_ID1)"><span style="font-size: 1.5em;">{{ TAB_NAME1 }}</span></v-tab>
+        <v-tab :value="TAB_NUM2" @click="changeTab(TAB_ID2)"><span style="font-size: 1.5em;">{{ TAB_NAME2 }}</span></v-tab>
+        <v-tab :value="TAB_NUM3" @click="changeTab(TAB_ID3)"><span style="font-size: 1.5em;">{{ TAB_NAME3 }}</span></v-tab>
+        <v-tab :value="TAB_NUM4" @click="changeTab(TAB_ID4)"><span style="font-size: 1.5em;">{{ TAB_NAME4 }}</span></v-tab>
+    </v-tabs>
+    <v-card class="bg-secondary" variant="outlined" dark style="margin:0% 2% 0% 2%">
         <v-window v-model="tab">
             <v-window-item v-for="n in TAB_LENGTH" :key="n" :value="n">
                 <div v-if="n === TAB_NUM4">

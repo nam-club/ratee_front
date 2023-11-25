@@ -9,7 +9,7 @@ export const mainTheme: ThemeDefinition = {
     background: '#FFFFFF',
     surface: '#FFFFFF',
     primary: '#3A98B9',
-    secondary: '#E1F5FE',
+    secondary: '#545454',
     error: '#ef4444',
     info: '#3b82f6',
     success: '#22c55e',

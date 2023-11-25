@@ -1,7 +1,7 @@
 <template>
-    <v-app>
+    <v-app class="bg-secondary-darken-2" style="display: flex; flex-direction: column;">
         <Header />
-        <ContentsView style="margin:5% 2%" :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires" :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire" :answerSearchQuestionnaire="answerSearchQuestionnaire" :resetQuestionnaires="resetQuestionnaires" :categories="categories" />
+        <ContentsView :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires" :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire" :answerSearchQuestionnaire="answerSearchQuestionnaire" :resetQuestionnaires="resetQuestionnaires" :categories="categories" />
         <Footer :buttonText="footerButtonText" />
     </v-app>
 </template>

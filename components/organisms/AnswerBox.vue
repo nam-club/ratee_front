@@ -6,7 +6,8 @@
                     <Msg fontWeight="normal" fontSize="2em" style="margin:2% 0">{{ questionnaire.content }}</Msg>
                     <v-row no-gutters>
                         <v-col cols="auto" v-for="(tag, i) in questionnaire.tags" :key="i">
-                            <v-chip class="ma-2" @click="() => {searchQuestionnaires(FORM_TAG_TEXT, tag); goToSearchTab(tag);}">
+                            <v-chip class="ma-2"
+                                @click="() => { searchQuestionnaires(FORM_TAG_TEXT, tag); goToSearchTab(tag); }">
                                 {{ tag }}
                             </v-chip>
                         </v-col>
@@ -17,7 +18,9 @@
                         <div v-if="questionnaire.enableMultiAnswer">
                             <v-row class="justify-center" v-for="(choice, index) in questionnaire.choices" :key="index">
                                 <v-col xs12 sm12 md12 align-self="center">
-                                    <Button :textColor="btnTextColor" :clickedTextColor="clickedMultiTextColor" :buttonStyle="btnStyle" :variant="btnVariant"
+                                    <Button :class="{ 'background-on-click': choices.includes(choice.id) }"
+                                        :textColor="choices.includes(choice.id) ? clickedMultiTextColor : btnTextColor"
+                                        :buttonStyle="btnStyle" :variant="btnVariant"
                                         :onClick="() => toggleChoice(choice.id)">
                                         {{ choice.name }}
                                     </Button>
@@ -25,7 +28,8 @@
                             </v-row>
                             <v-row class="justify-center" v-if="choices.length !== 0">
                                 <v-col class="text-end">
-                                    <Button :textColor="confitmBtnTextColor" :variant="btnVariant" :buttonStyle="confirmBtnStyle"
+                                    <Button :textColor="confirmBtnTextColor" :variant="btnVariant"
+                                        :buttonStyle="confirmBtnStyle"
                                         :onClick="() => answerQuestionnaire(questionnaire.id, choices)">確定</Button>
                                 </v-col>
                             </v-row>
@@ -61,6 +65,13 @@
         </v-container>
     </v-card>
 </template>
+
+<style>
+.background-on-click {
+    background-color: #3A98B9;
+    /* クリックされた時の背景色 */
+}
+</style>
 
 <script lang="ts">
 import Msg from '@/components/atoms/Msg.vue'
@@ -116,8 +127,8 @@ export default defineComponent({
         const btnTextColor = ref("#3A98B9");
         const btnVariant = ref("outlined");
         const btnStyle = ref({ width: '100%', "border-color": "#3A98B9" });
-        const clickedMultiTextColor = ref("#3A98B9");
-        const confitmBtnTextColor = ref("#FFFFFF");
+        const clickedMultiTextColor = ref("#FFFFFF");
+        const confirmBtnTextColor = ref("#FFFFFF");
         const confirmBtnStyle = ref({ "background-color": "#3A98B9" });
         const detailBtnTextColor = ref("#3A98B9");
 
@@ -131,11 +142,10 @@ export default defineComponent({
             } else {
                 choices.value.splice(index, 1);
             }
+            console.log(choices)
         };
 
         const answerQuestionnaire = (questionId: string, choices: string[]) => {
-            console.log(props.searchType);
-            console.log(props.searchWord);
             if (props.searchType === '') {
                 props.answerQuestionnaire(questionId, choices);
             } else {
@@ -160,6 +170,14 @@ export default defineComponent({
                 x: {
                     display: false, // x軸の目盛りと数値を非表示にする
                 },
+                y: {
+                    ticks: {
+                        font: {
+                            family: 'sans-serif', // y軸のラベルにフォントを適用
+                            size: 16,             // y軸のラベルのフォントサイズを16に設定
+                        }
+                    }
+                }
             },
         });
 
@@ -170,7 +188,7 @@ export default defineComponent({
             btnVariant,
             btnStyle,
             clickedMultiTextColor,
-            confitmBtnTextColor,
+            confirmBtnTextColor,
             confirmBtnStyle,
             detailBtnTextColor,
             choices,
