@@ -1,9 +1,9 @@
 <template>
-    <v-app>
+    <v-app class="bg-secondary">
         <Header />
         <DetailView style="margin:5%" :questionnaire="questionnaire" :answerQuestionnaire="answerQuestionnaire" />
-        <RecommendBox v-if="recommends && recommends.length !== 0" style="margin:0 5%" :recommends="recommends" />
-        <CommentBox v-if="questionnaire.enableComment" style="margin:'5%" :questionId="questionnaire.id" :comments="comments" :postComment="postComment" />
+        <RecommendBox v-if="recommends && recommends.length !== 0" :recommends="recommends" />
+        <CommentBox v-if="questionnaire.enableComment" :questionId="questionnaire.id" :comments="comments" :postComment="postComment" />
         <Footer :buttonText="footerButtonText" />
     </v-app>
 </template>

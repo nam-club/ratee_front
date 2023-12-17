@@ -1,71 +1,74 @@
 <template>
     <div v-if="!isLoading">
-        <form @submit.prevent="submit" style="margin:5% 20%">
-            <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
-                <template v-slot:activator="{ attrs }">
-                    <div>
-                        <InputSet type="textField" :caption="FORM_TITLE_TEXT" :captionLabel="FORM_CAPTION_REQUIRED_LABEL"
-                            :labelText="FORM_TITLE_LABEL" :textModel="title" @input="title = $event" :rules="titleRule" />
-                        <InputSet type="textsField" :caption="FORM_CHOICE_TEXT" :captionLabel="FORM_CAPTION_REQUIRED_LABEL"
-                            :textsModel="choices" @update:textsModel="choices = $event" :addText="FORM_ADD_CHOICE_TEXT"
-                            :rules="choiceRule" />
+        <form @submit.prevent="submit" style="margin:5% 10%">
+            <v-card style="padding: 2% 5%">
+                <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
+                    <template v-slot:activator="{ attrs }">
+                        <div>
+                            <InputSet type="textField" :caption="FORM_TITLE_TEXT"
+                                :captionLabel="FORM_CAPTION_REQUIRED_LABEL" :labelText="FORM_TITLE_LABEL" :textModel="title"
+                                @input="title = $event" :rules="titleRule" />
+                            <InputSet type="textsField" :caption="FORM_CHOICE_TEXT"
+                                :captionLabel="FORM_CAPTION_REQUIRED_LABEL" :textsModel="choices"
+                                @update:textsModel="choices = $event" :addText="FORM_ADD_CHOICE_TEXT" :rules="choiceRule" />
 
-                        <InputSet type="selectBox" :caption="FORM_CATEGORY_TEXT" :captionLabel="FORM_CAPTION_REQUIRED_LABEL"
-                            :selectItems="categoryNames" :selectModel="categoryName"
-                            @update:selectModel="setCategoryName" />
-                        <InputSet type="chipBox" :caption="FORM_TAG_TEXT" :labelText="FORM_TAG_LABEL" :chipsModel="tags"
-                            @update:chipsModel="tags = $event" :rules="tagRule" />
+                            <InputSet type="selectBox" :caption="FORM_CATEGORY_TEXT"
+                                :captionLabel="FORM_CAPTION_REQUIRED_LABEL" :selectItems="categoryNames"
+                                :selectModel="categoryName" @update:selectModel="setCategoryName" />
+                            <InputSet type="chipBox" :caption="FORM_TAG_TEXT" :labelText="FORM_TAG_LABEL" :chipsModel="tags"
+                                @update:chipsModel="tags = $event" :rules="tagRule" />
 
-                        <InputSet type="checkBox" :labelText="FORM_COMMENT_LABEL" :checkModel="enableComment"
-                            @update:checkModel="enableComment = $event" />
-                        <InputSet type="checkBox" :labelText="FORM_MULTI_LABEL" :checkModel="enableMultiAns"
-                            @update:checkModel="enableMultiAns = $event" />
+                            <InputSet type="checkBox" :labelText="FORM_COMMENT_LABEL" :checkModel="enableComment"
+                                @update:checkModel="enableComment = $event" />
+                            <InputSet type="checkBox" :labelText="FORM_MULTI_LABEL" :checkModel="enableMultiAns"
+                                @update:checkModel="enableMultiAns = $event" />
 
+                            <v-container>
+                                <v-row no-gutters>
+                                    <v-col cols="5" justify="center">
+                                        <nuxt-link to="/" style="text-decoration: none; color: inherit;">
+                                            <Button :color="cancelBtnColor" :textColor="cancelBtnTextColor"
+                                                :buttonStyle="cancelBtnStyle">キャンセル</Button>
+                                        </nuxt-link>
+                                    </v-col>
+                                    <v-col cols="2" />
+                                    <v-col cols="5" justify="center">
+                                        <Button :color="confirmBtnColor" :textColor="confirmBtnTextColor"
+                                            :buttonStyle="confirmBtnStyle" @click="openDialog"
+                                            :disabled="errFlg">確認画面を開く</Button>
+                                    </v-col>
+                                </v-row>
+                            </v-container>
+                        </div>
+                    </template>
+                    <v-card>
+                        <v-toolbar dark color="primary">
+                            <v-toolbar-title>確認画面</v-toolbar-title>
+                            <v-spacer></v-spacer>
+                        </v-toolbar>
+                        <v-divider></v-divider>
+                        <Paragraph type="text" :caption="FORM_TITLE_TEXT" :text="title" />
+                        <Paragraph type="multiText" :caption="FORM_CHOICE_TEXT" :texts="choices" />
+                        <Paragraph type="text" :caption="FORM_CATEGORY_TEXT" :text="categoryName" />
+                        <Paragraph type="chips" :caption="FORM_TAG_TEXT" :chips="tags" />
+                        <Paragraph type="checkBox" :isChecked="enableComment" :labelText="FORM_COMMENT_LABEL" />
+                        <Paragraph type="checkBox" :isChecked="enableMultiAns" :labelText="FORM_MULTI_LABEL" />
                         <v-container>
                             <v-row no-gutters>
                                 <v-col cols="5" justify="center">
-                                    <nuxt-link to="/" style="text-decoration: none; color: inherit;">
-                                        <Button :color="cancelBtnColor" :textColor="cancelBtnTextColor"
-                                            :buttonStyle="cancelBtnStyle">キャンセル</Button>
-                                    </nuxt-link>
+                                    <Button :color="cancelBtnColor" :textColor="cancelBtnTextColor"
+                                        :buttonStyle="cancelBtnStyle" @click="dialog = false">キャンセル</Button>
                                 </v-col>
                                 <v-col cols="2" />
                                 <v-col cols="5" justify="center">
-                                    <Button :color="confirmBtnColor" :textColor="confirmBtnTextColor"
-                                        :buttonStyle="confirmBtnStyle" @click="openDialog"
-                                        :disabled="errFlg">確認画面を開く</Button>
+                                    <Button :textColor="confirmBtnTextColor" :buttonStyle="confirmBtnStyle"
+                                        @click="onSubmit">投稿する</Button>
                                 </v-col>
                             </v-row>
                         </v-container>
-                    </div>
-                </template>
-                <v-card>
-                    <v-toolbar dark color="primary">
-                        <v-toolbar-title>確認画面</v-toolbar-title>
-                        <v-spacer></v-spacer>
-                    </v-toolbar>
-                    <v-divider></v-divider>
-                    <Paragraph type="text" :caption="FORM_TITLE_TEXT" :text="title" />
-                    <Paragraph type="multiText" :caption="FORM_CHOICE_TEXT" :texts="choices" />
-                    <Paragraph type="text" :caption="FORM_CATEGORY_TEXT" :text="categoryName" />
-                    <Paragraph type="chips" :caption="FORM_TAG_TEXT" :chips="tags" />
-                    <Paragraph type="checkBox" :isChecked="enableComment" :labelText="FORM_COMMENT_LABEL" />
-                    <Paragraph type="checkBox" :isChecked="enableMultiAns" :labelText="FORM_MULTI_LABEL" />
-                    <v-container>
-                        <v-row no-gutters>
-                            <v-col cols="5" justify="center">
-                                <Button :color="cancelBtnColor" :textColor="cancelBtnTextColor"
-                                    :buttonStyle="cancelBtnStyle" @click="dialog = false">キャンセル</Button>
-                            </v-col>
-                            <v-col cols="2" />
-                            <v-col cols="5" justify="center">
-                                <Button :color="confirmBtnColor" :textColor="confirmBtnTextColor"
-                                    :buttonStyle="confirmBtnStyle" @click="onSubmit">投稿する</Button>
-                            </v-col>
-                        </v-row>
-                    </v-container>
-                </v-card>
-            </v-dialog>
+                    </v-card>
+                </v-dialog>
+            </v-card>
         </form>
     </div>
     <div v-else class="text-center center-content">
@@ -180,8 +183,7 @@ export default defineComponent({
         const cancelBtnTextColor = ref('#515254');
         const cancelBtnStyle = ref({ fontSize: '1.2em', height: '100%', width: '100%', padding: '5%', display: 'block' });
 
-        const confirmBtnColor = ref("#3A98B9");
-        const confirmBtnTextColor = ref('white');
+        const confirmBtnTextColor = ref("#3A98B9");
         const confirmBtnStyle = ref({ fontSize: '1.2em', height: '100%', width: '100%', padding: '5%', display: 'block' });
 
         // ダイアログの表示
@@ -235,7 +237,6 @@ export default defineComponent({
             cancelBtnColor,
             cancelBtnTextColor,
             confirmBtnStyle,
-            confirmBtnColor,
             confirmBtnTextColor,
             dialog,
             openDialog,

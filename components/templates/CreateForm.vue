@@ -1,9 +1,9 @@
 <template>
-    <v-app>
+    <v-app class="bg-secondary">
         <div v-if="categories.length">
             <Header />
         </div>
-        <Form :categories="categories" :createQuestionnaire="createQuestionnaire" />
+        <Form :categories="categories" :createQuestionnaire="createQuestionnaire"/>
     </v-app>
 </template>
 

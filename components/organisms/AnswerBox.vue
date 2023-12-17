@@ -1,69 +1,76 @@
 <template>
-    <v-card v-for="(questionnaire, index) in questionnaires" :key="index" style="margin:1%">
-        <v-container>
-            <v-row class="justify-center">
-                <v-col xs12 sm6 md6 align-self="center">
-                    <Msg fontWeight="normal" fontSize="2em" style="margin:2% 0">{{ questionnaire.content }}</Msg>
-                    <v-row no-gutters>
-                        <v-col cols="auto" v-for="(tag, i) in questionnaire.tags" :key="i">
-                            <v-chip class="ma-2"
-                                @click="() => { searchQuestionnaires(FORM_TAG_TEXT, tag); goToSearchTab(tag); }">
-                                {{ tag }}
-                            </v-chip>
+    <v-row>
+        <v-col cols="4" v-for="(questionnaire, index) in questionnaires" :key="index">
+            <v-card>
+                <v-container>
+                    <v-row class="justify-center">
+                        <v-col xs12 sm6 md6 align-self="center">
+                            <v-row no-gutters>
+                                <v-col cols="8">
+                                    <Msg fontWeight="normal" fontSize="1.5em" style="margin:2% 0">{{ questionnaire.content }}
+                                    </Msg>
+                                </v-col>
+                                <v-col cols="4" class="text-end">
+                                    <nuxt-link :to="`/questionnaire/${questionnaire.id}`">
+                                        <Button :textColor="detailBtnTextColor" variant="btnVariant">
+                                            詳細を見る
+                                        </Button>
+                                    </nuxt-link>
+                                </v-col>
+                            </v-row>
+                            <v-row no-gutters>
+                                <v-col cols="auto" v-for="(tag, i) in questionnaire.tags" :key="i">
+                                    <v-chip class="ma-2"
+                                        @click="() => { searchQuestionnaires(FORM_TAG_TEXT, tag); goToSearchTab(tag); }">
+                                        {{ tag }}
+                                    </v-chip>
+                                </v-col>
+                            </v-row>
+                            <v-container v-if="questionnaire.isAnswered === false">
+                                <div v-if="questionnaire.enableMultiAnswer">
+                                    <v-row class="justify-center" v-for="(choice, index) in questionnaire.choices"
+                                        :key="index">
+                                        <v-col xs12 sm12 md12 align-self="center">
+                                            <Button :class="{ 'background-on-click': choices.includes(choice.id) }"
+                                                :textColor="choices.includes(choice.id) ? clickedMultiTextColor : btnTextColor"
+                                                :buttonStyle="btnStyle" :variant="btnVariant"
+                                                :onClick="() => toggleChoice(choice.id)">
+                                                {{ choice.name }}
+                                            </Button>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row class="justify-center" v-if="choices.length !== 0">
+                                        <v-col class="text-end">
+                                            <Button :textColor="confirmBtnTextColor" :variant="btnVariant"
+                                                :buttonStyle="confirmBtnStyle"
+                                                :onClick="() => answerQuestionnaire(questionnaire.id, choices)">確定</Button>
+                                        </v-col>
+                                    </v-row>
+                                </div>
+                                <div v-else>
+                                    <v-row class="justify-center" v-for="(choice, index) in questionnaire.choices"
+                                        :key="index">
+                                        <v-col xs12 sm12 md12 align-self="center">
+                                            <Button :color="btnColor" :textColor="btnTextColor" :variant="btnVariant"
+                                                :buttonStyle="btnStyle"
+                                                :onClick="() => answerQuestionnaire(questionnaire.id, [choice.id])">
+                                                {{ choice.name }}
+                                            </Button>
+                                        </v-col>
+                                    </v-row>
+                                </div>
+                            </v-container>
+                            <v-container v-if="questionnaire.isAnswered === true">
+                                <v-row>
+                                    <QuestionnaireBarChart :questionnaire="questionnaire" :options="options" />
+                                </v-row>
+                            </v-container>
                         </v-col>
                     </v-row>
-                </v-col>
-                <v-col xs12 sm6 md6>
-                    <v-container v-if="questionnaire.isAnswered === false">
-                        <div v-if="questionnaire.enableMultiAnswer">
-                            <v-row class="justify-center" v-for="(choice, index) in questionnaire.choices" :key="index">
-                                <v-col xs12 sm12 md12 align-self="center">
-                                    <Button :class="{ 'background-on-click': choices.includes(choice.id) }"
-                                        :textColor="choices.includes(choice.id) ? clickedMultiTextColor : btnTextColor"
-                                        :buttonStyle="btnStyle" :variant="btnVariant"
-                                        :onClick="() => toggleChoice(choice.id)">
-                                        {{ choice.name }}
-                                    </Button>
-                                </v-col>
-                            </v-row>
-                            <v-row class="justify-center" v-if="choices.length !== 0">
-                                <v-col class="text-end">
-                                    <Button :textColor="confirmBtnTextColor" :variant="btnVariant"
-                                        :buttonStyle="confirmBtnStyle"
-                                        :onClick="() => answerQuestionnaire(questionnaire.id, choices)">確定</Button>
-                                </v-col>
-                            </v-row>
-                        </div>
-                        <div v-else>
-                            <v-row class="justify-center" v-for="(choice, index) in questionnaire.choices" :key="index">
-                                <v-col xs12 sm12 md12 align-self="center">
-                                    <Button :color="btnColor" :textColor="btnTextColor" :variant="btnVariant"
-                                        :buttonStyle="btnStyle"
-                                        :onClick="() => answerQuestionnaire(questionnaire.id, [choice.id])">
-                                        {{ choice.name }}
-                                    </Button>
-                                </v-col>
-                            </v-row>
-                        </div>
-                    </v-container>
-                    <v-container v-if="questionnaire.isAnswered === true">
-                        <v-row>
-                            <v-col class="text-end">
-                                <nuxt-link :to="`/questionnaire/${questionnaire.id}`">
-                                    <Button :textColor="detailBtnTextColor" variant="btnVariant">
-                                        詳細を見る
-                                    </Button>
-                                </nuxt-link>
-                            </v-col>
-                        </v-row>
-                        <v-row>
-                            <QuestionnaireBarChart :questionnaire="questionnaire" :options="options" />
-                        </v-row>
-                    </v-container>
-                </v-col>
-            </v-row>
-        </v-container>
-    </v-card>
+                </v-container>
+            </v-card>
+        </v-col>
+    </v-row>
 </template>
 
 <style>
