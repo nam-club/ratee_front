@@ -1,13 +1,8 @@
 <template>
     <div style="display: flex; align-items: center;">
         <h2 v-if="caption">{{ caption }}</h2>
-        <v-chip v-if="captionLabel"
-          class="ma-2"
-          color="red"
-          label
-          text-color="white"
-        >
-          {{ captionLabel }}
+        <v-chip v-if="captionLabel" class="ma-2" color="red" label text-color="white">
+            {{ captionLabel }}
         </v-chip>
     </div>
     <div v-if="type === 'textField'">
@@ -16,30 +11,23 @@
     </div>
     <div v-else-if="type === 'textsField'">
         <v-container>
-            <v-row v-for="(t, i) in computedTextsModel" :key="i" no-gutters>
-                <v-col cols="1">
-                    <p>{{ i + 1 }}</p>
-                </v-col>
-                <v-col cols="10">
+            <v-row v-for="(t, i) in computedTextsModel" :key="i" no-gutters style="margin:1% 0%">
+                <v-col cols="11">
                     <v-text-field v-model="computedTextsModel[i]" clearable :rules="[rules.required, rules.textLength]" />
                 </v-col>
-                <v-col cols="1" v-if="computedTextsModel.length > rules.textsMinLength">
-                    <IconButton :icon="icons.mdiClose" :size="small" :onClick="($event: Event) => { $event.stopPropagation(); removeTexts(i); }" />
+                <v-col cols="1" v-if="computedTextsModel.length> rules.textsMinLength">
+                    <IconButton :icon="icons.mdiDelete" :size="x-small" :variant="btnVariant"
+                        :onClick="($event: Event) => { $event.stopPropagation(); removeTexts(i); }" />
                 </v-col>
             </v-row>
             <v-row no-gutters v-if="computedTextsModel.length < rules.textsMaxLength">
-                <v-col cols="1" />
-                <v-col cols="1">
-                    <IconButton :icon="icons.mdiPlus" :size="small" :onClick="addTexts" />
-                </v-col>
-                <v-col cols="auto">
-                    <Msg fontWeight="normal" fontSize="1.5em">{{ addText }}</Msg>
-                </v-col>
+                <Button :onClick="addTexts">{{ addText }}</Button>
             </v-row>
         </v-container>
     </div>
     <div v-else-if="type === 'textArea'">
-        <v-textarea counter :label="labelText" :rules="[rules.required, rules.textLength]" v-model="computedTextAreaModel"></v-textarea>
+        <v-textarea counter :label="labelText" :rules="[rules.required, rules.textLength]"
+            v-model="computedTextAreaModel"></v-textarea>
     </div>
     <div v-else-if="type === 'selectBox'">
         <v-select :label="labelText" :items="selectItems" v-model="computedSelectModel"></v-select>
@@ -57,7 +45,8 @@
             </v-row>
             <v-row no-gutters>
                 <v-col cols="auto" v-for="(c, i) in computedChipsModel" :key="i">
-                    <v-chip v-model="computedChipsModel[i]" class="ma-2" closable @click:close="($event: Event) => { $event.stopPropagation(); removeChip(i); }">
+                    <v-chip v-model="computedChipsModel[i]" class="ma-2" closable
+                        @click:close="($event: Event) => { $event.stopPropagation(); removeChip(i); }">
                         {{ computedChipsModel[i] }}
                     </v-chip>
                 </v-col>
@@ -85,7 +74,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { mdiClose, mdiPlus, mdiMagnify } from '@mdi/js';
+import { mdiDelete, mdiPlus, mdiMagnify } from '@mdi/js';
 import Button from '@/components/atoms/Button.vue'
 import IconButton from '@/components/atoms/IconButton.vue'
 import Msg from '@/components/atoms/Msg.vue'
@@ -214,10 +203,12 @@ export default defineComponent({
     },
     setup(props, context) {
         const icons = ref({
-            mdiClose,
+            mdiDelete,
             mdiPlus,
             mdiMagnify
         })
+
+        const btnVariant = ref("outlined");
 
         const newChip = ref('')
         const chips = ref([])
@@ -246,7 +237,7 @@ export default defineComponent({
         }
 
         const addChip = () => {
-            if (props.chipsModel && newChip.value.length >= TAG_MIN_LENGTH && newChip.value.length <= TAG_MAX_LENGTH ) {
+            if (props.chipsModel && newChip.value.length >= TAG_MIN_LENGTH && newChip.value.length <= TAG_MAX_LENGTH) {
                 props.chipsModel.push(newChip.value)
                 newChip.value = ''
                 context.emit('update:chipsModel', props.chipsModel)
@@ -275,6 +266,7 @@ export default defineComponent({
 
         return {
             icons,
+            btnVariant,
             tagTextColor,
             tagBtnStyle,
             newChip,

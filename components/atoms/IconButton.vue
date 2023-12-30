@@ -1,5 +1,5 @@
 <template>
-    <v-btn :icon="icon" :color="color" :size="size"></v-btn>
+    <v-btn :icon="icon" :color="color" :size="size" :variant="variant"></v-btn>
 </template>
   
 <script>
@@ -18,6 +18,10 @@ export default defineComponent({
         size: {
             type: String,
             required: true,
+        },
+        variant: {
+            type: String,
+            default: 'outlined'
         }
     },
 })
