@@ -36,7 +36,7 @@
         <v-container>
             <v-row no-gutters>
                 <v-col cols="9">
-                    <v-text-field v-model="newChip" :label="labelText" :rules="[rules.textLength]" />
+                    <v-text-field v-model="newChip" :label="labelText" :rules="[rules.textLength]" @keyup.enter="addChip" />
                 </v-col>
                 <v-col cols="1" />
                 <v-col cols="2" justify="center" v-if="computedChipsModel.length < rules.tagsMaxLength">
@@ -60,7 +60,7 @@
         <v-container>
             <v-row>
                 <v-col cols="10">
-                    <v-text-field v-model="computedTextModel" :label="labelText" />
+                    <v-text-field v-model="computedTextModel" :label="labelText" @keyup.enter="onClick()" />
                 </v-col>
                 <v-col cols="2">
                     <v-btn icon :onClick="() => onClick()">
