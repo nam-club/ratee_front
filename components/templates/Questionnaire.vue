@@ -1,14 +1,25 @@
 <template>
     <v-app class="bg-secondary">
         <Header />
-        <DetailView style="margin:5%" :questionnaire="questionnaire" :answerQuestionnaire="answerQuestionnaire" />
+        <DetailView :class="{'detail_mobile': mobile, 'detail': !mobile}" :questionnaire="questionnaire" :answerQuestionnaire="answerQuestionnaire" />
         <RecommendBox v-if="recommends && recommends.length !== 0" :recommends="recommends" />
         <CommentBox v-if="questionnaire.enableComment" :questionId="questionnaire.id" :comments="comments" :postComment="postComment" />
         <Footer :buttonText="footerButtonText" />
     </v-app>
 </template>
 
+<style scoped>
+.detail {
+    margin: 5%;
+}
+
+.detail_mobile {
+    margin: 20% 5% 0% 5%;
+}
+</style>
+
 <script lang="ts">
+import { useDisplay } from 'vuetify'
 import Header from '@/components/organisms/Header.vue'
 import DetailView from '@/components/organisms/DetailView.vue'
 import RecommendBox from '@/components/organisms/RecommendBox.vue'
@@ -45,10 +56,13 @@ export default defineComponent({
         },
     },
     setup(props) {
+        const { mobile } = useDisplay()
+
         const footerButtonText = ref('アンケートを作る')
         console.log(props.comments)
 
         return {
+            mobile,
             footerButtonText
         }
     }

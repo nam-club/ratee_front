@@ -3,7 +3,7 @@
         <v-container>
             <v-row>
                 <v-col>
-                    <Msg fontWeight="normal" fontSize="2em" style="margin:2% 0">{{ questionnaire.content }}</Msg>
+                    <Msg fontWeight="normal" :fontSize="mobile ? '1em' : '2em'" style="margin:2% 0">{{ questionnaire.content }}</Msg>
                     <v-row no-gutters>
                         <v-col cols="auto" v-for="(tag, i) in questionnaire.tags" :key="i">
                             <v-chip class="ma-2">
@@ -33,6 +33,7 @@
 </template>
 
 <script lang="ts">
+import { useDisplay } from 'vuetify'
 import Msg from '@/components/atoms/Msg.vue'
 import QuestionnaireBarChart from '@/components/organisms/QuestionnaireBarChart.vue'
 
@@ -52,6 +53,8 @@ export default defineComponent({
         }
     },
     setup() {
+        const { mobile } = useDisplay()
+        
         const options = ref({
             responsive: true,
             indexAxis: 'y',
@@ -69,6 +72,7 @@ export default defineComponent({
         });
 
         return {
+            mobile,
             options
         }
     }

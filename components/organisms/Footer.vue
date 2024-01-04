@@ -13,7 +13,7 @@
         </v-footer>
         <nuxt-link v-else to="/questionnaire/create"
             style="text-decoration: none; color: inherit; position: fixed; right: 0; bottom: 6%; margin: 20px; z-index: 1000;">
-            <IconButton :icon="icons.mdiPlus" :size="large" :variant="iconBtnVariant" />
+            <IconButton :icon="icons.mdiPenPlus" :size="large" :variant="iconBtnVariant" />
         </nuxt-link>
     </div>
 </template>
@@ -21,7 +21,7 @@
 <script>
 import { defineComponent } from 'vue'
 import { useDisplay } from 'vuetify'
-import { mdiPlus } from '@mdi/js';
+import { mdiPenPlus } from '@mdi/js';
 import Button from '@/components/atoms/Button.vue'
 
 export default defineComponent({
@@ -42,7 +42,7 @@ export default defineComponent({
         const { mobile } = useDisplay()
 
         const icons = ref({
-            mdiPlus,
+            mdiPenPlus,
         })
 
         return {
