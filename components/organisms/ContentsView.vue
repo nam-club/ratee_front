@@ -1,11 +1,11 @@
 <template>
-    <v-tabs v-model="tab" color="primary" dark align-tabs="center" style="margin:4% 0% 0.5% 0%">
+    <v-tabs v-if="!mobile" v-model="tab" color="primary" dark align-tabs="center" style="margin:4% 0% 0.5% 0%">
         <v-tab :value="TAB_NUM1" @click="changeTab(TAB_ID1)"><span style="font-size: 1.5em;">{{ TAB_NAME1 }}</span></v-tab>
         <v-tab :value="TAB_NUM2" @click="changeTab(TAB_ID2)"><span style="font-size: 1.5em;">{{ TAB_NAME2 }}</span></v-tab>
         <v-tab :value="TAB_NUM3" @click="changeTab(TAB_ID3)"><span style="font-size: 1.5em;">{{ TAB_NAME3 }}</span></v-tab>
         <v-tab :value="TAB_NUM4" @click="changeTab(TAB_ID4)"><span style="font-size: 1.5em;">{{ TAB_NAME4 }}</span></v-tab>
     </v-tabs>
-    <v-card class="bg-secondary" variant="outlined" dark style="margin:0% 2% 0% 2%">
+    <v-card class="bg-secondary" variant="outlined" dark :class="{'back_mobile': mobile, 'back': !mobile}">
         <v-window v-model="tab">
             <v-window-item v-for="n in TAB_LENGTH" :key="n" :value="n">
                 <div v-if="n === TAB_NUM4">
@@ -44,9 +44,36 @@
             </v-window-item>
         </v-window>
     </v-card>
+    <v-tabs v-if="mobile" v-model="tab" class="footer" color="primary" dark align-tabs="center" style="text-decoration: none; color: inherit;">
+        <v-tab :value="TAB_NUM1" @click="changeTab(TAB_ID1)"><span style="font-size: 1em;">{{ TAB_NAME1 }}</span></v-tab>
+        <v-tab :value="TAB_NUM2" @click="changeTab(TAB_ID2)"><span style="font-size: 1em;">{{ TAB_NAME2 }}</span></v-tab>
+        <v-tab :value="TAB_NUM3" @click="changeTab(TAB_ID3)"><span style="font-size: 1em;">{{ TAB_NAME3 }}</span></v-tab>
+        <v-tab :value="TAB_NUM4" @click="changeTab(TAB_ID4)"><span style="font-size: 1em;">{{ TAB_NAME4 }}</span></v-tab>
+    </v-tabs>
 </template>
 
+<style scoped>
+.back {
+    margin: 0% 2% 0% 2%;
+}
+
+.back_mobile {
+    margin: 15% 2% 0% 2%;
+}
+
+.footer {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    /* 透過した黒色 */
+    z-index: 100;
+}
+</style>
+
 <script lang="ts">
+import { useDisplay } from 'vuetify'
 import { mdiPlus, mdiMagnify } from '@mdi/js';
 import InputSet from '@/components/molecules/InputSet.vue'
 import AnswerBox from '@/components/organisms/AnswerBox.vue'
@@ -91,6 +118,8 @@ export default {
         tab: null,
     }),
     setup(props) {
+
+        const { mobile } = useDisplay()
 
         const icons = ref({
             mdiPlus,
@@ -151,6 +180,7 @@ export default {
         };
 
         return {
+            mobile,
             icons,
             tab,
             changeTab,

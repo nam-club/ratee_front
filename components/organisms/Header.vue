@@ -1,20 +1,25 @@
 <template>
-    <v-app-bar class="px-0 app-bar">
-        <v-btn v-if="isMobile" icon @click="toggleMenu">
-            <v-icon>{{ icons.mdiMenu }}</v-icon>
-        </v-btn>
+    <v-app-bar v-if="!mobile" class="px-0 app-bar">
         <nuxt-link to="/" style="text-decoration: none; color: inherit;">
-            <img :src="titleImg" @load="imageLoaded" @error="imageError" class="logo-img" />
+            <img :src="titleImg" style="width: 10%;" @load="imageLoaded" @error="imageError" class="logo-img" />
         </nuxt-link>
         <v-spacer></v-spacer>
-
+    </v-app-bar>
+    <v-app-bar v-else class="px-0 app-bar" style="display: flex;">
+        <!-- 左端に配置されるボタン -->
+        <v-btn icon @click="toggleMenu"
+            style="text-decoration: none; color: inherit; position: fixed; left: 0; top: 0; margin: 10px;">
+            <v-icon>{{ icons.mdiMenu }}</v-icon>
+        </v-btn>
+        <!-- 中央に配置されるコンテナ -->
+        <nuxt-link to="/" style="text-decoration: none; color: inherit; display: flex; justify-content: center;">
+            <img :src="titleImg" style="width: 35%;" @load="imageLoaded" @error="imageError" class="logo-img" />
+        </nuxt-link>
     </v-app-bar>
 </template>
 
 <style scoped>
 .logo-img {
-    width: 10%;
-    /* ここで幅を設定 */
     height: auto;
     /* 高さは自動調整 */
 }
@@ -22,6 +27,7 @@
   
 <script>
 import { defineComponent } from 'vue'
+import { useDisplay } from 'vuetify'
 import {
     mdiMenu,
 } from '@mdi/js'
@@ -29,6 +35,8 @@ import { TITLE_IMG } from '@/constants';
 
 export default defineComponent({
     setup() {
+        const { mobile } = useDisplay()
+
         const titleImg = TITLE_IMG;
 
         const imageError = () => {
@@ -45,29 +53,14 @@ export default defineComponent({
             mdiMenu,
         })
 
-        const isMobile = ref(false)
-
-        const checkWidth = () => {
-            isMobile.value = window.innerWidth < 960
-        }
-
-        onMounted(() => {
-            window.addEventListener('resize', checkWidth)
-            checkWidth()
-        })
-
-        onUnmounted(() => {
-            window.removeEventListener('resize', checkWidth)
-        })
-
         const toggleMenu = () => {
             // ここでハンバーガーメニューの開閉処理を行う
         }
 
         return {
+            mobile,
             titleImg,
             icons,
-            isMobile,
             toggleMenu,
             imageLoaded,
             imageError
