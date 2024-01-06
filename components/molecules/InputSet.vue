@@ -15,8 +15,8 @@
                 <v-col cols="11">
                     <v-text-field v-model="computedTextsModel[i]" clearable :rules="[rules.required, rules.textLength]" />
                 </v-col>
-                <v-col cols="1" v-if="computedTextsModel.length> rules.textsMinLength">
-                    <IconButton :icon="icons.mdiDelete" :size="x-small" :variant="btnVariant"
+                <v-col cols="1" v-if="computedTextsModel.length > rules.textsMinLength">
+                    <IconButton :icon="icons.mdiDelete" :size="x - small" :variant="btnVariant"
                         :onClick="($event: Event) => { $event.stopPropagation(); removeTexts(i); }" />
                 </v-col>
             </v-row>
@@ -57,18 +57,7 @@
         <v-checkbox v-model="computedCheckModel" :label="labelText" type="checkbox" hide-details />
     </div>
     <div v-if="type === 'searchBox'">
-        <v-container>
-            <v-row>
-                <v-col cols="10">
-                    <v-text-field v-model="computedTextModel" :label="labelText" @keyup.enter="onClick()" />
-                </v-col>
-                <v-col cols="2">
-                    <v-btn icon :onClick="() => onClick()">
-                        <v-icon>{{ icons.mdiMagnify }}</v-icon>
-                    </v-btn>
-                </v-col>
-            </v-row>
-        </v-container>
+        <v-text-field v-model="computedTextModel" :label="labelText" @keyup.enter="onClick()" />
     </div>
 </template>
 

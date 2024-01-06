@@ -5,33 +5,35 @@
         <v-tab :value="TAB_NUM3" @click="changeTab(TAB_ID3)"><span style="font-size: 1.5em;">{{ TAB_NAME3 }}</span></v-tab>
         <v-tab :value="TAB_NUM4" @click="changeTab(TAB_ID4)"><span style="font-size: 1.5em;">{{ TAB_NAME4 }}</span></v-tab>
     </v-tabs>
-    <v-card class="bg-secondary" variant="outlined" dark :class="{'back_mobile': mobile, 'back': !mobile}">
+    <v-card class="bg-secondary" variant="outlined" dark :class="{ 'back_mobile': mobile, 'back': !mobile }">
         <v-window v-model="tab">
             <v-window-item v-for="n in TAB_LENGTH" :key="n" :value="n">
                 <div v-if="n === TAB_NUM4">
-                    <v-container>
+                    <v-container v-if="!mobile">
                         <v-row>
                             <v-col cols="2" class="align-self-center">
                                 <InputSet type="selectBox" :selectItems="SEARCH_TYPES" :selectModel="typeName"
                                     @update:selectModel="setTypeName" />
                             </v-col>
-                            <v-col cols="10" class="align-self-center">
-                                <InputSet v-if="typeName !== FORM_CATEGORY_TEXT" type="searchBox" :text="word"
-                                    @input="word = $event" :labelText="SEARCH_LABEL"
-                                    :onClick="() => { searchQuestionnaires(typeName, word); }" />
-                                <v-row v-else>
-                                    <v-col cols="10" class="align-self-center">
-                                        <InputSet type="selectBox" :selectItems="categoryNames" :selectModel="categoryName"
-                                            @update:selectModel="setCategoryName" />
-                                    </v-col>
-                                    <v-col cols="2">
-                                        <v-btn icon @click="searchQuestionnaires(typeName, categoryId)">
-                                            <v-icon>{{ icons.mdiMagnify }}</v-icon>
-                                        </v-btn>
-                                    </v-col>
-                                </v-row>
+                            <v-col v-if="typeName !== FORM_CATEGORY_TEXT" cols="10" class="align-self-center">
+                                <InputSet type="searchBox" :text="word" @input="word = $event" :labelText="SEARCH_LABEL"
+                                    :onClick="searchQuestionnaires(typeName, word)" />
+                            </v-col>
+                            <v-col v-else cols="10" class="align-self-center">
+                                <InputSet type="selectBox" :selectItems="categoryNames" :selectModel="categoryName"
+                                    @update:selectModel="setCategoryName"
+                                    :onClick="searchQuestionnaires(typeName, categoryId)" />
                             </v-col>
                         </v-row>
+                    </v-container>
+                    <v-container v-else>
+                        <InputSet type="selectBox" :selectItems="SEARCH_TYPES" :selectModel="typeName"
+                            @update:selectModel="setTypeName" />
+                        <InputSet v-if="typeName !== FORM_CATEGORY_TEXT" type="searchBox" :text="word"
+                            @input="word = $event" :labelText="SEARCH_LABEL"
+                            :onClick="searchQuestionnaires(typeName, word)" />
+                        <InputSet v-else type="selectBox" :selectItems="categoryNames" :selectModel="categoryName"
+                            @update:selectModel="setCategoryName" :onClick="searchQuestionnaires(typeName, categoryId)" />
                     </v-container>
                     <AnswerBox style="margin:5%" :questionnaires="questionnaires"
                         :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire"
@@ -44,7 +46,8 @@
             </v-window-item>
         </v-window>
     </v-card>
-    <v-tabs v-if="mobile" v-model="tab" class="footer" color="primary" dark align-tabs="center" style="text-decoration: none; color: inherit;">
+    <v-tabs v-if="mobile" v-model="tab" class="footer" color="primary" dark align-tabs="center"
+        style="text-decoration: none; color: inherit;">
         <v-tab :value="TAB_NUM1" @click="changeTab(TAB_ID1)"><span style="font-size: 1em;">{{ TAB_NAME1 }}</span></v-tab>
         <v-tab :value="TAB_NUM2" @click="changeTab(TAB_ID2)"><span style="font-size: 1em;">{{ TAB_NAME2 }}</span></v-tab>
         <v-tab :value="TAB_NUM3" @click="changeTab(TAB_ID3)"><span style="font-size: 1em;">{{ TAB_NAME3 }}</span></v-tab>
