@@ -1,5 +1,15 @@
+import {
+    mdiListBox, mdiPencilBox
+} from '@mdi/js'
+
 export const TARGET_QUESTIONNAIRES = "QUESTIONNAIRES";
 export const TARGET_RECOMMENDS = "RECOMMENDS";
+
+// メニュー
+export const MENUS = [
+    {title: "アンケート一覧", path: "/", icon: mdiListBox}, 
+    {title: "アンケート作成", path: "/questionnaire/create", icon: mdiPencilBox}
+];
 
 // タブ
 export const TAB_LENGTH = 4; // タブの数
