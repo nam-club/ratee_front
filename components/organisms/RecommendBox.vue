@@ -5,11 +5,9 @@
             <v-row>
                 <v-col v-for="(recommend, index) in recommends" :key="index" cols="12" sm="4">
                     <nuxt-link :to="`/questionnaire/${recommend.id}`" style="text-decoration: none; color: inherit;">
-                        <v-card class="mx-auto" style="margin:1%">
-                            <v-card-text class="text-center">
-                                <Msg fontWeight="normal" fontSize="1.2em" :lineHeight="'1.5'">{{ recommend.content }}</Msg>
-                            </v-card-text>
-                        </v-card>
+                        <Button :buttonStyle="btnStyle">
+                            {{ recommend.content }}
+                        </Button>
                     </nuxt-link>
                 </v-col>
             </v-row>
@@ -31,10 +29,10 @@ export default defineComponent({
         },
     },
     setup() {
-
+        const btnStyle = ref({ width: '100%'});
 
         return {
-
+            btnStyle
         }
     }
 })
