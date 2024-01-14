@@ -6,17 +6,35 @@
         </v-chip>
     </div>
     <div v-if="type === 'textField'">
-        <v-text-field v-model="computedTextModel" :label="labelText" clearable
-            :rules="[rules.required, rules.textLength]" />
+        <v-container>
+            <v-row no-gutters>
+                <v-text-field v-model="computedTextModel" :label="labelText" clearable
+                    :rules="[rules.required, rules.textLength]" />
+            </v-row>
+        </v-container>
     </div>
     <div v-else-if="type === 'textsField'">
-        <v-container>
+        <v-container v-if="!mobile">
             <v-row v-for="(t, i) in computedTextsModel" :key="i" no-gutters style="margin:1% 0%">
                 <v-col cols="11">
                     <v-text-field v-model="computedTextsModel[i]" clearable :rules="[rules.required, rules.textLength]" />
                 </v-col>
-                <v-col cols="1" v-if="computedTextsModel.length > rules.textsMinLength">
-                    <IconButton :icon="icons.mdiDelete" :size="x - small" :variant="btnVariant"
+                <v-col cols="1" v-if="computedTextsModel.length > rules.textsMinLength" class="d-flex justify-center">
+                    <IconButton :icon="icons.mdiDeleteForever" :variant="btnVariant" color="error" size="x-large"
+                        :onClick="($event: Event) => { $event.stopPropagation(); removeTexts(i); }" />
+                </v-col>
+            </v-row>
+            <v-row no-gutters v-if="computedTextsModel.length < rules.textsMaxLength">
+                <Button :onClick="addTexts">{{ addText }}</Button>
+            </v-row>
+        </v-container>
+        <v-container v-else style="padding:0 0 5% 0">
+            <v-row v-for="(t, i) in computedTextsModel" :key="i" no-gutters>
+                <v-col cols="10">
+                    <v-text-field v-model="computedTextsModel[i]" clearable :rules="[rules.required, rules.textLength]" />
+                </v-col>
+                <v-col cols="2" v-if="computedTextsModel.length > rules.textsMinLength" class="d-flex justify-center">
+                    <IconButton :icon="icons.mdiDeleteForever" :variant="btnVariant" color="error" size="x-large"
                         :onClick="($event: Event) => { $event.stopPropagation(); removeTexts(i); }" />
                 </v-col>
             </v-row>
@@ -30,18 +48,16 @@
             v-model="computedTextAreaModel"></v-textarea>
     </div>
     <div v-else-if="type === 'selectBox'">
-        <v-select :label="labelText" :items="selectItems" v-model="computedSelectModel"></v-select>
+        <v-container>
+            <v-row no-gutters>
+                <v-select :label="labelText" :items="selectItems" v-model="computedSelectModel"></v-select>
+            </v-row>
+        </v-container>
     </div>
     <div v-else-if="type === 'chipBox'">
         <v-container>
             <v-row no-gutters>
-                <v-col cols="9">
-                    <v-text-field v-model="newChip" :label="labelText" :rules="[rules.textLength]" @keyup.enter="addChip" />
-                </v-col>
-                <v-col cols="1" />
-                <v-col cols="2" justify="center" v-if="computedChipsModel.length < rules.tagsMaxLength">
-                    <Button :onClick="addChip" :textColor="tagTextColor" :buttonStyle="tagBtnStyle">追加</Button>
-                </v-col>
+                <v-text-field v-model="newChip" :label="labelText" :rules="[rules.textLength]" @keyup.enter="addChip" />
             </v-row>
             <v-row no-gutters>
                 <v-col cols="auto" v-for="(c, i) in computedChipsModel" :key="i">
@@ -53,8 +69,8 @@
             </v-row>
         </v-container>
     </div>
-    <div v-else-if="type === 'checkBox'">
-        <v-checkbox v-model="computedCheckModel" :label="labelText" type="checkbox" hide-details />
+    <div v-else-if="type === 'switchButton'">
+        <v-switch color="primary" v-model="computedCheckModel" :label="labelText"></v-switch>
     </div>
     <div v-if="type === 'searchBox'">
         <v-text-field v-model="computedTextModel" :label="labelText" @keyup.enter="onClick()" />
@@ -63,7 +79,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { mdiDelete, mdiPlus, mdiMagnify } from '@mdi/js';
+import { useDisplay } from 'vuetify'
+import { mdiDeleteForever, mdiPlus, mdiMagnify } from '@mdi/js';
 import Button from '@/components/atoms/Button.vue'
 import IconButton from '@/components/atoms/IconButton.vue'
 import Msg from '@/components/atoms/Msg.vue'
@@ -191,16 +208,18 @@ export default defineComponent({
         },
     },
     setup(props, context) {
+        const { mobile } = useDisplay();
+
         const icons = ref({
-            mdiDelete,
+            mdiDeleteForever,
             mdiPlus,
             mdiMagnify
         })
 
-        const btnVariant = ref("outlined");
+        const btnVariant = ref("text");
 
-        const newChip = ref('')
-        const chips = ref([])
+        const newChip = ref('');
+        const chips = ref([]);
 
         const addTexts = () => {
             if (props.textsModel) {
@@ -254,6 +273,7 @@ export default defineComponent({
         const tagBtnStyle = ref({ fontSize: '1.2em', height: '70%', width: '100%', display: 'block' })
 
         return {
+            mobile,
             icons,
             btnVariant,
             tagTextColor,

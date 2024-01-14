@@ -1,5 +1,5 @@
 <template>
-    <v-btn :icon="icon" :color="color" :size="size" :variant="variant" :style="{ ...buttonStyle }"></v-btn>
+    <v-btn :icon="icon" :color="color" :size="size" :variant="variant" :disabled="disabled" :style="{ ...buttonStyle }"></v-btn>
 </template>
   
 <script>
@@ -22,6 +22,10 @@ export default defineComponent({
         variant: {
             type: String,
             default: 'outlined'
+        },
+        disabled: {
+            type: Boolean,
+            default: false
         },
         buttonStyle: {
             type: Object,

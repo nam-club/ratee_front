@@ -1,20 +1,23 @@
 <template>
-    <h2>{{ caption }}</h2>
-    <div v-if="type === 'text'">
-        <Msg fontWeight="normal" fontSize="1.5em">{{ text }}</Msg>
-    </div>
-    <div v-else-if="type === 'multiText'">
-        <Msg v-for="(t, i) in texts" :key="i" fontWeight="normal" fontSize="1.5em">
-            {{ i + 1 + ": " + t }}
-        </Msg>
-    </div>
-    <div v-else-if="type === 'chips'">
-        <v-chip v-for="(chip, i) in chips" :key="i" class="ma-2">
-            {{ chip }}
-        </v-chip>
-    </div>
-    <div v-else-if="type === 'checkBox'">
-        <v-checkbox :label="labelText" type="checkbox" v-model="isChecked" readonly hide-details class="no-focus"/>
+    <div :style="paragraphStyle">
+        <h2>{{ caption }}</h2>
+        <div v-if="type === 'text'">
+            <Msg fontWeight="normal" fontSize="1.2em" :padding="msgPadding">{{ text }}</Msg>
+        </div>
+        <div v-else-if="type === 'multiText'">
+            <Msg v-for="(t, i) in texts" :key="i" fontWeight="normal" fontSize="1.2em" :padding="msgPadding">
+                {{ i + 1 + ": " + t }}
+            </Msg>
+        </div>
+        <div v-else-if="type === 'chips'">
+            <v-chip v-for="(chip, i) in chips" :key="i" class="ma-2">
+                {{ chip }}
+            </v-chip>
+        </div>
+        <div v-else-if="type === 'switchButton'">
+            <v-switch color="primary" v-model="isChecked" :label="labelText" readonly hide-details
+                class="no-focus"></v-switch>
+        </div>
     </div>
 </template>
 
@@ -49,6 +52,16 @@ export default defineComponent({
         isChecked: {
             type: Boolean,
             default: false
+        },
+        paragraphStyle: {
+            type: Object,
+            default: () => ({}),
+        }
+    },
+    setup() {
+        const msgPadding = ref("0 0 0 2%")
+        return {
+            msgPadding
         }
     }
 })
