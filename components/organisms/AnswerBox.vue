@@ -7,7 +7,8 @@
                         <v-col xs12 sm6 md6 align-self="center">
                             <v-row no-gutters>
                                 <v-col cols="8">
-                                    <Msg fontWeight="normal" fontSize="1.5em" style="margin:2% 0">{{ questionnaire.content }}
+                                    <Msg fontWeight="normal" fontSize="1.5em" style="margin:2% 0">{{ questionnaire.content
+                                    }}
                                     </Msg>
                                 </v-col>
                                 <v-col cols="4" class="text-end">
@@ -31,19 +32,20 @@
                                     <v-row class="justify-center" v-for="(choice, index) in questionnaire.choices"
                                         :key="index">
                                         <v-col xs12 sm12 md12 align-self="center">
-                                            <Button :class="{ 'background-on-click': choices.includes(choice.id) }"
-                                                :textColor="choices.includes(choice.id) ? clickedMultiTextColor : btnTextColor"
+                                            <Button
+                                                :class="{ 'background-on-click': findChoicesByQuestionnaireId(questionnaire.id).includes(choice.id) }"
+                                                :textColor="findChoicesByQuestionnaireId(questionnaire.id).includes(choice.id) ? clickedMultiTextColor : btnTextColor"
                                                 :buttonStyle="btnStyle" :variant="btnVariant"
-                                                :onClick="() => toggleChoice(choice.id)">
+                                                :onClick="() => toggleChoice(questionnaire.id, choice.id)">
                                                 {{ choice.name }}
                                             </Button>
                                         </v-col>
                                     </v-row>
-                                    <v-row class="justify-center" v-if="choices.length !== 0">
+                                    <v-row class="justify-center" v-if="findChoicesByQuestionnaireId(questionnaire.id).length !== 0">
                                         <v-col class="text-end">
                                             <Button :textColor="confirmBtnTextColor" :variant="btnVariant"
                                                 :buttonStyle="confirmBtnStyle"
-                                                :onClick="() => answerQuestionnaire(questionnaire.id, choices)">確定</Button>
+                                                :onClick="() => answerQuestionnaire(questionnaire.id, findChoicesByQuestionnaireId(questionnaire.id))">確定</Button>
                                         </v-col>
                                     </v-row>
                                 </div>
@@ -101,19 +103,20 @@
                                     <v-row class="justify-center" v-for="(choice, index) in questionnaire.choices"
                                         :key="index">
                                         <v-col xs12 sm12 md12 align-self="center">
-                                            <Button :class="{ 'background-on-click': choices.includes(choice.id) }"
-                                                :textColor="choices.includes(choice.id) ? clickedMultiTextColor : btnTextColor"
+                                            <Button
+                                                :class="{ 'background-on-click': findChoicesByQuestionnaireId(questionnaire.id).includes(choice.id) }"
+                                                :textColor="findChoicesByQuestionnaireId(questionnaire.id).includes(choice.id) ? clickedMultiTextColor : btnTextColor"
                                                 :buttonStyle="btnStyle" :variant="btnVariant"
-                                                :onClick="() => toggleChoice(choice.id)">
+                                                :onClick="() => toggleChoice(questionnaire.id, choice.id)">
                                                 {{ choice.name }}
                                             </Button>
                                         </v-col>
                                     </v-row>
-                                    <v-row class="justify-center" v-if="choices.length !== 0">
+                                    <v-row class="justify-center" v-if="findChoicesByQuestionnaireId(questionnaire.id).length !== 0">
                                         <v-col class="text-end">
                                             <Button :textColor="confirmBtnTextColor" :variant="btnVariant"
                                                 :buttonStyle="confirmBtnStyle"
-                                                :onClick="() => answerQuestionnaire(questionnaire.id, choices)">確定</Button>
+                                                :onClick="() => answerQuestionnaire(questionnaire.id, findChoicesByQuestionnaireId(questionnaire.id))">確定</Button>
                                         </v-col>
                                     </v-row>
                                 </div>
@@ -217,17 +220,43 @@ export default defineComponent({
         const confirmBtnStyle = ref({ "background-color": "#3A98B9" });
         const detailBtnTextColor = ref("#3A98B9");
 
-        const choices = ref([]);
+        // 回答オブジェクトの型定義
+        interface Answer {
+            questionId: string;
+            choices: string[];
+        }
+        const answers = ref<Answer[]>([]);  // 回答配列
+        const choices = ref([]);            // 回答配列ないの選択肢配列
 
         // 選択肢をクリックしてchoices配列に追加 or 削除
-        const toggleChoice = (choiceId: string) => {
-            const index = choices.value.indexOf(choiceId);
-            if (index === -1) {
-                choices.value.push(choiceId);
+        const toggleChoice = (questionId: string, choiceId: string) => {
+            // 引数の questionId と一致する questionId のオブジェクトを検索
+            const answerIndex = answers.value.findIndex(answer => answer.questionId === questionId);
+
+            if (answerIndex === -1) {
+                // questionId のオブジェクトが存在しない場合、新しいオブジェクトを追加
+                answers.value.push({ questionId, choices: [choiceId] });
             } else {
-                choices.value.splice(index, 1);
+                // questionId のオブジェクトが存在する場合
+                const existingChoices = answers.value[answerIndex].choices;
+                const choiceIndex = existingChoices.indexOf(choiceId);
+
+                if (choiceIndex === -1) {
+                    // choiceId が存在しない場合、choices 配列に追加
+                    existingChoices.push(choiceId);
+                } else {
+                    // choiceId が存在する場合、choices 配列から削除
+                    existingChoices.splice(choiceIndex, 1);
+                }
             }
-            console.log(choices)
+
+            console.log(answers.value);
+        };
+
+        // 選択肢を選択した場合に色を変えるため、questionnaire.idに対応するanswersオブジェクトのchoicesを取得するヘルパー関数
+        const findChoicesByQuestionnaireId = (questionnaireId) => {
+            const answer = answers.value.find(answer => answer.questionId === questionnaireId);
+            return answer ? answer.choices : [];
         };
 
         const answerQuestionnaire = (questionId: string, choices: string[]) => {
@@ -281,6 +310,7 @@ export default defineComponent({
             detailBtnTextColor,
             choices,
             toggleChoice,
+            findChoicesByQuestionnaireId,
             answerQuestionnaire,
             options
         }
