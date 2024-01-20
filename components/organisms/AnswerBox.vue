@@ -41,7 +41,8 @@
                                             </Button>
                                         </v-col>
                                     </v-row>
-                                    <v-row class="justify-center" v-if="findChoicesByQuestionnaireId(questionnaire.id).length !== 0">
+                                    <v-row class="justify-center"
+                                        v-if="findChoicesByQuestionnaireId(questionnaire.id).length !== 0">
                                         <v-col class="text-end">
                                             <Button :textColor="confirmBtnTextColor" :variant="btnVariant"
                                                 :buttonStyle="confirmBtnStyle"
@@ -112,7 +113,8 @@
                                             </Button>
                                         </v-col>
                                     </v-row>
-                                    <v-row class="justify-center" v-if="findChoicesByQuestionnaireId(questionnaire.id).length !== 0">
+                                    <v-row class="justify-center"
+                                        v-if="findChoicesByQuestionnaireId(questionnaire.id).length !== 0">
                                         <v-col class="text-end">
                                             <Button :textColor="confirmBtnTextColor" :variant="btnVariant"
                                                 :buttonStyle="confirmBtnStyle"
@@ -287,7 +289,7 @@ export default defineComponent({
                 y: {
                     ticks: {
                         font: {
-                            family: 'sans-serif', // y軸のラベルにフォントを適用
+                            family: "'Kosugi Maru'", // y軸のラベルにフォントを適用
                             size: 16,             // y軸のラベルのフォントサイズを16に設定
                         }
                     }

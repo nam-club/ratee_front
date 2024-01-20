@@ -3,6 +3,16 @@
 import vuetify from 'vite-plugin-vuetify'
 
 export default defineNuxtConfig({
+    head: {
+        link: [
+            // M PLUS Rounded 1c
+            //{ rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=M+PLUS+1p&family=M+PLUS+Rounded+1c&display=swap' },
+            // Kosugi Maru
+            { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=M+PLUS+1p&family=M+PLUS+Rounded+1c&display=swap' },
+            // Zen Maru Gothic
+            //{ rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=M+PLUS+1p&family=M+PLUS+Rounded+1c&family=Zen+Maru+Gothic&display=swap' },
+        ]
+    },
     build: {
         transpile: ['vuetify'],
     },

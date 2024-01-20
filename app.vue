@@ -7,9 +7,9 @@
 </template>
 
 <style>
-@import url('https://fonts.googleapis.com/css?family=M+PLUS+1p&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=M+PLUS+1p&family=M+PLUS+Rounded+1c&display=swap');
 
 body {
-  font-family: 'M PLUS 1p', sans-serif;
+  font-family: 'Kosugi Maru', sans-serif;
 }
 </style>
