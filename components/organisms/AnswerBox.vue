@@ -251,8 +251,6 @@ export default defineComponent({
                     existingChoices.splice(choiceIndex, 1);
                 }
             }
-
-            console.log(answers.value);
         };
 
         // 選択肢を選択した場合に色を変えるため、questionnaire.idに対応するanswersオブジェクトのchoicesを取得するヘルパー関数
@@ -273,10 +271,11 @@ export default defineComponent({
             }
         }
 
-        const options = ref({
+        const options = computed(() => ({
             responsive: true,
+            maintainAspectRatio: true,
+            aspectRatio: mobile.value ? 1.2 : 1.8, // mobile の状態に基づいて aspectRatio を変更
             indexAxis: 'y',
-            maintainAspectRatio: false,
             plugins: {
                 legend: {
                     display: false // レジェンド（ラベル）を非表示にする
@@ -290,12 +289,12 @@ export default defineComponent({
                     ticks: {
                         font: {
                             family: "'Kosugi Maru'", // y軸のラベルにフォントを適用
-                            size: 16,             // y軸のラベルのフォントサイズを16に設定
+                            size: 14
                         }
                     }
                 }
             },
-        });
+        }));
 
         return {
             mobile,

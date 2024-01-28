@@ -55,10 +55,11 @@ export default defineComponent({
     setup() {
         const { mobile } = useDisplay()
         
-        const options = ref({
+        const options = computed(() => ({
             responsive: true,
+            maintainAspectRatio: true,
+            aspectRatio: mobile.value ? 1.2 : 4, // mobile の状態に基づいて aspectRatio を変更
             indexAxis: 'y',
-            maintainAspectRatio: false,
             plugins: {
                 legend: {
                     display: false // レジェンド（ラベル）を非表示にする
@@ -68,8 +69,16 @@ export default defineComponent({
                 x: {
                     display: false, // x軸の目盛りと数値を非表示にする
                 },
+                y: {
+                    ticks: {
+                        font: {
+                            family: "'Kosugi Maru'", // y軸のラベルにフォントを適用
+                            size: 14
+                        }
+                    }
+                }
             },
-        });
+        }));
 
         return {
             mobile,

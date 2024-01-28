@@ -8,14 +8,14 @@
                             <Msg fontWeight="normal" fontSize="1.5em">コメント</Msg>
                         </v-col>
                         <v-col cols="6" class="text-end">
-                            <Button :color="confirmBtnColor" :textColor="confirmBtnTextColor" @click="openDialog">
+                            <Button :variant="btnVariant" @click="openDialog">
                                 {{ COMMENT_BUTTON }}
                             </Button>
                         </v-col>
                     </v-row>
                     <v-row v-else>
                         <v-col cols="12">
-                            <Button :color="confirmBtnColor" :textColor="confirmBtnTextColor" @click="openDialog">
+                            <Button :variant="btnVariant" @click="openDialog">
                                 {{ COMMENT_BUTTON }}
                             </Button>
                         </v-col>
