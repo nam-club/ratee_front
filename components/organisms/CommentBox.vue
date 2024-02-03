@@ -29,6 +29,18 @@
                             <v-divider inset></v-divider>
                         </v-list>
                     </v-card>
+                    <InfiniteLoading :questionnaires="questionnaires" @infinite="load" :immediate-check="false"
+                        :reverse="false" :disabled="isInfiniteDisabled">
+                        <template #spinner>
+                            <div class="text-center" style="padding:10%">
+                                <v-progress-circular indeterminate color="primary" :size="100"
+                                    :width="10"></v-progress-circular>
+                            </div>
+                        </template>
+                        <template #complete>
+                            <span>読み込み終了</span>
+                        </template>
+                    </InfiniteLoading>
                 </v-container>
 
                 <v-container v-else>
@@ -57,6 +69,18 @@
                             <v-divider inset></v-divider>
                         </v-list>
                     </v-card>
+                    <InfiniteLoading :questionnaires="questionnaires" @infinite="load" :immediate-check="false"
+                        :reverse="false" :disabled="isInfiniteDisabled">
+                        <template #spinner>
+                            <div class="text-center" style="padding:10%">
+                                <v-progress-circular indeterminate color="primary" :size="100"
+                                    :width="10"></v-progress-circular>
+                            </div>
+                        </template>
+                        <template #complete>
+                            <span>読み込み終了</span>
+                        </template>
+                    </InfiniteLoading>
                 </v-container>
                 <v-container>
 
@@ -101,6 +125,8 @@
 <script lang="ts">
 import { useDisplay } from 'vuetify'
 import { mdiCommentPlus } from '@mdi/js';
+import InfiniteLoading from "v3-infinite-loading";
+import "v3-infinite-loading/lib/style.css";
 import Button from '@/components/atoms/Button.vue'
 import IconButton from '@/components/atoms/IconButton.vue'
 import Msg from '@/components/atoms/Msg.vue'
@@ -111,6 +137,7 @@ import {
 
 export default defineComponent({
     components: {
+        InfiniteLoading,
         Button,
         IconButton,
         Msg,
@@ -128,6 +155,10 @@ export default defineComponent({
             type: Function,
             required: true
         },
+        load: {
+            type: Function,
+            required: true
+        }
     },
     setup(props) {
         const { mobile } = useDisplay();

@@ -1,12 +1,7 @@
 <template>
     <div v-if="!isLoading">
         <Questionnaire v-if="questionnaire" :questionnaire="questionnaire" :answerQuestionnaire="answerQuestionnaire"
-            :comments="comments" :postComment="postComment" :recommends="recommends" :chart="chart" />
-        <InfiniteLoading :comments="comments" @infinite="load" :immediate-check="false" :reverse="false" :disabled="isInfiniteDisabled">
-            <template #complete>
-                <span>読み込み終了</span>
-            </template>
-        </InfiniteLoading>
+            :comments="comments" :postComment="postComment" :recommends="recommends" :chart="chart" :load="load" />
     </div>
     <div v-else class="text-center center-content">
         <v-progress-circular indeterminate color="primary" :size="100" :width="10"></v-progress-circular>

@@ -3,7 +3,7 @@
         <Header />
         <DetailView :class="{'detail_mobile': mobile, 'detail': !mobile}" :questionnaire="questionnaire" :answerQuestionnaire="answerQuestionnaire" />
         <RecommendBox v-if="recommends && recommends.length !== 0" :recommends="recommends" />
-        <CommentBox v-if="questionnaire.enableComment" :questionId="questionnaire.id" :comments="comments" :postComment="postComment" />
+        <CommentBox v-if="questionnaire.enableComment" :questionId="questionnaire.id" :comments="comments" :postComment="postComment" :load="load" />
         <Footer :buttonText="footerButtonText" />
     </v-app>
 </template>
@@ -19,7 +19,7 @@
 </style>
 
 <script lang="ts">
-import { useDisplay } from 'vuetify'
+import { useDisplay } from 'vuetify';
 import Header from '@/components/organisms/Header.vue'
 import DetailView from '@/components/organisms/DetailView.vue'
 import RecommendBox from '@/components/organisms/RecommendBox.vue'
@@ -58,6 +58,10 @@ export default defineComponent({
             type: Object,
             required: true,
         },
+        load: {
+            type: Function,
+            required: true
+        }
     },
     setup(props) {
         const { mobile } = useDisplay()
