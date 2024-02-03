@@ -1,7 +1,7 @@
 <template>
     <v-app class="bg-secondary-darken-2" style="display: flex; flex-direction: column;">
         <Header />
-        <ContentsView :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires" :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire" :answerSearchQuestionnaire="answerSearchQuestionnaire" :resetQuestionnaires="resetQuestionnaires" :categories="categories" :isLoading="isLoading" />
+        <ContentsView :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires" :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire" :answerSearchQuestionnaire="answerSearchQuestionnaire" :resetQuestionnaires="resetQuestionnaires" :categories="categories" :isLoading="isLoading" :load="load" />
         <Footer :buttonText="footerButtonText" />
     </v-app>
 </template>
@@ -51,6 +51,10 @@ export default defineComponent({
         isLoading: {
             type: Boolean,
             required: true,
+        },
+        load: {
+            type: Function,
+            required: true
         }
     },
     setup(props) {

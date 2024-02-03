@@ -2,13 +2,7 @@
     <Top :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires"
         :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire"
         :answerSearchQuestionnaire="answerSearchQuestionnaire" :resetQuestionnaires="resetQuestionnaires"
-        :categories="categories" :isLoading="isLoading" />
-    <InfiniteLoading :questionnaires="questionnaires" @infinite="load" :immediate-check="false" :reverse="false"
-        :disabled="isInfiniteDisabled">
-        <template #complete>
-            <span>読み込み終了</span>
-        </template>
-    </InfiniteLoading>
+        :categories="categories" :isLoading="isLoading" :load="load" />
 </template>
 
 <style scoped>

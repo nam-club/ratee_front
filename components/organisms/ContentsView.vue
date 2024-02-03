@@ -45,8 +45,20 @@
                     <AnswerBox v-else style="margin:5%" :questionnaires="questionnaires"
                         :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire"
                         :answerSearchQuestionnaire="answerSearchQuestionnaire" :goToSearchTab="goToSearchTab" />
+                    <InfiniteLoading :questionnaires="questionnaires" @infinite="load" :immediate-check="false"
+                        :reverse="false" :disabled="isInfiniteDisabled">
+                        <template #spinner>
+                            <div class="text-center" style="padding:10%">
+                                <v-progress-circular indeterminate color="primary" :size="100"
+                                    :width="10"></v-progress-circular>
+                            </div>
+                        </template>
+                        <template #complete>
+                            <span>読み込み終了</span>
+                        </template>
+                    </InfiniteLoading>
                 </div>
-                <div v-else class="text-center center-content" style="padding:10%">
+                <div v-else class="text-center" style="padding:10%">
                     <v-progress-circular indeterminate color="primary" :size="100" :width="10"></v-progress-circular>
                 </div>
             </v-window-item>
@@ -84,7 +96,6 @@
 <script lang="ts">
 import { useDisplay } from 'vuetify'
 import { mdiPlus, mdiMagnify } from '@mdi/js';
-import { InfiniteLoadingState } from '@/types';
 import InfiniteLoading from "v3-infinite-loading";
 import "v3-infinite-loading/lib/style.css";
 import InputSet from '@/components/molecules/InputSet.vue'
@@ -94,6 +105,7 @@ import { Category } from '@/types';
 
 export default {
     components: {
+        InfiniteLoading,
         InputSet,
         AnswerBox
     },
@@ -128,6 +140,10 @@ export default {
         isLoading: {
             type: Boolean,
             required: true,
+        },
+        load: {
+            type: Function,
+            required: true
         }
     },
     data: () => ({
