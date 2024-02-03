@@ -1,7 +1,7 @@
 <template>
     <div v-if="!isLoading">
         <Questionnaire v-if="questionnaire" :questionnaire="questionnaire" :answerQuestionnaire="answerQuestionnaire"
-            :comments="comments" :postComment="postComment" :recommends="recommends" />
+            :comments="comments" :postComment="postComment" :recommends="recommends" :chart="chart" />
         <InfiniteLoading :comments="comments" @infinite="load" :immediate-check="false" :reverse="false" :disabled="isInfiniteDisabled">
             <template #complete>
                 <span>読み込み終了</span>
@@ -55,6 +55,10 @@ export default defineComponent({
         // コメント一覧取得
         const cStore = useComments(questionId, "");
         const comments = ref([]);
+
+        // 時系列チャート取得
+        const chStore = useChart(questionId);
+        const chart = chStore.state;
 
         watchEffect(() => {
             comments.value = cStore.state.value.comments;
@@ -122,7 +126,8 @@ export default defineComponent({
             isLoading,
             load,
             isInfiniteDisabled,
-            postComment
+            postComment,
+            chart
         }
     }
 })

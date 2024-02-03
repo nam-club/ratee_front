@@ -54,6 +54,10 @@ export default defineComponent({
             type: Function,
             required: true
         },
+        chart: {
+            type: Object,
+            required: true,
+        },
     },
     setup(props) {
         const { mobile } = useDisplay()

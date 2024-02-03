@@ -259,6 +259,7 @@ export const useQuestionnaires = (target: string, questionId: string) => {
         switch (target) {
             // アンケート一覧を取得
             case TARGET_QUESTIONNAIRES:
+                isLoading.value = true;
                 const qObject = await getQuestionnaires(TAB_ID1);
                 state.value.questionnaires = qObject.questionnaires ? [...qObject.questionnaires] : state.value.questionnaires;
                 state.value.nextToken = qObject.nextToken ? qObject.nextToken : '';
@@ -276,6 +277,7 @@ export const useQuestionnaires = (target: string, questionId: string) => {
 
     // アンケート一覧再取得
     const reloadQuestionnaires = async () => {
+        isLoading.value = true;
         const qObject = await getQuestionnaires(TAB_ID1);
         state.value.questionnaires = qObject.questionnaires ? [...qObject.questionnaires] : state.value.questionnaires;
         state.value.nextToken = qObject.nextToken ? qObject.nextToken : '';
@@ -285,6 +287,7 @@ export const useQuestionnaires = (target: string, questionId: string) => {
 
     // 続きのアンケート一覧を取得(無限スクロール)
     const scrollQuestionnaires = async (order: string, nextToken: string) => {
+        isLoading.value = false;
         if (nextToken !== '') {
             const qObject = await getNextQuestionnaires(order, nextToken);
             if (qObject.questionnaires) {
@@ -292,15 +295,18 @@ export const useQuestionnaires = (target: string, questionId: string) => {
             }
             state.value.nextToken = qObject.nextToken ? qObject.nextToken : '';
         }
+        isLoading.value = false;
     }
 
     // アンケートタブ切替
     const changeQuestionnaires = async (order: string) => {
+        isLoading.value = true;
         if (state.value) {
             const qObject = await getQuestionnaires(order);
             state.value.questionnaires = qObject.questionnaires ? [...qObject.questionnaires] : state.value.questionnaires;
             state.value.nextToken = qObject.nextToken ? qObject.nextToken : '';
         }
+        isLoading.value = false;
     }
 
     // アンケート検索

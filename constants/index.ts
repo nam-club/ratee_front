@@ -5,13 +5,13 @@ import {
 export const TARGET_QUESTIONNAIRES = "QUESTIONNAIRES";
 export const TARGET_RECOMMENDS = "RECOMMENDS";
 
-// メニュー
+/** メニュー */
 export const MENUS = [
     {title: "アンケート一覧", path: "/", icon: mdiListBox}, 
     {title: "アンケート作成", path: "/questionnaire/create", icon: mdiPencilBox}
 ];
 
-// タブ
+/** タブ */
 export const TAB_LENGTH = 4; // タブの数
 export const TAB_ID1 = "news";
 export const TAB_NAME1 = "新着";
@@ -26,7 +26,7 @@ export const TAB_ID4 = "search";
 export const TAB_NAME4 = "検索";
 export const TAB_NUM4 = 4;
 
-// アンケート作成フォーム
+/** アンケート作成フォーム */
 export const FORM_CAPTION_REQUIRED_LABEL = "必須";
 export const FORM_TITLE_TEXT = "質問";
 export const FORM_TITLE_LABEL = "質問を入力してください。";
@@ -38,17 +38,17 @@ export const FORM_TAG_LABEL = "追加したいタグを入力してください�
 export const FORM_COMMENT_LABEL = "コメントを有効にする";
 export const FORM_MULTI_LABEL = "複数の回答を有効にする";
 
-// 検索ボックス
+/** 検索ボックス */
 export const SEARCH_LABEL = "検索ワードを入力";
 export const SEARCH_TYPES = [FORM_TITLE_TEXT, FORM_CATEGORY_TEXT, FORM_TAG_TEXT];
 
-// アンケート・コメント取得件数
+/** アンケート・コメント取得件数 */
 export const MAX_COUNT = 9999;
 
-// コメントボックス
+/** コメントボックス */
 export const COMMENT_BUTTON = "コメントを投稿する";
 
-// バリデーションチェック
+/** バリデーションチェック */
 export const TITLE_MIN_LENGTH = 4; // アンケート質問の最低文字数
 export const TITLE_MAX_LENGTH = 40; // アンケート質問の最大文字数
 export const CHOICES_MIN_LENGTH = 2; // アンケート選択肢の最低数
@@ -65,5 +65,5 @@ export const COMMENT_MIN_LENGTH = 1; // アンケート質問の最低文字数
 export const COMMENT_MAX_LENGTH = 40; // アンケート質問の最大文字数
 export const COMMENT_NULL_TEXT = 'コメントを入力してください。' // コメントのデフォルトおよびエラーメッセージ
 
-// 画像パス
+/** 画像パス */
 export const TITLE_IMG = '/logo.png';

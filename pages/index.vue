@@ -1,19 +1,14 @@
 <template>
-    <div v-if="!isLoading">
-        <Top :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires"
-            :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire"
-            :answerSearchQuestionnaire="answerSearchQuestionnaire" :resetQuestionnaires="resetQuestionnaires"
-            :categories="categories" />
-        <InfiniteLoading :questionnaires="questionnaires" @infinite="load" :immediate-check="false" :reverse="false"
-            :disabled="isInfiniteDisabled">
-            <template #complete>
-                <span>読み込み終了</span>
-            </template>
-        </InfiniteLoading>
-    </div>
-    <div v-else class="text-center center-content">
-        <v-progress-circular indeterminate color="primary" :size="100" :width="10"></v-progress-circular>
-    </div>
+    <Top :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires"
+        :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire"
+        :answerSearchQuestionnaire="answerSearchQuestionnaire" :resetQuestionnaires="resetQuestionnaires"
+        :categories="categories" :isLoading="isLoading" />
+    <InfiniteLoading :questionnaires="questionnaires" @infinite="load" :immediate-check="false" :reverse="false"
+        :disabled="isInfiniteDisabled">
+        <template #complete>
+            <span>読み込み終了</span>
+        </template>
+    </InfiniteLoading>
 </template>
 
 <style scoped>

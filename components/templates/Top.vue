@@ -1,7 +1,7 @@
 <template>
     <v-app class="bg-secondary-darken-2" style="display: flex; flex-direction: column;">
         <Header />
-        <ContentsView :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires" :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire" :answerSearchQuestionnaire="answerSearchQuestionnaire" :resetQuestionnaires="resetQuestionnaires" :categories="categories" />
+        <ContentsView :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires" :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire" :answerSearchQuestionnaire="answerSearchQuestionnaire" :resetQuestionnaires="resetQuestionnaires" :categories="categories" :isLoading="isLoading" />
         <Footer :buttonText="footerButtonText" />
     </v-app>
 </template>
@@ -48,6 +48,10 @@ export default defineComponent({
             type: Function,
             required: true
         },
+        isLoading: {
+            type: Boolean,
+            required: true,
+        }
     },
     setup(props) {
         const footerButtonText = ref('アンケートを作る')
