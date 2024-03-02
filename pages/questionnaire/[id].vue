@@ -53,7 +53,8 @@ export default defineComponent({
 
         // 時系列チャート取得
         const chStore = useChart(questionId);
-        const chart = chStore.state;
+        const chart = chStore.state.value.chart;
+        console.log(chart)
 
         watchEffect(() => {
             comments.value = cStore.state.value.comments;

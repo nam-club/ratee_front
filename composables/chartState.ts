@@ -18,7 +18,7 @@ const baseURL = import.meta.env.VITE_BASE_URL
 // 時系列チャート取得API
 const getChart = async (questionId: string): Promise<ResponseData> => {
     try {
-        const url = new URL(`${baseURL}/chart/daily-answers`);
+        const url = new URL(`${baseURL}/chart/questionnaire/answers-sum`);
         let params = new URLSearchParams({
             id: questionId
         });

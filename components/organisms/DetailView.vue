@@ -24,8 +24,11 @@
                 </v-row>
             </v-container>
             <v-container v-if="questionnaire.isAnswered === true">
-                <v-row v-if="questionnaire.isAnswered === true">
+                <v-row>
                     <QuestionnaireBarChart :questionnaire="questionnaire" :options="options" />
+                </v-row>
+                <v-row>
+                    <TimeChart :timeData="chart" :options="options" />
                 </v-row>
             </v-container>
         </v-container>
@@ -36,11 +39,13 @@
 import { useDisplay } from 'vuetify'
 import Msg from '@/components/atoms/Msg.vue'
 import QuestionnaireBarChart from '@/components/organisms/QuestionnaireBarChart.vue'
+import TimeChart from '@/components/organisms/TimeChart.vue'
 
 export default defineComponent({
     components: {
         Msg,
         QuestionnaireBarChart,
+        TimeChart
     },
     props: {
         questionnaire: {
@@ -50,6 +55,10 @@ export default defineComponent({
         answerQuestionnaire: {
             type: Function,
             required: true
+        },
+        chart: {
+            type: Object,
+            required: true,
         }
     },
     setup() {
