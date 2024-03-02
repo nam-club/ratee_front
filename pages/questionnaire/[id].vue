@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!isCommentLoading && !isChartLoading">
+    <div v-if="!isQuestionnaireLoading && !isCommentLoading && !isChartLoading">
         <Questionnaire :questionnaire="questionnaire" :answerQuestionnaire="answerQuestionnaire" :comments="comments"
             :postComment="postComment" :recommends="recommends" :chart="chart" :load="load" />
     </div>
@@ -33,12 +33,19 @@ export default defineComponent({
     setup() {
         const router = useRoute();
         const questionId = Array.isArray(router.params.id) ? router.params.id[0] : router.params.id;
+        const isQuestionnaireLoading = ref(true);
         const isCommentLoading = ref(true);
         const isChartLoading = ref(true);
 
         // アンケート情報取得
         const qStore = useQuestionnaire(questionId);
-        const questionnaire = qStore.state;
+        const questionnaire = ref({});
+        
+        watchEffect(() => {
+            questionnaire.value = qStore.state.value;
+            isQuestionnaireLoading.value = qStore.isLoading.value;
+            console.log(questionnaire.value)
+        });
 
         // アンケート回答
         const answerQuestionnaire = (id: string, name: string) => {
@@ -56,14 +63,12 @@ export default defineComponent({
         watchEffect(() => {
             comments.value = cStore.state.value.comments;
             isCommentLoading.value = cStore.isLoading.value;
-            console.log(isCommentLoading.value)
         });
 
         // 続きのコメント一覧を取得
         const scrollComments = async (nextToken: string) => {
             console.log('==start scrollComments==')
             await cStore.scrollComments(questionId, nextToken)
-            console.log(cStore.state)
         };
 
         // 時系列チャート取得
@@ -73,7 +78,6 @@ export default defineComponent({
         watchEffect(() => {
             chart.value = chStore.state.value.chart;
             isChartLoading.value = chStore.isLoading.value;
-            console.log(isChartLoading.value)
         });
 
         const isInfiniteDisabled = ref(false); // 無限スクロール制御変数の定義

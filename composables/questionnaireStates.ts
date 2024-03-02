@@ -393,9 +393,11 @@ export const useQuestionnaires = (target: string, questionId: string) => {
 // アンケート情報のStore定義
 export const useQuestionnaire = (questionId: string) => {
     const state = ref<Questionnaire>(); // 初期値は空のオブジェクト
+    const isLoading = ref(true);
 
     onMounted(async () => {
         state.value = await getQuestionnaire(questionId);
+        isLoading.value = false;
     });
 
     // アンケート回答
@@ -410,6 +412,7 @@ export const useQuestionnaire = (questionId: string) => {
     return {
         state: readonly(state),
         answerQuestionnaire,
+        isLoading,
     }
 
 }

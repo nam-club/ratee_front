@@ -24,31 +24,31 @@ export default {
         console.log(props.timeData)
         const chartData = ref({ labels: [], datasets: [] });
 
-        const processData = (data) => {
-            if (!data || Object.keys(data).length === 0) {
+        const processData = (obj) => {
+            if (!obj || Object.keys(obj).length === 0) {
                 console.log('timeData is empty or undefined');
                 return;
             }
-            console.log(data);
+            console.log(obj);
             const labels = new Set();
             const datasets = [];
-            const dataPoints = Object.entries(data.data);
+            const dataPoints = Object.entries(obj.data);
+            const choices = Object.entries(dataPoints[0][1]);
 
-            for (let i = 1; i <= 10; i++) {
+            choices.forEach(([key, value]) => {
                 const borderColor = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`;
                 datasets.push({
-                    label: `選択肢${i}`,
+                    label: key,
                     data: [],
                     fill: true,
                     borderColor: borderColor,
                     backgroundColor: borderColor.replace('rgb', 'rgba').replace(')', ', 0.2)'),
                     tension: 0.1
                 });
-            }
+            });
 
             dataPoints.forEach(([date, values]) => {
-                const formattedDate = data.interval === 'daily' ? date : date.substring(0, 7);
-                labels.add(formattedDate);
+                labels.add(date);
 
                 Object.entries(values).forEach(([key, value], index) => {
                     datasets[index].data.push(value);
