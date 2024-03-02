@@ -61,7 +61,8 @@ export default defineComponent({
             required: true,
         }
     },
-    setup() {
+    setup(props) {
+        console.log(props.chart)
         const { mobile } = useDisplay()
         
         const options = computed(() => ({

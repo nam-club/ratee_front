@@ -1,7 +1,7 @@
 <template>
-    <div v-if="!isLoading">
-        <Questionnaire v-if="questionnaire" :questionnaire="questionnaire" :answerQuestionnaire="answerQuestionnaire"
-            :comments="comments" :postComment="postComment" :recommends="recommends" :chart="chart" :load="load" />
+    <div v-if="!isCommentLoading && !isChartLoading">
+        <Questionnaire :questionnaire="questionnaire" :answerQuestionnaire="answerQuestionnaire" :comments="comments"
+            :postComment="postComment" :recommends="recommends" :chart="chart" :load="load" />
     </div>
     <div v-else class="text-center center-content">
         <v-progress-circular indeterminate color="primary" :size="100" :width="10"></v-progress-circular>
@@ -33,6 +33,8 @@ export default defineComponent({
     setup() {
         const router = useRoute();
         const questionId = Array.isArray(router.params.id) ? router.params.id[0] : router.params.id;
+        const isCommentLoading = ref(true);
+        const isChartLoading = ref(true);
 
         // アンケート情報取得
         const qStore = useQuestionnaire(questionId);
@@ -51,16 +53,11 @@ export default defineComponent({
         const cStore = useComments(questionId, "");
         const comments = ref([]);
 
-        // 時系列チャート取得
-        const chStore = useChart(questionId);
-        const chart = chStore.state.value.chart;
-        console.log(chart)
-
         watchEffect(() => {
             comments.value = cStore.state.value.comments;
-            console.log(cStore.state.value.nextToken)
+            isCommentLoading.value = cStore.isLoading.value;
+            console.log(isCommentLoading.value)
         });
-        const isLoading = cStore.isLoading;
 
         // 続きのコメント一覧を取得
         const scrollComments = async (nextToken: string) => {
@@ -68,6 +65,16 @@ export default defineComponent({
             await cStore.scrollComments(questionId, nextToken)
             console.log(cStore.state)
         };
+
+        // 時系列チャート取得
+        const chStore = useChart(questionId);
+        const chart = ref({});
+
+        watchEffect(() => {
+            chart.value = chStore.state.value.chart;
+            isChartLoading.value = chStore.isLoading.value;
+            console.log(isChartLoading.value)
+        });
 
         const isInfiniteDisabled = ref(false); // 無限スクロール制御変数の定義
 
@@ -119,11 +126,12 @@ export default defineComponent({
             answerQuestionnaire,
             recommends,
             comments,
-            isLoading,
+            isCommentLoading,
             load,
             isInfiniteDisabled,
             postComment,
-            chart
+            chart,
+            isChartLoading
         }
     }
 })

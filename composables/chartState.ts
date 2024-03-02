@@ -49,6 +49,7 @@ export const useChart = (questionId: string) => {
         const cObject = await getChart(questionId);
         state.value.chart.interval = cObject.chart.interval ? cObject.chart.interval : '';
         state.value.chart.data = cObject.chart.data ? cObject.chart.data : {};
+        isLoading.value = false;
     });
 
     return {
