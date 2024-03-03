@@ -12,7 +12,7 @@ export const MENUS = [
 ];
 
 /** タブ */
-export const TAB_LENGTH = 4; // タブの数
+export const TAB_LENGTH = 4; // タブの数（一覧画面）
 export const TAB_ID1 = "news";
 export const TAB_NAME1 = "新着";
 export const TAB_NUM1 = 1;
@@ -25,6 +25,12 @@ export const TAB_NUM3 = 3;
 export const TAB_ID4 = "search";
 export const TAB_NAME4 = "検索";
 export const TAB_NUM4 = 4;
+
+export const DETAIL_TAB_LENGTH = 2; // タブの数（詳細画面）
+export const DETAIL_TAB_NAME1 = "投票数";
+export const DETAIL_TAB_NUM1 = 1;
+export const DETAIL_TAB_NAME2 = "投票推移";
+export const DETAIL_TAB_NUM2 = 2;
 
 /** アンケート作成フォーム */
 export const FORM_CAPTION_REQUIRED_LABEL = "必須";

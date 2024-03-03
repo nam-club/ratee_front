@@ -146,9 +146,6 @@ export default {
             required: true
         }
     },
-    data: () => ({
-        tab: null,
-    }),
     setup(props) {
 
         const { mobile } = useDisplay()
