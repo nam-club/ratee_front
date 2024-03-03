@@ -1,7 +1,10 @@
 <template>
     <v-app class="bg-secondary-darken-2" style="display: flex; flex-direction: column;">
         <Header />
-        <ContentsView :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires" :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire" :answerSearchQuestionnaire="answerSearchQuestionnaire" :resetQuestionnaires="resetQuestionnaires" :categories="categories" :isLoading="isLoading" :load="load" />
+        <ContentsView :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires"
+         :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire" 
+         :answerSearchQuestionnaire="answerSearchQuestionnaire" :resetQuestionnaires="resetQuestionnaires" 
+         :categories="categories" :isLoading="isLoading" :load="load" :isInfiniteDisabled="isInfiniteDisabled" />
         <Footer :buttonText="footerButtonText" />
     </v-app>
 </template>
@@ -55,6 +58,10 @@ export default defineComponent({
         load: {
             type: Function,
             required: true
+        },
+        isInfiniteDisabled: {
+            type: Boolean,
+            required: true,
         }
     },
     setup(props) {
@@ -63,6 +70,7 @@ export default defineComponent({
         watchEffect(() => {
             console.log("===Topコンポーネント===")
             console.log(props.questionnaires)
+            console.log(props.isInfiniteDisabled)
         });
 
         return {

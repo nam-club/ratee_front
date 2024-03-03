@@ -45,8 +45,8 @@
                     <AnswerBox v-else style="margin:5%" :questionnaires="questionnaires"
                         :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire"
                         :answerSearchQuestionnaire="answerSearchQuestionnaire" :goToSearchTab="goToSearchTab" />
-                    <InfiniteLoading :questionnaires="questionnaires" @infinite="load" :immediate-check="false"
-                        :reverse="false" :disabled="isInfiniteDisabled">
+                    <InfiniteLoading v-if="!isInfiniteDisabled" :questionnaires="questionnaires" @infinite="load" :immediate-check="false"
+                        :reverse="false">
                         <template #spinner>
                             <div class="text-center" style="padding:10%">
                                 <v-progress-circular indeterminate color="primary" :size="100"
@@ -144,6 +144,10 @@ export default {
         load: {
             type: Function,
             required: true
+        },
+        isInfiniteDisabled: {
+            type: Boolean,
+            required: true,
         }
     },
     setup(props) {
@@ -236,7 +240,7 @@ export default {
             categoryNames,
             categoryId,
             categoryName,
-            setCategoryName
+            setCategoryName,
         }
     }
 }

@@ -29,8 +29,8 @@
                             <v-divider inset></v-divider>
                         </v-list>
                     </v-card>
-                    <InfiniteLoading :questionnaires="questionnaires" @infinite="load" :immediate-check="false"
-                        :reverse="false" :disabled="isInfiniteDisabled">
+                    <InfiniteLoading v-if="!isInfiniteDisabled" :questionnaires="questionnaires" @infinite="load" :immediate-check="false"
+                        :reverse="false">
                         <template #spinner>
                             <div class="text-center" style="padding:10%">
                                 <v-progress-circular indeterminate color="primary" :size="100"
@@ -69,8 +69,8 @@
                             <v-divider inset></v-divider>
                         </v-list>
                     </v-card>
-                    <InfiniteLoading :questionnaires="questionnaires" @infinite="load" :immediate-check="false"
-                        :reverse="false" :disabled="isInfiniteDisabled">
+                    <InfiniteLoading v-if="!isInfiniteDisabled" :questionnaires="questionnaires" @infinite="load" :immediate-check="false"
+                        :reverse="false">
                         <template #spinner>
                             <div class="text-center" style="padding:10%">
                                 <v-progress-circular indeterminate color="primary" :size="100"
@@ -158,6 +158,10 @@ export default defineComponent({
         load: {
             type: Function,
             required: true
+        },
+        isInfiniteDisabled: {
+            type: Boolean,
+            required: true,
         }
     },
     setup(props) {

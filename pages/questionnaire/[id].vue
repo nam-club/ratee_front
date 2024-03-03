@@ -1,7 +1,7 @@
 <template>
     <div v-if="!isQuestionnaireLoading && !isCommentLoading && !isChartLoading">
         <Questionnaire :questionnaire="questionnaire" :answerQuestionnaire="answerQuestionnaire" :comments="comments"
-            :postComment="postComment" :recommends="recommends" :chart="chart" :load="load" />
+            :postComment="postComment" :recommends="recommends" :chart="chart" :load="load" :isInfiniteDisabled="isInfiniteDisabled" />
     </div>
     <div v-else class="text-center center-content">
         <v-progress-circular indeterminate color="primary" :size="100" :width="10"></v-progress-circular>
@@ -103,10 +103,12 @@ export default defineComponent({
                     console.log("nextTokenなし")
                     await scrollComments(cStore.state.value.nextToken);
                     $state.complete();
+                    isInfiniteDisabled.value = true;
                 }
                 // 最大件数に達したらローディング完了にする
                 if (comments.length >= MAX_COUNT) {
                     $state.complete();
+                    isInfiniteDisabled.value = true;
                 } else {
                     $state.loaded();
                 }

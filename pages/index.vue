@@ -2,7 +2,7 @@
     <Top :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires"
         :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire"
         :answerSearchQuestionnaire="answerSearchQuestionnaire" :resetQuestionnaires="resetQuestionnaires"
-        :categories="categories" :isLoading="isLoading" :load="load" />
+        :categories="categories" :isLoading="isLoading" :load="load" :isInfiniteDisabled="isInfiniteDisabled"/>
 </template>
 
 <style scoped>
@@ -18,7 +18,6 @@
 <script lang="ts">
 import { ref, watchEffect } from 'vue'
 import { InfiniteLoadingState } from '@/types';
-import InfiniteLoading from "v3-infinite-loading";
 import "v3-infinite-loading/lib/style.css";
 import Top from '@/components/templates/Top.vue'
 import { TARGET_QUESTIONNAIRES, TAB_ID1, MAX_COUNT } from '@/constants';
@@ -27,7 +26,6 @@ import { Questionnaire } from '~/composables/questionnaireStates';
 export default {
     components: {
         Top,
-        InfiniteLoading
     },
     setup() {
         // アンケート一覧取得
@@ -100,10 +98,12 @@ export default {
                     console.log("nextTokenなし")
                     await scrollQuestionnaires(TAB_ID1, qStore.state.value.nextToken);
                     $state.complete();
+                    isInfiniteDisabled.value = true;
                 }
                 // 最大件数に達したらローディング完了にする
                 if (questionnaires.length >= MAX_COUNT) {
                     $state.complete();
+                    isInfiniteDisabled.value = true;
                 } else {
                     $state.loaded();
                 }

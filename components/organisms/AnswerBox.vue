@@ -13,7 +13,7 @@
                                 </v-col>
                                 <v-col cols="4" class="text-end">
                                     <nuxt-link :to="`/questionnaire/${questionnaire.id}`">
-                                        <Button :textColor="detailBtnTextColor" variant="btnVariant">
+                                        <Button :textColor="detailBtnTextColor" :variant="btnVariant">
                                             詳細を見る
                                         </Button>
                                     </nuxt-link>
@@ -214,7 +214,7 @@ export default defineComponent({
 
         const btnColor = ref("#3A98B9");
         const btnTextColor = ref("#3A98B9");
-        const btnVariant = ref("outlined");
+        const btnVariant = ref("text");
         const iconBtnVariant = ref("text");
         const btnStyle = ref({ width: '100%', "border-color": "#3A98B9" });
         const clickedMultiTextColor = ref("#FFFFFF");

@@ -3,7 +3,8 @@
         <Header />
         <DetailView :class="{'detail_mobile': mobile, 'detail': !mobile}" :questionnaire="questionnaire" :answerQuestionnaire="answerQuestionnaire" :chart="chart" />
         <RecommendBox v-if="recommends && recommends.length !== 0" :recommends="recommends" />
-        <CommentBox v-if="questionnaire.enableComment" :questionId="questionnaire.id" :comments="comments" :postComment="postComment" :load="load" />
+        <CommentBox v-if="questionnaire.enableComment" :questionId="questionnaire.id" :comments="comments" :postComment="postComment"
+         :load="load" :isInfiniteDisabled="isInfiniteDisabled" />
         <Footer :buttonText="footerButtonText" />
     </v-app>
 </template>
@@ -61,6 +62,10 @@ export default defineComponent({
         load: {
             type: Function,
             required: true
+        },
+        isInfiniteDisabled: {
+            type: Boolean,
+            required: true,
         }
     },
     setup(props) {
