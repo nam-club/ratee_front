@@ -127,13 +127,14 @@ export default defineComponent({
 
         return {
             questionnaire,
+            isQuestionnaireLoading,
             answerQuestionnaire,
             recommends,
             comments,
             isCommentLoading,
+            postComment,
             load,
             isInfiniteDisabled,
-            postComment,
             chart,
             isChartLoading
         }

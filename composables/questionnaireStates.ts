@@ -397,6 +397,7 @@ export const useQuestionnaire = (questionId: string) => {
 
     onMounted(async () => {
         state.value = await getQuestionnaire(questionId);
+        console.log(state.value)
         isLoading.value = false;
     });
 

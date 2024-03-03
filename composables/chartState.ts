@@ -30,6 +30,31 @@ const getChart = async (questionId: string): Promise<ResponseData> => {
             const data = await response.json();
             console.log(data)
             return { chart: data };
+            /*const data = {
+                "questionnaireId": "q_dc77293d-f734-4046-ace9-880ae6e7d106",
+                "interval": "yearly",
+                "data": {
+                    "2021": {
+                        "1": 100,
+                        "2": 45,
+                        "3": 76,
+                        "4": 12
+                    },
+                    "2022": {
+                        "1": 0,
+                        "2": 121,
+                        "3": 89,
+                        "4": 45
+                    },
+                    "2023": {
+                        "1": 18,
+                        "2": 43,
+                        "3": 443,
+                        "4": 165
+                    }
+                }
+            }*/
+            return { chart: data }
         } else {
             console.error('時系列チャート取得APIの実行中にエラーが発生しました:', response.statusText);
         }
