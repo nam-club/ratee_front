@@ -1,7 +1,7 @@
 <template>
     <div style="display: flex; align-items: center;">
         <h2 v-if="caption">{{ caption }}</h2>
-        <v-chip v-if="captionLabel" class="ma-2" color="red" label text-color="white">
+        <v-chip v-if="captionLabel" class="ma-2" color="#EF4444" label text-color="white">
             {{ captionLabel }}
         </v-chip>
     </div>
@@ -14,13 +14,14 @@
         </v-container>
     </div>
     <div v-else-if="type === 'textsField'">
+        <Msg v-if="errCondition" color="#EF4444">選択肢の内容が重複しています。</Msg>
         <v-container v-if="!mobile">
             <v-row v-for="(t, i) in computedTextsModel" :key="i" no-gutters style="margin:1% 0%">
                 <v-col cols="11">
                     <v-text-field v-model="computedTextsModel[i]" clearable :rules="[rules.required, rules.textLength]" />
                 </v-col>
                 <v-col cols="1" v-if="computedTextsModel.length > rules.textsMinLength" class="d-flex justify-center">
-                    <IconButton :icon="icons.mdiDeleteForever" :variant="btnVariant" color="error" size="x-large"
+                    <IconButton :icon="icons.mdiDeleteForever" :variant="btnVariant" color="#757575" size="x-large"
                         :onClick="($event: Event) => { $event.stopPropagation(); removeTexts(i); }" />
                 </v-col>
             </v-row>
@@ -34,7 +35,7 @@
                     <v-text-field v-model="computedTextsModel[i]" clearable :rules="[rules.required, rules.textLength]" />
                 </v-col>
                 <v-col cols="2" v-if="computedTextsModel.length > rules.textsMinLength" class="d-flex justify-center">
-                    <IconButton :icon="icons.mdiDeleteForever" :variant="btnVariant" color="error" size="x-large"
+                    <IconButton :icon="icons.mdiDeleteForever" :variant="btnVariant" color="#757575" size="x-large"
                         :onClick="($event: Event) => { $event.stopPropagation(); removeTexts(i); }" />
                 </v-col>
             </v-row>
@@ -149,6 +150,10 @@ export default defineComponent({
         rules: {
             type: Object,
             default: () => ({}),
+        },
+        errCondition: {
+            type: Boolean,
+            default: false
         }
     },
     computed: {

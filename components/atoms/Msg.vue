@@ -1,5 +1,5 @@
 <template>
-    <p :class="[color + '--text', 'font-weight-' + fontWeight]" :style="{fontSize: fontSize, lineHeight: lineHeight, padding: padding}">
+    <p :class="['font-weight-' + fontWeight]" :style="{color: color, fontSize: fontSize, lineHeight: lineHeight, padding: padding}">
         <slot></slot>
     </p>
 </template>

@@ -10,8 +10,8 @@
                                 @input="title = $event" :rules="titleRule" />
                             <InputSet type="textsField" :caption="FORM_CHOICE_TEXT"
                                 :captionLabel="FORM_CAPTION_REQUIRED_LABEL" :textsModel="choices"
-                                @update:textsModel="choices = $event" :addText="FORM_ADD_CHOICE_TEXT" :rules="choiceRule" />
-
+                                @update:textsModel="choices = $event" :addText="FORM_ADD_CHOICE_TEXT" :rules="choiceRule"
+                                :errCondition="hasDuplicateChoices" />
                             <InputSet type="selectBox" :caption="FORM_CATEGORY_TEXT"
                                 :captionLabel="FORM_CAPTION_REQUIRED_LABEL" :selectItems="categoryNames"
                                 :selectModel="categoryName" @update:selectModel="setCategoryName" />
@@ -129,12 +129,18 @@
                         </v-toolbar>
                         <v-divider></v-divider>
                         <v-card style="margin: 2%;">
-                            <Paragraph type="text" :caption="FORM_TITLE_TEXT" :text="title" :paragraphStyle="paragraphStyle" />
-                            <Paragraph type="multiText" :caption="FORM_CHOICE_TEXT" :texts="choices" :paragraphStyle="paragraphStyle" />
-                            <Paragraph type="text" :caption="FORM_CATEGORY_TEXT" :text="categoryName" :paragraphStyle="paragraphStyle" />
-                            <Paragraph type="chips" :caption="FORM_TAG_TEXT" :chips="tags" :paragraphStyle="paragraphStyle" />
-                            <Paragraph type="switchButton" :isChecked="enableComment" :labelText="FORM_COMMENT_LABEL" :paragraphStyle="switchStyle" />
-                            <Paragraph type="switchButton" :isChecked="enableMultiAns" :labelText="FORM_MULTI_LABEL" :paragraphStyle="switchStyle" />
+                            <Paragraph type="text" :caption="FORM_TITLE_TEXT" :text="title"
+                                :paragraphStyle="paragraphStyle" />
+                            <Paragraph type="multiText" :caption="FORM_CHOICE_TEXT" :texts="choices"
+                                :paragraphStyle="paragraphStyle" />
+                            <Paragraph type="text" :caption="FORM_CATEGORY_TEXT" :text="categoryName"
+                                :paragraphStyle="paragraphStyle" />
+                            <Paragraph type="chips" :caption="FORM_TAG_TEXT" :chips="tags"
+                                :paragraphStyle="paragraphStyle" />
+                            <Paragraph type="switchButton" :isChecked="enableComment" :labelText="FORM_COMMENT_LABEL"
+                                :paragraphStyle="switchStyle" />
+                            <Paragraph type="switchButton" :isChecked="enableMultiAns" :labelText="FORM_MULTI_LABEL"
+                                :paragraphStyle="switchStyle" />
                         </v-card>
                         <v-container>
                             <v-row no-gutters>
@@ -205,9 +211,17 @@ export default defineComponent({
         const router = useRouter();
         const isLoading = ref(false);
         const { mobile } = useDisplay();
+        const hasDuplicateChoices = ref(false); // 選択肢の重複チェック
 
         const errFlg = computed(() => {
-            return !title.value || title.value.length < TITLE_MIN_LENGTH || title.value.length > TITLE_MAX_LENGTH || !choices.value || choices.value.length < CHOICES_MIN_LENGTH || choices.value.length > CHOICES_MAX_LENGTH || choices.value.some(choice => !choice || choice === '' || choice.length < CHOICE_MIN_LENGTH || choice.length > CHOICE_MAX_LENGTH || !categoryId.value || categoryId.value === '');
+            // choices.value から空文字 ('') を除外した新しい配列を作成
+            const nonEmptyChoices = choices.value.filter(choice => choice !== '');
+
+            // 新しい配列で Set を作成し、そのサイズが非空の要素の数と異なる場合、
+            // 重複が存在すると判断（ただし空文字の重複は無視）
+            hasDuplicateChoices.value = new Set(nonEmptyChoices).size !== nonEmptyChoices.length;
+
+            return !title.value || title.value.length < TITLE_MIN_LENGTH || title.value.length > TITLE_MAX_LENGTH || !choices.value || choices.value.length < CHOICES_MIN_LENGTH || choices.value.length > CHOICES_MAX_LENGTH || choices.value.some(choice => !choice || choice === '' || choice.length < CHOICE_MIN_LENGTH || choice.length > CHOICE_MAX_LENGTH) || !categoryId.value || categoryId.value === '' || hasDuplicateChoices.value;
         });
 
         const title = ref<string>('');
@@ -312,6 +326,7 @@ export default defineComponent({
             choiceStyle,
             choices,
             choiceRule,
+            hasDuplicateChoices,
             FORM_ADD_CHOICE_TEXT,
             FORM_CATEGORY_TEXT,
             categoryNames,
