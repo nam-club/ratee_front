@@ -22,6 +22,8 @@ export interface Questionnaire {
 type ResponseData = {
     questionnaires: Questionnaire[];
     nextToken: string;
+    code: string;
+    message: string;
 }
 
 
@@ -59,17 +61,17 @@ const getQuestionnaires = async (order: string): Promise<ResponseData> => {
         const response = await fetch(
             url, { credentials: 'include' }
         );
+        const data = await response.json();
+        console.log(data)
         if (response.ok) {
-            const data = await response.json();
-            console.log(data)
-            return data;
+            return { questionnaires: data.questionnaires, nextToken: data.nextToken, code: '', message: '' };
         } else {
             console.error('アンケート一覧取得APIの実行中にエラーが発生しました:', response.statusText);
+            return { questionnaires: [], nextToken: '', code: data.code, message: data.message };
         }
     } catch (error) {
         console.error('アンケート一覧取得APIの実行中にエラーが発生しました:', error);
     }
-    return { questionnaires: [], nextToken: '' };
 }
 
 // アンケート一覧取得API（続き）
@@ -85,16 +87,16 @@ const getNextQuestionnaires = async (order: string, nextToken: string): Promise<
         const response = await fetch(
             url, { credentials: 'include' }
         );
+        const data = await response.json();
         if (response.ok) {
-            const data = await response.json();
-            return data;
+            return { questionnaires: data.questionnaires, nextToken: data.nextToken, code: '', message: '' };
         } else {
             console.error('アンケート一覧取得APIの実行中にエラーが発生しました:', response.statusText);
+            return { questionnaires: [], nextToken: '', code: data.code, message: data.message };
         }
     } catch (error) {
         console.error('アンケート一覧取得APIの実行中にエラーが発生しました:', error);
     }
-    return { questionnaires: [], nextToken: '' };
 }
 
 // アンケート一覧取得API（検索）
@@ -132,17 +134,17 @@ const getSearchQuestionnaires = async (type: string, word: string): Promise<Resp
         const response = await fetch(
             url, { credentials: 'include' }
         );
+        const data = await response.json();
+        console.log(data)
         if (response.ok) {
-            const data = await response.json();
-            console.log(data)
-            return data;
+            return { questionnaires: data.questionnaires, nextToken: data.nextToken, code: '', message: '' };
         } else {
             console.error('アンケート一覧取得APIの実行中にエラーが発生しました:', response.statusText);
+            return { questionnaires: [], nextToken: '', code: data.code, message: data.message };
         }
     } catch (error) {
         console.error('アンケート一覧取得APIの実行中にエラーが発生しました:', error);
     }
-    return { questionnaires: [], nextToken: '' }; // エラーが発生した場合やレスポンスがOKでない場合は空の配列を返す
 }
 
 // アンケート情報取得API
@@ -253,6 +255,7 @@ export const useQuestionnaires = (target: string, questionId: string) => {
 
     const state = ref<ResponseData>({ questionnaires: [], nextToken: '' });
     const isLoading = ref(true);
+    const code = ref('');
 
     onMounted(async () => {
         await updateUserId();
@@ -264,6 +267,7 @@ export const useQuestionnaires = (target: string, questionId: string) => {
                 state.value.questionnaires = qObject.questionnaires ? [...qObject.questionnaires] : state.value.questionnaires;
                 state.value.nextToken = qObject.nextToken ? qObject.nextToken : '';
                 isLoading.value = false;
+                code.value = qObject.code ? qObject.code : '';
                 break;
             // おすすめアンケート一覧を取得
             case TARGET_RECOMMENDS:
@@ -282,6 +286,7 @@ export const useQuestionnaires = (target: string, questionId: string) => {
         state.value.questionnaires = qObject.questionnaires ? [...qObject.questionnaires] : state.value.questionnaires;
         state.value.nextToken = qObject.nextToken ? qObject.nextToken : '';
         isLoading.value = false;
+        code.value = qObject.code ? qObject.code : '';
         return qObject.questionnaires;
     }
 
@@ -294,6 +299,7 @@ export const useQuestionnaires = (target: string, questionId: string) => {
                 state.value.questionnaires.push(...qObject.questionnaires);
             }
             state.value.nextToken = qObject.nextToken ? qObject.nextToken : '';
+            code.value = qObject.code ? qObject.code : '';
         }
         isLoading.value = false;
     }
@@ -379,6 +385,7 @@ export const useQuestionnaires = (target: string, questionId: string) => {
     return {
         state: readonly(state),
         isLoading,
+        code,
         scrollQuestionnaires,
         changeQuestionnaires,
         searchQuestionnaires,

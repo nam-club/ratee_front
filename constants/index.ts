@@ -73,3 +73,8 @@ export const COMMENT_NULL_TEXT = 'コメントを入力してください。' //
 
 /** 画像パス */
 export const TITLE_IMG = '/logo.png';
+
+/** エラーメッセージ */
+export const ERR_MSG: Record<string, string> = {
+    "q.invalid_order": "読み込みに失敗しました。"
+}

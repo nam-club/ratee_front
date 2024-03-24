@@ -1,8 +1,10 @@
 <template>
+    <!-- スナックバーの追加 -->
+    <SnackBar :snackbar="snackbar" :snackbarText="snackbarText" @update:snackbar="snackbar = $event" />
     <Top :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires"
         :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire"
         :answerSearchQuestionnaire="answerSearchQuestionnaire" :resetQuestionnaires="resetQuestionnaires"
-        :categories="categories" :isLoading="isLoading" :load="load" :isInfiniteDisabled="isInfiniteDisabled"/>
+        :categories="categories" :isLoading="isLoading" :load="load" :isInfiniteDisabled="isInfiniteDisabled" />
 </template>
 
 <style scoped>
@@ -19,13 +21,16 @@
 import { ref, watchEffect } from 'vue'
 import { InfiniteLoadingState } from '@/types';
 import "v3-infinite-loading/lib/style.css";
+
 import Top from '@/components/templates/Top.vue'
-import { TARGET_QUESTIONNAIRES, TAB_ID1, MAX_COUNT } from '@/constants';
+import SnackBar from '@/components/molecules/SnackBar.vue'
+import { TARGET_QUESTIONNAIRES, TAB_ID1, MAX_COUNT, ERR_MSG } from '@/constants';
 import { Questionnaire } from '~/composables/questionnaireStates';
 
 export default {
     components: {
         Top,
+        SnackBar
     },
     setup() {
         // アンケート一覧取得
@@ -122,6 +127,18 @@ export default {
             await qStore.resetQuestionnaires();
         }
 
+        const snackbar = ref(false); // スナックバーの表示状態
+        const snackbarText = ref(''); // スナックバーに表示するテキスト
+
+        // qStoreを監視し、エラーコードがあればスナックバーを表示
+        watchEffect(() => {
+            if (qStore.code.value !== '') {
+                Object.entries(ERR_MSG);
+                snackbarText.value = ERR_MSG[qStore.code.value];
+                snackbar.value = true;
+            }
+        });
+
         return {
             questionnaires,
             isLoading,
@@ -132,7 +149,9 @@ export default {
             categories,
             load,
             isInfiniteDisabled,
-            resetQuestionnaires
+            resetQuestionnaires,
+            snackbar,
+            snackbarText,
         }
     }
 }
