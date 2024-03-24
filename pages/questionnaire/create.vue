@@ -1,18 +1,20 @@
 <template>
-    <div>
-        <div v-if="categories.length">
-            <CreateForm :categories="categories" :createQuestionnaire="createQuestionnaire" />
-        </div>
+    <!-- スナックバーの追加 -->
+    <SnackBar :snackbar="snackbar" :snackbarText="snackbarText" @update:snackbar="snackbar = $event" />
+    <div v-if="categories.length">
+        <CreateForm :categories="categories" :createQuestionnaire="createQuestionnaire" />
     </div>
 </template>
 
 <script lang="ts">
 import CreateForm from '@/components/templates/CreateForm.vue'
-import { TARGET_QUESTIONNAIRES } from '@/constants';
+import SnackBar from '@/components/molecules/SnackBar.vue'
+import { TARGET_QUESTIONNAIRES, ERR_MSG } from '@/constants';
 
 export default {
     components: {
-        CreateForm
+        CreateForm,
+        SnackBar
     },
 
     setup() {
@@ -26,9 +28,23 @@ export default {
             await qStore.createQuestionnaire(title, choices, categoryId, tags, options);
         }
 
+        const snackbar = ref(false); // スナックバーの表示状態
+        const snackbarText = ref(''); // スナックバーに表示するテキスト
+
+        // qStoreを監視し、エラーコードがあればスナックバーを表示
+        watchEffect(() => {
+            if (qStore.code.value !== '') {
+                Object.entries(ERR_MSG);
+                snackbarText.value = ERR_MSG[qStore.code.value];
+                snackbar.value = true;
+            }
+        });
+
         return {
             categories,
-            createQuestionnaire
+            createQuestionnaire,
+            snackbar,
+            snackbarText,
         }
     }
 }

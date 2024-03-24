@@ -1,7 +1,7 @@
 <template>
     <v-dialog v-model="dialog">
         <template v-slot:activator="{ attrs }">
-            <div>
+            <div style="margin:0 0 10% 0">
                 <v-container v-if="!mobile">
                     <v-row v-if="comments && comments.length !== 0">
                         <v-col cols="6">
