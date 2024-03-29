@@ -1,12 +1,12 @@
 <template>
-    <!-- スナックバーの追加 -->
-    <SnackBar :snackbar="snackbar" :snackbarText="snackbarText" @update:snackbar="snackbar = $event" />
+    <SnackBar :snackbar="snackbar" :snackbarText="snackbarText" @update:snackbar="snackbar = $event" :color="errorColor" />
     <div v-if="categories.length">
         <CreateForm :categories="categories" :createQuestionnaire="createQuestionnaire" />
     </div>
 </template>
 
 <script lang="ts">
+import { mainTheme } from '@/helpers/themes'
 import CreateForm from '@/components/templates/CreateForm.vue'
 import SnackBar from '@/components/molecules/SnackBar.vue'
 import { TARGET_QUESTIONNAIRES, ERR_MSG } from '@/constants';
@@ -33,6 +33,7 @@ export default {
 
         // qStoreを監視し、エラーコードがあればスナックバーを表示
         watchEffect(() => {
+            console.log(qStore.code.value)
             if (qStore.code.value !== '') {
                 Object.entries(ERR_MSG);
                 snackbarText.value = ERR_MSG[qStore.code.value];
@@ -45,6 +46,7 @@ export default {
             createQuestionnaire,
             snackbar,
             snackbarText,
+            errorColor: mainTheme.colors?.error
         }
     }
 }

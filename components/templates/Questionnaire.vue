@@ -1,5 +1,5 @@
 <template>
-    <v-app class="bg-secondary">
+    <v-app class="bg-background">
         <Header />
         <DetailView :class="{'detail_mobile': mobile, 'detail': !mobile}" :questionnaire="questionnaire" :answerQuestionnaire="answerQuestionnaire" :chart="chart" />
         <RecommendBox v-if="recommends && recommends.length !== 0" :recommends="recommends" />

@@ -1,5 +1,5 @@
 <template>
-    <v-app class="bg-secondary-darken-2" style="display: flex; flex-direction: column;">
+    <v-app class="bg-secondary-lighten-6" style="display: flex; flex-direction: column;">
         <Header />
         <ContentsView :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires"
          :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire" 

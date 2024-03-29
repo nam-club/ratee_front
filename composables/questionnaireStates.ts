@@ -72,6 +72,7 @@ const getQuestionnaires = async (order: string): Promise<ResponseData> => {
         }
     } catch (error) {
         console.error('アンケート一覧取得APIの実行中にエラーが発生しました:', error);
+        return { code: data.code, message: data.message };
     }
 }
 
@@ -97,6 +98,7 @@ const getNextQuestionnaires = async (order: string, nextToken: string): Promise<
         }
     } catch (error) {
         console.error('アンケート一覧取得APIの実行中にエラーが発生しました:', error);
+        return { code: data.code, message: data.message };
     }
 }
 
@@ -136,7 +138,6 @@ const getSearchQuestionnaires = async (type: string, word: string): Promise<Resp
             url, { credentials: 'include' }
         );
         const data = await response.json();
-        console.log(data)
         if (response.ok) {
             return { questionnaires: data.questionnaires, nextToken: data.nextToken };
         } else {
@@ -145,6 +146,7 @@ const getSearchQuestionnaires = async (type: string, word: string): Promise<Resp
         }
     } catch (error) {
         console.error('アンケート一覧取得APIの実行中にエラーが発生しました:', error);
+        return { code: data.code, message: data.message };
     }
 }
 
@@ -159,8 +161,8 @@ const getQuestionnaire = async (questionId: string) => {
         const response = await fetch(
             url, { credentials: 'include' }
         );
+        const data = await response.json();
         if (response.ok) {
-            const data = await response.json();
             return data;
         } else {
             console.error('アンケート情報取得APIの実行中にエラーが発生しました:', response.statusText);
@@ -168,6 +170,7 @@ const getQuestionnaire = async (questionId: string) => {
         }
     } catch (error) {
         console.error('アンケート情報取得APIの実行中にエラーが発生しました:', error);
+        return { code: data.code, message: data.message };
     }
 }
 
@@ -195,6 +198,7 @@ const postAnswer = async (questionId: string, choices: string[]) => {
         }
     } catch (error) {
         console.error('アンケート回答APIの実行中にエラーが発生しました:', error);
+        return { code: data.code, message: data.message };
     }
 };
 
@@ -225,6 +229,7 @@ const postQuestionnaire = async (title: string, choices: string[], categoryId: s
         }
     } catch (error) {
         console.error('アンケート投稿APIの実行中にエラーが発生しました:', error);
+        return { code: data.code, message: data.message };
     }
 };
 
@@ -425,6 +430,7 @@ export const useQuestionnaire = (questionId: string) => {
         console.log(state.value)
         isLoading.value = false;
         code.value = state.value.code ? state.value.code : '';
+        console.log(code.value)
     });
 
     // アンケート回答

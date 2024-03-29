@@ -4,6 +4,8 @@
   
 <script>
 import { computed } from 'vue';
+
+import { mainTheme } from '@/helpers/themes'
 import BarChart from '@/components/molecules/BarChart.vue'; // Path to your BarChart component
 
 export default {

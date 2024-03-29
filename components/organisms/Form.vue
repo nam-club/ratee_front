@@ -181,6 +181,8 @@
 import { defineComponent, ref } from 'vue'
 import { useDisplay } from 'vuetify'
 import { useRouter } from 'vue-router';
+
+import { mainTheme } from '@/helpers/themes'
 import Button from '@/components/atoms/Button.vue'
 import InputSet from '@/components/molecules/InputSet.vue'
 import Paragraph from '@/components/molecules/Paragraph.vue'
@@ -280,13 +282,13 @@ export default defineComponent({
         const options = ref({});
         options.value = { "enableComment": enableComment, "enableMultiAns": enableMultiAns }
 
-        const cancelBtnColor = ref("#f5f5f5");
+        const cancelBtnColor = ref("#ffffff");
         const cancelBtnTextColor = ref('#515254');
-        const cancelBtnVariant = ref("outlined");
+        const cancelBtnVariant = ref("elevated");
         const cancelBtnStyle = ref({ width: '100%', display: 'block' });
 
-        const confirmBtnColor = ref("#3A98B9");
-        const confirmBtnTextColor = ref("#f5f5f5");
+        const confirmBtnColor = ref(mainTheme.colors?.primary);
+        const confirmBtnTextColor = ref("#ffffff");
         const confirmBtnVariant = ref("elevated");
         const confirmBtnStyle = ref({ width: '100%', display: 'block' });
 
@@ -306,9 +308,12 @@ export default defineComponent({
             isLoading.value = true; // ローディング開始
             try {
                 console.log(1);
-                await props.createQuestionnaire(title.value, choices.value, categoryId.value, tags.value, options.value);
-                router.push('/');
-                console.log(2);
+                let result = await props.createQuestionnaire(title.value, choices.value, categoryId.value, tags.value, options.value);
+                dialog.value = false;
+                if (result) {
+                    router.push('/');
+                    console.log(2);
+                }
             } catch (error) {
                 console.error("アンケート投稿エラーが発生しました:", error);
             } finally {

@@ -1,7 +1,7 @@
 <template>
     <div style="display: flex; align-items: center;">
         <h2 v-if="caption">{{ caption }}</h2>
-        <v-chip v-if="captionLabel" class="ma-2" color="#EF4444" label text-color="white">
+        <v-chip v-if="captionLabel" class="ma-2" :color="errorColor" label text-color="white">
             {{ captionLabel }}
         </v-chip>
     </div>
@@ -14,7 +14,7 @@
         </v-container>
     </div>
     <div v-else-if="type === 'textsField'">
-        <Msg v-if="errCondition" color="#EF4444">選択肢の内容が重複しています。</Msg>
+        <Msg v-if="errCondition" :color="errorColor">選択肢の内容が重複しています。</Msg>
         <v-container v-if="!mobile">
             <v-row v-for="(t, i) in computedTextsModel" :key="i" no-gutters style="margin:1% 0%">
                 <v-col cols="11">
@@ -26,7 +26,7 @@
                 </v-col>
             </v-row>
             <v-row no-gutters v-if="computedTextsModel.length < rules.textsMaxLength">
-                <Button :onClick="addTexts">{{ addText }}</Button>
+                <Button :onClick="addTexts" variant="elevated">{{ addText }}</Button>
             </v-row>
         </v-container>
         <v-container v-else style="padding:0 0 5% 0">
@@ -82,6 +82,8 @@
 import { defineComponent } from 'vue'
 import { useDisplay } from 'vuetify'
 import { mdiDeleteForever, mdiPlus, mdiMagnify } from '@mdi/js';
+
+import { mainTheme } from '@/helpers/themes'
 import Button from '@/components/atoms/Button.vue'
 import IconButton from '@/components/atoms/IconButton.vue'
 import Msg from '@/components/atoms/Msg.vue'
@@ -289,6 +291,7 @@ export default defineComponent({
             removeTexts,
             addChip,
             removeChip,
+            errorColor: mainTheme.colors?.error
         }
     },
 })

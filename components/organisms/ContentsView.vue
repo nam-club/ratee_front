@@ -5,7 +5,7 @@
         <v-tab :value="TAB_NUM3" @click="changeTab(TAB_ID3)"><span style="font-size: 1.5em;">{{ TAB_NAME3 }}</span></v-tab>
         <v-tab :value="TAB_NUM4" @click="changeTab(TAB_ID4)"><span style="font-size: 1.5em;">{{ TAB_NAME4 }}</span></v-tab>
     </v-tabs>
-    <v-card class="bg-secondary" variant="outlined" dark :class="{ 'back_mobile': mobile, 'back': !mobile }">
+    <v-card class="bg-secondary-lighten-7" variant="elevated" :class="{ 'back_mobile': mobile, 'back': !mobile }">
         <v-window v-model="tab">
             <v-window-item v-for="n in TAB_LENGTH" :key="n" :value="n">
                 <div v-if="!isLoading">
@@ -64,7 +64,7 @@
             </v-window-item>
         </v-window>
     </v-card>
-    <v-tabs v-if="mobile" v-model="tab" class="footer" color="primary" dark align-tabs="center"
+    <v-tabs v-if="mobile" v-model="tab" class="footer bg-background" color="primary" dark align-tabs="center"
         style="text-decoration: none; color: inherit;">
         <v-tab :value="TAB_NUM1" @click="changeTab(TAB_ID1)"><span style="font-size: 1em;">{{ TAB_NAME1 }}</span></v-tab>
         <v-tab :value="TAB_NUM2" @click="changeTab(TAB_ID2)"><span style="font-size: 1em;">{{ TAB_NAME2 }}</span></v-tab>

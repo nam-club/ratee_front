@@ -35,8 +35,8 @@ export default defineComponent({
         },
     },
     setup() {
-        const btnTextColor = ref("white");
-        const btnVariant = ref("outlined");
+        const btnTextColor = ref("black");
+        const btnVariant = ref("elevated");
         const iconBtnVariant = ref("elevated");
         const btnStyle = ref({ fontSize: '1.5em', height: '100%', width: '100%', padding: '6%', display: 'block' });
         const { mobile } = useDisplay()
@@ -62,7 +62,7 @@ export default defineComponent({
     position: fixed;
     bottom: 0;
     width: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.2);
     /* 透過した黒色 */
     z-index: 100;
 }

@@ -1,6 +1,5 @@
 <template>
-    <!-- スナックバーの追加 -->
-    <SnackBar :snackbar="snackbar" :snackbarText="snackbarText" @update:snackbar="snackbar = $event" />
+    <SnackBar :snackbar="snackbar" :snackbarText="snackbarText" @update:snackbar="snackbar = $event" :color="errorColor" />
     <Top :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires"
         :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire"
         :answerSearchQuestionnaire="answerSearchQuestionnaire" :resetQuestionnaires="resetQuestionnaires"
@@ -22,6 +21,7 @@ import { ref, watchEffect } from 'vue'
 import { InfiniteLoadingState } from '@/types';
 import "v3-infinite-loading/lib/style.css";
 
+import { mainTheme } from '@/helpers/themes'
 import Top from '@/components/templates/Top.vue'
 import SnackBar from '@/components/molecules/SnackBar.vue'
 import { TARGET_QUESTIONNAIRES, TAB_ID1, MAX_COUNT, ERR_MSG } from '@/constants';
@@ -152,6 +152,7 @@ export default {
             resetQuestionnaires,
             snackbar,
             snackbarText,
+            errorColor: mainTheme.colors?.error
         }
     }
 }

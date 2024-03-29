@@ -6,11 +6,11 @@ export const MAIN_THEME = 'mainTheme'
 export const mainTheme: ThemeDefinition = {
   dark: false,
   colors: {
-    background: '#FFFFFF',
+    background: '#F7F7F7',
     surface: '#FFFFFF',
-    primary: '#3A98B9',
+    primary: '#42A5F5',
     secondary: '#545454',
-    error: '#ef4444',
+    error: '#EF5350',
     info: '#3b82f6',
     success: '#22c55e',
     warning: '#f59e0b',

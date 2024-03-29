@@ -1,5 +1,5 @@
 <template>
-    <v-snackbar v-model="computedSnackbarModel" multi-line location="top">
+    <v-snackbar v-model="computedSnackbarModel" :color="color" multi-line location="top">
         {{ snackbarText }}
         <template v-slot:actions>
             <IconButton :icon="icons.mdiClose" variant="text" @click="closeSnackbar" />
@@ -24,6 +24,9 @@ export default {
         snackbarText: {
             type: String,
             required: true
+        },
+        color: {
+            type: String
         },
     },
     setup(props, { emit }) {

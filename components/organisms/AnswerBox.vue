@@ -158,6 +158,8 @@
 <script lang="ts">
 import { useDisplay } from 'vuetify'
 import { mdiChevronRight } from '@mdi/js';
+
+import { mainTheme } from '@/helpers/themes'
 import Msg from '@/components/atoms/Msg.vue'
 import Button from '@/components/atoms/Button.vue'
 import QuestionnaireBarChart from '@/components/organisms/QuestionnaireBarChart.vue'
@@ -212,15 +214,15 @@ export default defineComponent({
             mdiChevronRight,
         })
 
-        const btnColor = ref("#3A98B9");
-        const btnTextColor = ref("#3A98B9");
+        const btnColor = ref(mainTheme.colors!.primary);
+        const btnTextColor = ref(mainTheme.colors!.primary);
         const btnVariant = ref("text");
         const iconBtnVariant = ref("text");
-        const btnStyle = ref({ width: '100%', "border-color": "#3A98B9" });
+        const btnStyle = ref({ width: '100%', "border-color": mainTheme.colors!.primary });
         const clickedMultiTextColor = ref("#FFFFFF");
         const confirmBtnTextColor = ref("#FFFFFF");
-        const confirmBtnStyle = ref({ "background-color": "#3A98B9" });
-        const detailBtnTextColor = ref("#3A98B9");
+        const confirmBtnStyle = ref({ "background-color": mainTheme.colors!.primary });
+        const detailBtnTextColor = ref(mainTheme.colors!.primary);
 
         // 回答オブジェクトの型定義
         interface Answer {

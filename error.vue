@@ -1,6 +1,6 @@
 <template>
-    <v-app class="bg-secondary-darken-2" style="display: flex; flex-direction: column;">
-        <v-card class="bg-secondary errorCard">
+    <v-app class="bg-surface" style="display: flex; flex-direction: column;">
+        <v-card class="bg-background errorCard">
             <Msg fontSize = "5em" fontWeight = "bold">{{ error.statusCode }}</Msg>
             <Msg class="errorMsg" fontSize = "3em">{{ error.message }}</Msg>
             <nuxt-link to="/" style="text-decoration: none; color: inherit;">

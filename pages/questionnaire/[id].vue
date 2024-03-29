@@ -1,4 +1,5 @@
 <template>
+    <SnackBar :snackbar="snackbar" :snackbarText="snackbarText" @update:snackbar="snackbar = $event" :color="errorColor" />
     <div v-if="!isQuestionnaireLoading && !isCommentLoading && !isChartLoading">
         <Questionnaire :questionnaire="questionnaire" :answerQuestionnaire="answerQuestionnaire" :comments="comments"
             :postComment="postComment" :recommends="recommends" :chart="chart" :load="load" :isInfiniteDisabled="isInfiniteDisabled" />
@@ -19,14 +20,18 @@
 </style>
 
 <script lang="ts">
-import Questionnaire from '@/components/templates/Questionnaire.vue'
-import { TARGET_RECOMMENDS, MAX_COUNT } from '@/constants';
 import { InfiniteLoadingState } from '@/types';
 import InfiniteLoading from "v3-infinite-loading";
 import "v3-infinite-loading/lib/style.css";
 
+import { mainTheme } from '@/helpers/themes'
+import SnackBar from '@/components/molecules/SnackBar.vue'
+import Questionnaire from '@/components/templates/Questionnaire.vue'
+import { TARGET_RECOMMENDS, MAX_COUNT, ERR_MSG } from '@/constants';
+
 export default defineComponent({
     components: {
+        SnackBar,
         Questionnaire,
         InfiniteLoading
     },
@@ -127,6 +132,19 @@ export default defineComponent({
             cStore.resetComment();
         });
 
+        const snackbar = ref(false); // スナックバーの表示状態
+        const snackbarText = ref(''); // スナックバーに表示するテキスト
+
+        // qStoreを監視し、エラーコードがあればスナックバーを表示
+        watchEffect(() => {
+            console.log(qStore.code.value)
+            if (qStore.code.value !== '') {
+                Object.entries(ERR_MSG);
+                snackbarText.value = ERR_MSG[qStore.code.value];
+                snackbar.value = true;
+            }
+        });
+
         return {
             questionnaire,
             isQuestionnaireLoading,
@@ -138,7 +156,10 @@ export default defineComponent({
             load,
             isInfiniteDisabled,
             chart,
-            isChartLoading
+            isChartLoading,
+            snackbar,
+            snackbarText,
+            errorColor: mainTheme.colors?.error
         }
     }
 })

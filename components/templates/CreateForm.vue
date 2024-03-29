@@ -1,5 +1,5 @@
 <template>
-    <v-app class="bg-secondary">
+    <v-app class="bg-background">
         <div v-if="categories.length">
             <Header />
         </div>
