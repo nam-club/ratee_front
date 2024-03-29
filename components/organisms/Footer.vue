@@ -3,7 +3,7 @@
         <v-footer v-if="!mobile" class="footer" style="height: 12%; width: 100%;">
             <v-row class="fill-height" align="center" justify="center">
                 <v-col cols="auto" style="width: 20%;">
-                    <nuxt-link to="/questionnaire/create" style="text-decoration: none; color: inherit;">
+                    <nuxt-link to="/create" style="text-decoration: none; color: inherit;">
                         <Button :textColor="btnTextColor" :variant="btnVariant" :buttonStyle="btnStyle">
                             {{ buttonText }}
                         </Button>
@@ -11,7 +11,7 @@
                 </v-col>
             </v-row>
         </v-footer>
-        <nuxt-link v-else to="/questionnaire/create"
+        <nuxt-link v-else to="/create"
             style="text-decoration: none; color: inherit; position: fixed; right: 0; bottom: 6%; margin: 20px; z-index: 1000;">
             <IconButton :icon="icons.mdiPencilPlus" :size="large" :variant="iconBtnVariant" />
         </nuxt-link>

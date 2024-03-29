@@ -15,6 +15,7 @@ export interface Questionnaire {
     category: string;
     tags: string[];
     isAnswered: boolean;
+    enableComment: boolean;
     enableMultiAnswer: boolean;
     createdAt: string;
 }
@@ -222,7 +223,7 @@ const postQuestionnaire = async (title: string, choices: string[], categoryId: s
         });
         const data = await response.json();
         if (response.ok) {
-
+            return { code: '', message: '' };
         } else {
             console.error('アンケート投稿APIの実行中にエラーが発生しました:', response.statusText);
             return { code: data.code, message: data.message };
@@ -290,19 +291,16 @@ export const useQuestionnaires = (target: string, questionId: string) => {
 
     // アンケート一覧再取得
     const reloadQuestionnaires = async () => {
-        isLoading.value = true;
         code.value = '';
         const qObject = await getQuestionnaires(TAB_ID1);
         state.value.questionnaires = qObject.questionnaires ? [...qObject.questionnaires] : state.value.questionnaires;
         state.value.nextToken = qObject.nextToken ? qObject.nextToken : '';
-        isLoading.value = false;
         code.value = qObject.code ? qObject.code : '';
         return qObject.questionnaires;
     }
 
     // 続きのアンケート一覧を取得(無限スクロール)
     const scrollQuestionnaires = async (order: string, nextToken: string) => {
-        isLoading.value = false;
         code.value = '';
         if (nextToken !== '') {
             const qObject = await getNextQuestionnaires(order, nextToken);
@@ -312,7 +310,6 @@ export const useQuestionnaires = (target: string, questionId: string) => {
             state.value.nextToken = qObject.nextToken ? qObject.nextToken : '';
             code.value = qObject.code ? qObject.code : '';
         }
-        isLoading.value = false;
     }
 
     // アンケートタブ切替
@@ -375,7 +372,6 @@ export const useQuestionnaires = (target: string, questionId: string) => {
             code.value = '';
             // アンケート投稿APIを実行し、成功したかどうかを確認
             const postResult = await postQuestionnaire(title, choices, categoryId, tags, options);
-            console.log(postResult)
             if (postResult.code !== '') {
                 code.value = postResult.code ? postResult.code : '';
                 return false; // 投稿に失敗した場合は false を返す
@@ -430,7 +426,9 @@ export const useQuestionnaire = (questionId: string) => {
         console.log(state.value)
         isLoading.value = false;
         code.value = state.value.code ? state.value.code : '';
-        console.log(code.value)
+        if(state.value?.enableComment) {
+            
+        }
     });
 
     // アンケート回答

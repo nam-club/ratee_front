@@ -8,7 +8,7 @@ export const TARGET_RECOMMENDS = "RECOMMENDS";
 /** メニュー */
 export const MENUS = [
     {title: "アンケート一覧", path: "/", icon: mdiListBox}, 
-    {title: "アンケート作成", path: "/questionnaire/create", icon: mdiPencilBox}
+    {title: "アンケート作成", path: "/create", icon: mdiPencilBox}
 ];
 
 /** タブ */

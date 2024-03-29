@@ -12,6 +12,8 @@ export interface Comment {
 type ResponseData = {
     comments: Comment[];
     nextToken: string;
+    code: string;
+    message: string;
 }
 
 // ベースURLの読み込み
@@ -39,17 +41,18 @@ const getComments = async (questionId: string, nextToken: string): Promise<Respo
         const response = await fetch(
             url, { credentials: 'include' }
         );
+        const data = await response.json();
+        console.log(data)
         if (response.ok) {
-            const data = await response.json();
-            console.log(data)
-            return data;
+            return { comments: data.comments, nextToken: data.nextToken };
         } else {
             console.error('コメント一覧取得APIの実行中にエラーが発生しました:', response.statusText);
+            return { code: data.code, message: data.message };
         }
     } catch (error) {
         console.error('コメント一覧取得APIの実行中にエラーが発生しました:', error);
+        return { code: data.code, message: data.message };
     }
-    return { comments: [], nextToken: '' };
 }
 
 // コメント投稿API
@@ -68,51 +71,63 @@ const postComment = async (questionId: string, iconId: number, comment: string) 
             }),
             credentials: 'include'
         });
+        const data = await response.json();
         if (response.ok) {
-            const data = await response.json();
+            return { code: '', message: '' };
         } else {
             console.error('コメント投稿APIの実行中にエラーが発生しました:', response.statusText);
+            return { code: data.code, message: data.message };
         }
     } catch (error) {
         console.error('コメント投稿APIの実行中にエラーが発生しました:', error);
+        return { code: data.code, message: data.message };
     }
 };
 
 
 // コメント一覧のStore定義
-export const useComments = (questionId: string, nextToken: string) => {
+export const useComments = async (questionId: string, nextToken: string) => {
     const state = ref<ResponseData>({ comments: [], nextToken: '' });
     const isLoading = ref(true);
+    const code = ref('');
 
     // コメント一覧の取得(初回)
-    onMounted(async () => {
-        const cObject = await getComments(questionId, nextToken);
-        state.value.comments = cObject.comments ? [...cObject.comments] : state.value.comments;
-        state.value.nextToken = cObject.nextToken ? cObject.nextToken : '';
-        isLoading.value = false;
-    });
+    const cObject = await getComments(questionId, nextToken);
+    state.value.comments = cObject.comments ? [...cObject.comments] : state.value.comments;
+    state.value.nextToken = cObject.nextToken ? cObject.nextToken : '';
+    isLoading.value = false;
+    code.value = state.value.code ? state.value.code : '';
 
     // 続きのコメント一覧を取得(無限スクロール)
     const scrollComments = async (questionId: string, nextToken: string) => {
+        code.value = '';
         if (nextToken !== '') {
             const cObject = await getComments(questionId, nextToken);
             if (cObject.comments) {
                 state.value.comments.push(...cObject.comments);
             }
             state.value.nextToken = cObject.nextToken ? cObject.nextToken : '';
+            code.value = cObject.code ? cObject.code : '';
         }
     }
 
     // コメント投稿
     const sendComment = async (questionId: string, iconId: number, comment: string) => {
 
-        await postComment(questionId, iconId, comment);
+        code.value = '';
+        const postResult = await postComment(questionId, iconId, comment);
+
+        if (postResult.code !== '') {
+            code.value = postResult.code ? postResult.code : '';
+            return false; // 投稿に失敗した場合は false を返す
+        }
 
         // コメント投稿APIが完了した後にコメント一覧取得APIを実行
-        if (state.value) {
+        if (code.value !== '') {
             const cObject = await getComments(questionId, "");
             state.value.comments = cObject.comments ? [...cObject.comments] : state.value.comments;
             state.value.nextToken = cObject.nextToken ? cObject.nextToken : '';
+            code.value = cObject.code ? cObject.code : '';
         }
     }
 
@@ -127,6 +142,7 @@ export const useComments = (questionId: string, nextToken: string) => {
     return {
         state: readonly(state),
         isLoading,
+        code,
         scrollComments,
         sendComment,
         resetComment
