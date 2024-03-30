@@ -263,12 +263,12 @@ export default defineComponent({
 
         const answerQuestionnaire = (questionId: string, choices: string[]) => {
             if (props.searchType === '') {
-                props.answerQuestionnaire(questionId, choices);
+                props.answerQuestionnaire(questionId, [...choices]);
             } else {
                 if (props.searchType === FORM_TITLE_TEXT || props.searchType === FORM_TAG_TEXT) {
-                    props.answerSearchQuestionnaire(questionId, choices, props.searchType, props.searchWord);
+                    props.answerSearchQuestionnaire(questionId, [...choices], props.searchType, props.searchWord);
                 } else if (props.searchType === FORM_CATEGORY_TEXT) {
-                    props.answerSearchQuestionnaire(questionId, choices, props.searchType, props.searchCategory);
+                    props.answerSearchQuestionnaire(questionId, [...choices], props.searchType, props.searchCategory);
                 }
             }
         }

@@ -178,6 +178,8 @@ const getQuestionnaire = async (questionId: string) => {
 // アンケート回答API
 const postAnswer = async (questionId: string, choices: string[]) => {
 
+    console.log(choices)
+
     try {
         const response = await fetch(`${baseURL}/questionnaire/answer`, {
             method: 'POST',
