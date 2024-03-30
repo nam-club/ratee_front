@@ -96,7 +96,7 @@ export const useComments = async (questionId: string, nextToken: string) => {
     state.value.comments = cObject.comments ? [...cObject.comments] : state.value.comments;
     state.value.nextToken = cObject.nextToken ? cObject.nextToken : '';
     isLoading.value = false;
-    code.value = state.value.code ? state.value.code : '';
+    code.value = cObject.code ? cObject.code : '';
 
     // 続きのコメント一覧を取得(無限スクロール)
     const scrollComments = async (questionId: string, nextToken: string) => {
@@ -118,12 +118,12 @@ export const useComments = async (questionId: string, nextToken: string) => {
         const postResult = await postComment(questionId, iconId, comment);
 
         if (postResult.code !== '') {
-            code.value = postResult.code ? postResult.code : '';
+            code.value = postResult.code;
             return false; // 投稿に失敗した場合は false を返す
         }
 
         // コメント投稿APIが完了した後にコメント一覧取得APIを実行
-        if (code.value !== '') {
+        if (code.value === '') {
             const cObject = await getComments(questionId, "");
             state.value.comments = cObject.comments ? [...cObject.comments] : state.value.comments;
             state.value.nextToken = cObject.nextToken ? cObject.nextToken : '';

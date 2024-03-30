@@ -47,12 +47,16 @@ export default defineComponent({
         const isChartLoading = ref(true);
         const snackbarMessages = ref<{ text: string; show: boolean }[]>([]); // スナックバーのメッセージを格納する配列
 
+        // コメント一覧取得
         const cStore = ref(null); // cStoreをrefとして定義
+        const comments = ref([]);
 
         // コメント投稿関数をsetup関数の直下で定義
-        const postComment = (questionId: string, iconId: number, comment: string) => {
+        const postComment = async (questionId: string, iconId: number, comment: string) => {
             if (cStore.value) {
-                cStore.value.sendComment(questionId, iconId, comment);
+                await cStore.value.sendComment(questionId, iconId, comment);
+                console.log(cStore.value)
+                comments.value = cStore.value.state.comments;
             } else {
                 console.error("cStore is not initialized.");
             }
@@ -71,9 +75,6 @@ export default defineComponent({
         // アンケート情報取得
         const qStore = useQuestionnaire(questionId);
         const questionnaire = ref({});
-
-        // コメント一覧取得
-        const comments = ref([]);
 
         // アンケート情報取得後、enableCommentがtrueの場合のみコメント一覧取得を実行
         watchEffect(async () => {
@@ -102,14 +103,6 @@ export default defineComponent({
                 onBeforeUnmount(() => {
                     cStore.value.resetComment();
                 });
-
-                // qStoreとcStoreを監視し、エラーコードがあればスナックバー用のメッセージ配列に追加
-                if (qStore.code.value !== '') {
-                    snackbarMessages.value.push({ text: ERR_MSG[qStore.code.value], show: true });
-                }
-                if (cStore.value && cStore.value.state && cStore.value.code !== '') {
-                    snackbarMessages.value.push({ text: ERR_MSG[cStore.value.code], show: true });
-                }
             }
         });
 
@@ -120,12 +113,7 @@ export default defineComponent({
 
         // おすすめアンケート一覧取得
         const rStore = useQuestionnaires(TARGET_RECOMMENDS, questionId);
-        const recommends = rStore.state;
-        watchEffect(() => {
-            if (rStore.code.value !== '') {
-                snackbarMessages.value.push({ text: ERR_MSG[rStore.code.value], show: true });
-            }
-        });
+        const recommends = rStore.state.value.questionnaires;
 
         // 時系列チャート取得
         const chStore = useChart(questionId);
@@ -164,6 +152,22 @@ export default defineComponent({
                 $state.error();
             }
         };
+
+        // qStoreとcStoreとrStoreを監視し、エラーコードがあればスナックバー用のメッセージ配列に追加
+        watchEffect(() => {
+            if (qStore.code.value !== '') {
+                snackbarMessages.value.push({ text: ERR_MSG[qStore.code.value], show: true });
+            }
+            if (cStore.value && cStore.value.state && cStore.value.code !== '') {
+                snackbarMessages.value.push({ text: ERR_MSG[cStore.value.code], show: true });
+            }
+            if (rStore.code.value !== '') {
+                snackbarMessages.value.push({ text: ERR_MSG[rStore.code.value], show: true });
+            }
+            if (chStore.code.value !== '') {
+                snackbarMessages.value.push({ text: ERR_MSG[chStore.code.value], show: true });
+            }
+        });
 
         return {
             questionnaire,

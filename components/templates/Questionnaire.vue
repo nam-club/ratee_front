@@ -46,10 +46,12 @@ export default defineComponent({
             required: true
         },
         recommends: {
-            type: Array as PropType<Questionnaire[]>
+            type: Array as PropType<Questionnaire[]>,
+            default: [],
         },
         comments: {
-            type: Array as PropType<Comment[]>
+            type: Array as PropType<Comment[]>,
+            default: [],
         },
         postComment: {
             type: Function,

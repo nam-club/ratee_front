@@ -29,7 +29,7 @@
                             <v-divider inset></v-divider>
                         </v-list>
                     </v-card>
-                    <InfiniteLoading v-if="!isInfiniteDisabled" :questionnaires="questionnaires" @infinite="load" :immediate-check="false"
+                    <InfiniteLoading v-if="!isInfiniteDisabled" @infinite="load" :immediate-check="false"
                         :reverse="false">
                         <template #spinner>
                             <div class="text-center" style="padding:10%">
@@ -69,7 +69,7 @@
                             <v-divider inset></v-divider>
                         </v-list>
                     </v-card>
-                    <InfiniteLoading v-if="!isInfiniteDisabled" :questionnaires="questionnaires" @infinite="load" :immediate-check="false"
+                    <InfiniteLoading v-if="!isInfiniteDisabled" @infinite="load" :immediate-check="false"
                         :reverse="false">
                         <template #spinner>
                             <div class="text-center" style="padding:10%">
