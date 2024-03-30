@@ -37,12 +37,12 @@
                                 @update:selectModel="setCategoryName"
                                 :onClick="searchQuestionnaires(typeName, categoryId)" />
                         </v-container>
-                        <AnswerBox style="margin:5%" :questionnaires="questionnaires"
+                        <QuestionnaireCard style="margin:5%" :questionnaires="questionnaires"
                             :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire"
                             :answerSearchQuestionnaire="answerSearchQuestionnaire" :searchType="typeName" :searchWord="word"
                             :searchCategory="categoryId" :goToSearchTab="goToSearchTab" />
                     </div>
-                    <AnswerBox v-else style="margin:5%" :questionnaires="questionnaires"
+                    <QuestionnaireCard v-else style="margin:5%" :questionnaires="questionnaires"
                         :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire"
                         :answerSearchQuestionnaire="answerSearchQuestionnaire" :goToSearchTab="goToSearchTab" />
                     <InfiniteLoading v-if="!isInfiniteDisabled" :questionnaires="questionnaires" @infinite="load" :immediate-check="false"
@@ -99,7 +99,7 @@ import { mdiPlus, mdiMagnify } from '@mdi/js';
 import InfiniteLoading from "v3-infinite-loading";
 import "v3-infinite-loading/lib/style.css";
 import InputSet from '@/components/molecules/InputSet.vue'
-import AnswerBox from '@/components/organisms/AnswerBox.vue'
+import QuestionnaireCard from '~/components/organisms/QuestionnaireCard.vue'
 import { TAB_LENGTH, TAB_ID1, TAB_NAME1, TAB_NUM1, TAB_ID2, TAB_NAME2, TAB_NUM2, TAB_ID3, TAB_NAME3, TAB_NUM3, TAB_ID4, TAB_NAME4, TAB_NUM4, FORM_TITLE_TEXT, FORM_CATEGORY_TEXT, FORM_TAG_TEXT, SEARCH_LABEL, SEARCH_TYPES } from '@/constants';
 import { Category } from '@/types';
 
@@ -107,7 +107,7 @@ export default {
     components: {
         InfiniteLoading,
         InputSet,
-        AnswerBox
+        QuestionnaireCard
     },
     props: {
         questionnaires: {

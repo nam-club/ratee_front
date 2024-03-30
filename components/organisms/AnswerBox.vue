@@ -1,151 +1,66 @@
 <template>
-    <v-row v-if="!mobile">
-        <v-col cols="4" v-for="(questionnaire, index) in questionnaires" :key="index">
-            <v-card>
-                <v-container>
-                    <v-row class="justify-center">
-                        <v-col xs12 sm6 md6 align-self="center">
-                            <v-row no-gutters>
-                                <v-col cols="8">
-                                    <Msg fontWeight="normal" fontSize="1.5em" style="margin:2% 0">{{ questionnaire.content
-                                    }}
-                                    </Msg>
-                                </v-col>
-                                <v-col cols="4" class="text-end">
-                                    <nuxt-link :to="`/questionnaire/${questionnaire.id}`">
-                                        <Button :textColor="detailBtnTextColor" :variant="btnVariant">
-                                            詳細を見る
-                                        </Button>
-                                    </nuxt-link>
-                                </v-col>
-                            </v-row>
-                            <v-row no-gutters>
-                                <v-col cols="auto" v-for="(tag, i) in questionnaire.tags" :key="i">
-                                    <v-chip class="ma-1"
-                                        @click="() => { searchQuestionnaires(FORM_TAG_TEXT, tag); goToSearchTab(tag); }">
-                                        {{ tag }}
-                                    </v-chip>
-                                </v-col>
-                            </v-row>
-                            <v-container v-if="questionnaire.isAnswered === false">
-                                <div v-if="questionnaire.enableMultiAnswer">
-                                    <v-row class="justify-center" v-for="(choice, index) in questionnaire.choices"
-                                        :key="index">
-                                        <v-col xs12 sm12 md12 align-self="center">
-                                            <Button
-                                                :class="{ 'background-on-click': findChoicesByQuestionnaireId(questionnaire.id).includes(choice.id) }"
-                                                :textColor="findChoicesByQuestionnaireId(questionnaire.id).includes(choice.id) ? clickedMultiTextColor : btnTextColor"
-                                                :buttonStyle="btnStyle" :variant="btnVariant"
-                                                :onClick="() => toggleChoice(questionnaire.id, choice.id)">
-                                                {{ choice.name }}
-                                            </Button>
-                                        </v-col>
-                                    </v-row>
-                                    <v-row class="justify-center"
-                                        v-if="findChoicesByQuestionnaireId(questionnaire.id).length !== 0">
-                                        <v-col class="text-end">
-                                            <Button :textColor="confirmBtnTextColor" :variant="btnVariant"
-                                                :buttonStyle="confirmBtnStyle"
-                                                :onClick="() => answerQuestionnaire(questionnaire.id, findChoicesByQuestionnaireId(questionnaire.id))">確定</Button>
-                                        </v-col>
-                                    </v-row>
-                                </div>
-                                <div v-else>
-                                    <v-row class="justify-center" v-for="(choice, index) in questionnaire.choices"
-                                        :key="index">
-                                        <v-col xs12 sm12 md12 align-self="center">
-                                            <Button :color="btnColor" :textColor="btnTextColor" :variant="btnVariant"
-                                                :buttonStyle="btnStyle"
-                                                :onClick="() => answerQuestionnaire(questionnaire.id, [choice.id])">
-                                                {{ choice.name }}
-                                            </Button>
-                                        </v-col>
-                                    </v-row>
-                                </div>
-                            </v-container>
-                            <v-container v-if="questionnaire.isAnswered === true">
-                                <v-row>
-                                    <QuestionnaireBarChart :questionnaire="questionnaire" :options="options" />
-                                </v-row>
-                            </v-container>
-                        </v-col>
-                    </v-row>
-                </v-container>
-            </v-card>
-        </v-col>
-    </v-row>
-    <v-row v-else>
-        <v-col cols="12" v-for="(questionnaire, index) in questionnaires" :key="index">
-            <v-card>
-                <v-container>
-                    <v-row class="justify-center">
-                        <v-col xs12 sm6 md6 align-self="center">
-                            <v-row no-gutters>
-                                <v-col cols="8">
-                                    <Msg fontWeight="normal" fontSize="1em">{{ questionnaire.content }}
-                                    </Msg>
-                                </v-col>
-                                <v-col cols="4" class="text-end">
-                                    <nuxt-link :to="`/questionnaire/${questionnaire.id}`" style="color: black;">
-                                        <IconButton :icon="icons.mdiChevronRight" :size="large" :variant="iconBtnVariant" />
-                                    </nuxt-link>
-                                </v-col>
-                            </v-row>
-                            <v-row no-gutters>
-                                <v-col cols="auto" v-for="(tag, i) in questionnaire.tags" :key="i">
-                                    <v-chip class="ma-1"
-                                        @click="() => { searchQuestionnaires(FORM_TAG_TEXT, tag); goToSearchTab(tag); }">
-                                        {{ tag }}
-                                    </v-chip>
-                                </v-col>
-                            </v-row>
-                            <v-container v-if="questionnaire.isAnswered === false">
-                                <div v-if="questionnaire.enableMultiAnswer">
-                                    <v-row class="justify-center" v-for="(choice, index) in questionnaire.choices"
-                                        :key="index">
-                                        <v-col xs12 sm12 md12 align-self="center">
-                                            <Button
-                                                :class="{ 'background-on-click': findChoicesByQuestionnaireId(questionnaire.id).includes(choice.id) }"
-                                                :textColor="findChoicesByQuestionnaireId(questionnaire.id).includes(choice.id) ? clickedMultiTextColor : btnTextColor"
-                                                :buttonStyle="btnStyle" :variant="btnVariant"
-                                                :onClick="() => toggleChoice(questionnaire.id, choice.id)">
-                                                {{ choice.name }}
-                                            </Button>
-                                        </v-col>
-                                    </v-row>
-                                    <v-row class="justify-center"
-                                        v-if="findChoicesByQuestionnaireId(questionnaire.id).length !== 0">
-                                        <v-col class="text-end">
-                                            <Button :textColor="confirmBtnTextColor" :variant="btnVariant"
-                                                :buttonStyle="confirmBtnStyle"
-                                                :onClick="() => answerQuestionnaire(questionnaire.id, findChoicesByQuestionnaireId(questionnaire.id))">確定</Button>
-                                        </v-col>
-                                    </v-row>
-                                </div>
-                                <div v-else>
-                                    <v-row class="justify-center" v-for="(choice, index) in questionnaire.choices"
-                                        :key="index">
-                                        <v-col xs12 sm12 md12 align-self="center">
-                                            <Button :color="btnColor" :textColor="btnTextColor" :variant="btnVariant"
-                                                :buttonStyle="btnStyle"
-                                                :onClick="() => answerQuestionnaire(questionnaire.id, [choice.id])">
-                                                {{ choice.name }}
-                                            </Button>
-                                        </v-col>
-                                    </v-row>
-                                </div>
-                            </v-container>
-                            <v-container v-if="questionnaire.isAnswered === true">
-                                <v-row>
-                                    <QuestionnaireBarChart :questionnaire="questionnaire" :options="options" />
-                                </v-row>
-                            </v-container>
-                        </v-col>
-                    </v-row>
-                </v-container>
-            </v-card>
-        </v-col>
-    </v-row>
+    <div v-if="!mobile">
+        <div v-if="questionnaire.enableMultiAnswer">
+            <v-row class="justify-center" v-for="(choice, index) in questionnaire.choices" :key="index">
+                <v-col xs12 sm12 md12 align-self="center">
+                    <Button
+                        :class="{ 'background-on-click': findChoicesByQuestionnaireId(questionnaire.id).includes(choice.id) }"
+                        :textColor="findChoicesByQuestionnaireId(questionnaire.id).includes(choice.id) ? clickedMultiTextColor : btnTextColor"
+                        :buttonStyle="btnStyle" :variant="btnVariant"
+                        :onClick="() => toggleChoice(questionnaire.id, choice.id)">
+                        {{ choice.name }}
+                    </Button>
+                </v-col>
+            </v-row>
+            <v-row class="justify-center" v-if="findChoicesByQuestionnaireId(questionnaire.id).length !== 0">
+                <v-col class="text-end">
+                    <Button :textColor="confirmBtnTextColor" :variant="btnVariant" :buttonStyle="confirmBtnStyle"
+                        :onClick="() => answerQuestionnaire(questionnaire.id, findChoicesByQuestionnaireId(questionnaire.id))">確定</Button>
+                </v-col>
+            </v-row>
+        </div>
+        <div v-else>
+            <v-row class="justify-center" v-for="(choice, index) in questionnaire.choices" :key="index">
+                <v-col xs12 sm12 md12 align-self="center">
+                    <Button :color="btnColor" :textColor="btnTextColor" :variant="btnVariant" :buttonStyle="btnStyle"
+                        :onClick="() => answerQuestionnaire(questionnaire.id, [choice.id])">
+                        {{ choice.name }}
+                    </Button>
+                </v-col>
+            </v-row>
+        </div>
+    </div>
+    <div v-else>
+        <div v-if="questionnaire.enableMultiAnswer">
+            <v-row class="justify-center" v-for="(choice, index) in questionnaire.choices" :key="index">
+                <v-col xs12 sm12 md12 align-self="center">
+                    <Button
+                        :class="{ 'background-on-click': findChoicesByQuestionnaireId(questionnaire.id).includes(choice.id) }"
+                        :textColor="findChoicesByQuestionnaireId(questionnaire.id).includes(choice.id) ? clickedMultiTextColor : btnTextColor"
+                        :buttonStyle="btnStyle" :variant="btnVariant"
+                        :onClick="() => toggleChoice(questionnaire.id, choice.id)">
+                        {{ choice.name }}
+                    </Button>
+                </v-col>
+            </v-row>
+            <v-row class="justify-center" v-if="findChoicesByQuestionnaireId(questionnaire.id).length !== 0">
+                <v-col class="text-end">
+                    <Button :textColor="confirmBtnTextColor" :variant="btnVariant" :buttonStyle="confirmBtnStyle"
+                        :onClick="() => answerQuestionnaire(questionnaire.id, findChoicesByQuestionnaireId(questionnaire.id))">確定</Button>
+                </v-col>
+            </v-row>
+        </div>
+        <div v-else>
+            <v-row class="justify-center" v-for="(choice, index) in questionnaire.choices" :key="index">
+                <v-col xs12 sm12 md12 align-self="center">
+                    <Button :color="btnColor" :textColor="btnTextColor" :variant="btnVariant" :buttonStyle="btnStyle"
+                        :onClick="() => answerQuestionnaire(questionnaire.id, [choice.id])">
+                        {{ choice.name }}
+                    </Button>
+                </v-col>
+            </v-row>
+        </div>
+    </div>
 </template>
 
 <style>
@@ -157,37 +72,25 @@
 
 <script lang="ts">
 import { useDisplay } from 'vuetify'
-import { mdiChevronRight } from '@mdi/js';
 
 import { mainTheme } from '@/helpers/themes'
-import Msg from '@/components/atoms/Msg.vue'
 import Button from '@/components/atoms/Button.vue'
-import QuestionnaireBarChart from '@/components/organisms/QuestionnaireBarChart.vue'
-import { Questionnaire } from '~/composables/questionnaireStates';
 import { FORM_TITLE_TEXT, FORM_CATEGORY_TEXT, FORM_TAG_TEXT } from '@/constants';
 
 export default defineComponent({
     components: {
-        Msg,
         Button,
-        QuestionnaireBarChart,
     },
     props: {
-        questionnaires: {
-            type: Array as PropType<Questionnaire[]>
-        },
-        sortType: {
-            type: String
+        questionnaire: {
+            type: Object,
+            required: true,
         },
         answerQuestionnaire: {
             type: Function,
             required: true
         },
         answerSearchQuestionnaire: {
-            type: Function,
-            required: true
-        },
-        searchQuestionnaires: {
             type: Function,
             required: true
         },
@@ -203,26 +106,17 @@ export default defineComponent({
             type: String,
             default: ''
         },
-        goToSearchTab: {
-            type: Function,
-            required: true
-        }
     },
     setup(props) {
         const { mobile } = useDisplay()
-        const icons = ref({
-            mdiChevronRight,
-        })
 
         const btnColor = ref(mainTheme.colors!.primary);
         const btnTextColor = ref(mainTheme.colors!.primary);
         const btnVariant = ref("text");
-        const iconBtnVariant = ref("text");
         const btnStyle = ref({ width: '100%', "border-color": mainTheme.colors!.primary });
         const clickedMultiTextColor = ref("#FFFFFF");
         const confirmBtnTextColor = ref("#FFFFFF");
         const confirmBtnStyle = ref({ "background-color": mainTheme.colors!.primary });
-        const detailBtnTextColor = ref(mainTheme.colors!.primary);
 
         // 回答オブジェクトの型定義
         interface Answer {
@@ -273,49 +167,20 @@ export default defineComponent({
             }
         }
 
-        const options = computed(() => ({
-            responsive: true,
-            maintainAspectRatio: true,
-            aspectRatio: mobile.value ? 1.2 : 1.8, // mobile の状態に基づいて aspectRatio を変更
-            indexAxis: 'y',
-            plugins: {
-                legend: {
-                    display: false // レジェンド（ラベル）を非表示にする
-                }
-            },
-            scales: {
-                x: {
-                    display: false, // x軸の目盛りと数値を非表示にする
-                },
-                y: {
-                    ticks: {
-                        font: {
-                            family: "'Kosugi Maru'", // y軸のラベルにフォントを適用
-                            size: 14
-                        }
-                    }
-                }
-            },
-        }));
-
         return {
             mobile,
-            icons,
             FORM_TAG_TEXT,
             btnColor,
             btnTextColor,
             btnVariant,
-            iconBtnVariant,
             btnStyle,
             clickedMultiTextColor,
             confirmBtnTextColor,
             confirmBtnStyle,
-            detailBtnTextColor,
             choices,
             toggleChoice,
             findChoicesByQuestionnaireId,
             answerQuestionnaire,
-            options
         }
     }
 })
