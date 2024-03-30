@@ -340,12 +340,13 @@ export const useQuestionnaires = (target: string, questionId: string) => {
 
     // アンケート回答
     const answerQuestionnaire = async (questionId: string, choices: string[]) => {
-
+        console.log(choices)
         code.value = '';
         const postResult = await postAnswer(questionId, choices);
+        code.value = postResult.code ? postResult.code : '';
 
         // アンケート回答APIが完了した後にアンケート一覧取得APIを実行
-        if (postResult.code == '') {
+        if (postResult.code === '') {
             const qObject = await getQuestionnaires(TAB_ID1);
             state.value.questionnaires = qObject.questionnaires ? [...qObject.questionnaires] : state.value.questionnaires;
             state.value.nextToken = qObject.nextToken ? qObject.nextToken : '';
@@ -358,9 +359,10 @@ export const useQuestionnaires = (target: string, questionId: string) => {
 
         code.value = '';
         const postResult = await postAnswer(questionId, choices);
+        code.value = postResult.code ? postResult.code : '';
 
         // アンケート回答APIが完了した後にアンケート一覧取得API（検索）を実行
-        if (postResult.code == '') {
+        if (postResult.code === '') {
             const qObject = await getSearchQuestionnaires(type, word);
             state.value.questionnaires = qObject.questionnaires ? [...qObject.questionnaires] : state.value.questionnaires;
             state.value.nextToken = qObject.nextToken ? qObject.nextToken : '';
@@ -380,7 +382,7 @@ export const useQuestionnaires = (target: string, questionId: string) => {
             }
     
             // アンケート一覧取得APIを実行
-            if(code.value !== '') {
+            if(code.value === '') {
                 console.log("アンケート投稿後の一覧取得API");
                 const qObject = await getQuestionnaires(TAB_ID1);
                 console.log("アンケート再取得完了");
@@ -435,11 +437,12 @@ export const useQuestionnaire = (questionId: string) => {
 
     // アンケート回答
     const answerQuestionnaire = async (questionId: string, choices: string[]) => {
-
+        console.log(choices)
+        code.value = '';
         const postResult = await postAnswer(questionId, choices);
         code.value = postResult.code ? postResult.code : '';
 
-        if(code.value !== '') {
+        if(code.value === '') {
             // アンケート回答APIが完了した後にアンケート情報取得APIを実行
             state.value = await getQuestionnaire(questionId);
             code.value = state.value.code ? state.value.code : '';

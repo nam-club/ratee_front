@@ -103,7 +103,7 @@ import Button from '@/components/atoms/Button.vue'
 import AnswerBox from '@/components/organisms/AnswerBox.vue'
 import QuestionnaireBarChart from '@/components/organisms/QuestionnaireBarChart.vue'
 import { Questionnaire } from '~/composables/questionnaireStates';
-import { FORM_TITLE_TEXT, FORM_CATEGORY_TEXT, FORM_TAG_TEXT } from '@/constants';
+import { FORM_TAG_TEXT } from '@/constants';
 
 export default defineComponent({
     components: {

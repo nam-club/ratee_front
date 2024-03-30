@@ -132,6 +132,7 @@ export default {
 
         // qStoreを監視し、エラーコードがあればスナックバーを表示
         watchEffect(() => {
+            console.log(qStore.code.value)
             if (qStore.code.value !== '') {
                 Object.entries(ERR_MSG);
                 snackbarText.value = ERR_MSG[qStore.code.value];

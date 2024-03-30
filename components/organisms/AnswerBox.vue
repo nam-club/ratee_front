@@ -92,7 +92,7 @@ export default defineComponent({
         },
         answerSearchQuestionnaire: {
             type: Function,
-            required: true
+            default: () => () => {}
         },
         searchType: {
             type: String,
@@ -109,6 +109,8 @@ export default defineComponent({
     },
     setup(props) {
         const { mobile } = useDisplay()
+
+        console.log(props.questionnaire)
 
         const btnColor = ref(mainTheme.colors!.primary);
         const btnTextColor = ref(mainTheme.colors!.primary);
@@ -156,6 +158,8 @@ export default defineComponent({
         };
 
         const answerQuestionnaire = (questionId: string, choices: string[]) => {
+            console.log([...choices])
+            console.log(props.searchType)
             if (props.searchType === '') {
                 props.answerQuestionnaire(questionId, [...choices]);
             } else {

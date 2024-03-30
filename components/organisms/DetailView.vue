@@ -15,14 +15,7 @@
                 </v-col>
             </v-row>
             <v-container v-if="questionnaire.isAnswered === false">
-                <v-row class="justify-center" v-for="(choice, index) in questionnaire.choices" :key="index">
-                    <v-col xs12 sm12 md12 align-self="center">
-                        <Button :color="btnColor" :variant="btnVariant" :buttonStyle="btnStyle"
-                            :onClick="() => answerQuestionnaire(questionnaire.id, [choice.id])">
-                            {{ choice.name }}
-                        </Button>
-                    </v-col>
-                </v-row>
+                <AnswerBox :questionnaire="questionnaire" :answerQuestionnaire="answerQuestionnaire" />
             </v-container>
 
             <v-container v-if="questionnaire.isAnswered === true">
@@ -52,6 +45,7 @@
 <script lang="ts">
 import { useDisplay } from 'vuetify'
 import Msg from '@/components/atoms/Msg.vue'
+import AnswerBox from '@/components/organisms/AnswerBox.vue'
 import QuestionnaireBarChart from '@/components/organisms/QuestionnaireBarChart.vue'
 import TimeChart from '@/components/organisms/TimeChart.vue'
 import { DETAIL_TAB_LENGTH, DETAIL_TAB_NAME1, DETAIL_TAB_NUM1, DETAIL_TAB_NAME2, DETAIL_TAB_NUM2, } from '@/constants';
@@ -59,6 +53,7 @@ import { DETAIL_TAB_LENGTH, DETAIL_TAB_NAME1, DETAIL_TAB_NUM1, DETAIL_TAB_NAME2,
 export default defineComponent({
     components: {
         Msg,
+        AnswerBox,
         QuestionnaireBarChart,
         TimeChart
     },
@@ -77,8 +72,9 @@ export default defineComponent({
         }
     },
     setup(props) {
-        console.log(props.chart)
         const { mobile } = useDisplay()
+
+        console.log(props.questionnaire)
 
         // タブの値をリアクティブにする
         const tab = ref<number | null>(null);

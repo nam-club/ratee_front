@@ -108,7 +108,7 @@ export default defineComponent({
 
         // アンケート回答
         const answerQuestionnaire = (id: string, name: string) => {
-            qStore.answerQuestionnaire(id, [name]);
+            qStore.answerQuestionnaire(id, name);
         }
 
         // おすすめアンケート一覧取得
