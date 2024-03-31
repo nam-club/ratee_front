@@ -21,7 +21,6 @@ export default {
         },
     },
     setup(props) {
-        console.log(props.timeData)
         const chartData = ref({ labels: [], datasets: [] });
 
         const processData = (obj) => {
@@ -33,12 +32,15 @@ export default {
             const labels = new Set();
             const datasets = [];
             const dataPoints = Object.entries(obj.data);
-            const choices = Object.entries(dataPoints[0][1]);
+            // choicesの取得方法を変更します。obj.choicesを直接使用します。
+            const choices = Object.entries(obj.choices);
 
             choices.forEach(([key, value]) => {
                 const borderColor = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`;
+                console.log(key)
+                // labelをobj.choicesのvalueに設定します。
                 datasets.push({
-                    label: key,
+                    label: value, // keyではなく、valueを使用
                     data: [],
                     fill: true,
                     borderColor: borderColor,
@@ -51,7 +53,11 @@ export default {
                 labels.add(date);
 
                 Object.entries(values).forEach(([key, value], index) => {
-                    datasets[index].data.push(value);
+                    // keyに基づいて正しいdatasetを見つけて、そのdataにvalueを追加します。
+                    const datasetIndex = choices.findIndex(([choiceKey]) => choiceKey === key);
+                    if (datasetIndex !== -1) { // 見つかった場合のみ追加
+                        datasets[datasetIndex].data.push(value);
+                    }
                 });
             });
 
