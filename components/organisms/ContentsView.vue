@@ -17,25 +17,23 @@
                                         @update:selectModel="setTypeName" />
                                 </v-col>
                                 <v-col v-if="typeName !== FORM_CATEGORY_TEXT" cols="10" class="align-self-center">
-                                    <InputSet type="searchBox" :text="word" @input="word = $event" :labelText="SEARCH_LABEL"
-                                        :onClick="searchQuestionnaires(typeName, word)" />
+                                    <InputSet type="searchBox" :textModel="word" @input="word = $event"
+                                        :labelText="SEARCH_LABEL" :search="search"/>
                                 </v-col>
                                 <v-col v-else cols="10" class="align-self-center">
-                                    <InputSet type="selectBox" :selectItems="categoryNames" :selectModel="categoryName"
-                                        @update:selectModel="setCategoryName"
-                                        :onClick="searchQuestionnaires(typeName, categoryId)" />
+                                    <InputSet type="searchSelectBox" :selectItems="categoryNames" :selectModel="categoryName"
+                                        @update:selectModel="setCategoryName" :search="search" :searchId="categoryId"/>
                                 </v-col>
                             </v-row>
                         </v-container>
                         <v-container v-else>
                             <InputSet type="selectBox" :selectItems="SEARCH_TYPES" :selectModel="typeName"
                                 @update:selectModel="setTypeName" />
-                            <InputSet v-if="typeName !== FORM_CATEGORY_TEXT" type="searchBox" :text="word"
+                            <InputSet v-if="typeName !== FORM_CATEGORY_TEXT" type="searchBox" :textModel="word"
                                 @input="word = $event" :labelText="SEARCH_LABEL"
-                                :onClick="searchQuestionnaires(typeName, word)" />
-                            <InputSet v-else type="selectBox" :selectItems="categoryNames" :selectModel="categoryName"
-                                @update:selectModel="setCategoryName"
-                                :onClick="searchQuestionnaires(typeName, categoryId)" />
+                                :search="search" />
+                            <InputSet v-else type="searchSelectBox" :selectItems="categoryNames" :selectModel="categoryName"
+                                @update:selectModel="setCategoryName" :search="search" :searchId="categoryId" />
                         </v-container>
                         <QuestionnaireCard style="margin:5%" :questionnaires="questionnaires"
                             :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire"
@@ -45,8 +43,8 @@
                     <QuestionnaireCard v-else style="margin:5%" :questionnaires="questionnaires"
                         :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire"
                         :answerSearchQuestionnaire="answerSearchQuestionnaire" :goToSearchTab="goToSearchTab" />
-                    <InfiniteLoading v-if="!isInfiniteDisabled" :questionnaires="questionnaires" @infinite="load" :immediate-check="false"
-                        :reverse="false">
+                    <InfiniteLoading v-if="!isInfiniteDisabled" :questionnaires="questionnaires"
+                        @infinite="($state) => load($state, tab)" :immediate-check="false" :reverse="false">
                         <template #spinner>
                             <div class="text-center" style="padding:10%">
                                 <v-progress-circular indeterminate color="primary" :size="100"
@@ -212,11 +210,19 @@ export default {
             typeName.value = FORM_TAG_TEXT;
         };
 
+        // 検索する
+        const search = (word: string) => {
+            console.log(word)
+            console.log(typeName.value)
+            props.searchQuestionnaires(typeName.value, word);
+        }
+
         return {
             mobile,
             icons,
             tab,
             changeTab,
+            search,
             goToSearchTab,
             TAB_LENGTH,
             TAB_ID1,

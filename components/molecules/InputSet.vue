@@ -73,8 +73,31 @@
     <div v-else-if="type === 'switchButton'">
         <v-switch color="primary" v-model="computedCheckModel" :label="labelText"></v-switch>
     </div>
-    <div v-if="type === 'searchBox'">
-        <v-text-field v-model="computedTextModel" :label="labelText" @keyup.enter="onClick()" />
+    <div v-else-if="type === 'searchBox'">
+        <v-container>
+            <v-row>
+                <v-col cols="10">
+                    <v-text-field v-model="computedTextModel" :label="labelText" />
+                </v-col>
+                <v-col cols="2">
+                    <Button :color="confirmBtnColor" :textColor="confirmBtnTextColor" :variant="confirmBtnVariant"
+                        :buttonStyle="confirmBtnStyle" :disabled="!computedTextModel" @click="search(computedTextModel)">検索する</Button>
+                </v-col>
+            </v-row>
+        </v-container>
+    </div>
+    <div v-else-if="type === 'searchSelectBox'">
+        <v-container>
+            <v-row>
+                <v-col cols="10">
+                    <v-select :label="labelText" :items="selectItems" v-model="computedSelectModel"></v-select>
+                </v-col>
+                <v-col cols="2">
+                    <Button :color="confirmBtnColor" :textColor="confirmBtnTextColor" :variant="confirmBtnVariant"
+                        :buttonStyle="confirmBtnStyle" :disabled="!computedSelectModel" @click="search(searchId)">検索する</Button>
+                </v-col>
+            </v-row>
+        </v-container>
     </div>
 </template>
 
@@ -107,7 +130,6 @@ export default defineComponent({
         },
         caption: {
             type: String,
-            required: true,
         },
         captionLabel: {
             type: String,
@@ -119,7 +141,7 @@ export default defineComponent({
             type: String,
         },
         selectItems: {
-            type: [],
+            type: Array as () => string[],
         },
         inputStyle: {
             type: Object,
@@ -143,6 +165,13 @@ export default defineComponent({
         checkModel: {
             type: Boolean,
             default: false
+        },
+        search: {
+            type: Function,
+            default: () => { },
+        },
+        searchId: {
+            type: String
         },
         onClick: {
             type: Function,
@@ -224,6 +253,10 @@ export default defineComponent({
         })
 
         const btnVariant = ref("text");
+        const confirmBtnColor = ref(mainTheme.colors?.primary);
+        const confirmBtnTextColor = ref("#ffffff");
+        const confirmBtnVariant = ref("elevated");
+        const confirmBtnStyle = ref({ width: '100%', display: 'block' });
 
         const newChip = ref('');
         const chips = ref([]);
@@ -283,6 +316,10 @@ export default defineComponent({
             mobile,
             icons,
             btnVariant,
+            confirmBtnStyle,
+            confirmBtnColor,
+            confirmBtnTextColor,
+            confirmBtnVariant,
             tagTextColor,
             tagBtnStyle,
             newChip,

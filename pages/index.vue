@@ -24,7 +24,7 @@ import "v3-infinite-loading/lib/style.css";
 import { mainTheme } from '@/helpers/themes'
 import Top from '@/components/templates/Top.vue'
 import SnackBar from '@/components/molecules/SnackBar.vue'
-import { TARGET_QUESTIONNAIRES, TAB_ID1, MAX_COUNT, ERR_MSG } from '@/constants';
+import { TARGET_QUESTIONNAIRES, TAB_ID1, TAB_NUM1, MAX_COUNT, ERR_MSG } from '@/constants';
 import { Questionnaire } from '~/composables/questionnaireStates';
 
 export default {
@@ -89,9 +89,10 @@ export default {
             }
         });
 
-        const load = async ($state: InfiniteLoadingState) => {
-            console.log(qStore.state.value.nextToken)
-            if (isInfiniteDisabled.value) {
+        const load = async ($state: InfiniteLoadingState, tabNum: number) => {
+            console.log(tabNum)
+            if (isInfiniteDisabled.value || tabNum !== TAB_NUM1) {
+                $state.loaded();
                 return; // 無限ローディングが無効の場合は関数の処理を終了
             }
             try {

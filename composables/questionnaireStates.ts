@@ -291,16 +291,6 @@ export const useQuestionnaires = (target: string, questionId: string) => {
         }
     });
 
-    // アンケート一覧再取得
-    const reloadQuestionnaires = async () => {
-        code.value = '';
-        const qObject = await getQuestionnaires(TAB_ID1);
-        state.value.questionnaires = qObject.questionnaires ? [...qObject.questionnaires] : state.value.questionnaires;
-        state.value.nextToken = qObject.nextToken ? qObject.nextToken : '';
-        code.value = qObject.code ? qObject.code : '';
-        return qObject.questionnaires;
-    }
-
     // 続きのアンケート一覧を取得(無限スクロール)
     const scrollQuestionnaires = async (order: string, nextToken: string) => {
         code.value = '';
@@ -414,8 +404,7 @@ export const useQuestionnaires = (target: string, questionId: string) => {
         answerQuestionnaire,
         answerSearchQuestionnaire,
         createQuestionnaire,
-        resetQuestionnaires,
-        reloadQuestionnaires
+        resetQuestionnaires
     }
 }
 
