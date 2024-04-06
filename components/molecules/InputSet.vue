@@ -76,10 +76,10 @@
     <div v-else-if="type === 'searchBox'">
         <v-container>
             <v-row>
-                <v-col cols="10">
+                <v-col cols="8">
                     <v-text-field v-model="computedTextModel" :label="labelText" />
                 </v-col>
-                <v-col cols="2">
+                <v-col cols="4">
                     <Button :color="confirmBtnColor" :textColor="confirmBtnTextColor" :variant="confirmBtnVariant"
                         :buttonStyle="confirmBtnStyle" :disabled="!computedTextModel" @click="search(computedTextModel)">検索する</Button>
                 </v-col>
@@ -89,10 +89,10 @@
     <div v-else-if="type === 'searchSelectBox'">
         <v-container>
             <v-row>
-                <v-col cols="10">
+                <v-col cols="8">
                     <v-select :label="labelText" :items="selectItems" v-model="computedSelectModel"></v-select>
                 </v-col>
-                <v-col cols="2">
+                <v-col cols="4">
                     <Button :color="confirmBtnColor" :textColor="confirmBtnTextColor" :variant="confirmBtnVariant"
                         :buttonStyle="confirmBtnStyle" :disabled="!computedSelectModel" @click="search(searchId)">検索する</Button>
                 </v-col>
@@ -256,7 +256,10 @@ export default defineComponent({
         const confirmBtnColor = ref(mainTheme.colors?.primary);
         const confirmBtnTextColor = ref("#ffffff");
         const confirmBtnVariant = ref("elevated");
-        const confirmBtnStyle = ref({ width: '100%', display: 'block' });
+        const confirmBtnStyle = ref({ fontSize: '1.2em', height: '70%', width: '100%' });
+
+        const tagTextColor = ref('#515254');
+        const tagBtnStyle = ref({ fontSize: '1.2em', height: '70%', width: '100%', display: 'block' })
 
         const newChip = ref('');
         const chips = ref([]);
@@ -308,9 +311,6 @@ export default defineComponent({
                 }
             }
         }
-
-        const tagTextColor = ref('#515254');
-        const tagBtnStyle = ref({ fontSize: '1.2em', height: '70%', width: '100%', display: 'block' })
 
         return {
             mobile,
