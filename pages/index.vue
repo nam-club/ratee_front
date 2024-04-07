@@ -165,12 +165,23 @@ export default {
         const snackbar = ref(false); // スナックバーの表示状態
         const snackbarText = ref(''); // スナックバーに表示するテキスト
 
-        // newsStoreを監視し、エラーコードがあればスナックバーを表示
+        // storeを監視し、エラーコードがあればスナックバーを表示
         watchEffect(() => {
-            console.log(newsStore.code.value)
             if (newsStore.code.value !== '') {
                 Object.entries(ERR_MSG);
                 snackbarText.value = ERR_MSG[newsStore.code.value];
+                snackbar.value = true;
+            } else if(trendStore.code.value !== '') {
+                Object.entries(ERR_MSG);
+                snackbarText.value = ERR_MSG[trendStore.code.value];
+                snackbar.value = true;
+            } else if(rankingStore.code.value !== '') {
+                Object.entries(ERR_MSG);
+                snackbarText.value = ERR_MSG[rankingStore.code.value];
+                snackbar.value = true;
+            } else if(searchStore.code.value !== '') {
+                Object.entries(ERR_MSG);
+                snackbarText.value = ERR_MSG[searchStore.code.value];
                 snackbar.value = true;
             }
         });

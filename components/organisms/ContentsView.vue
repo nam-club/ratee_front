@@ -44,10 +44,11 @@
                             <InputSet v-else type="searchSelectBox" :selectItems="categoryNames" :selectModel="categoryName"
                                 @update:selectModel="setCategoryName" :search="search" :searchId="categoryId" />
                         </v-container>
-                        <QuestionnaireCard style="margin:5%" :questionnaires="sQuestionnaires"
+                        <QuestionnaireCard v-if="sQuestionnaires?.length !== 0" style="margin:5%" :questionnaires="sQuestionnaires"
                             :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire"
                             :answerSearchQuestionnaire="answerSearchQuestionnaire" :searchType="typeName" :searchWord="word"
                             :searchCategory="categoryId" :goToSearchTab="goToSearchTab" />
+                        <Msg v-else-if="isSearched" color="grey" fontSize = "1.5em" style="text-align: center; margin: 0 0 3% 0;">検索したアンケートはヒットしませんでした。</Msg>
                     </div>
                     <InfiniteLoading v-if="!isInfiniteDisabled && n === TAB_NUM1" :questionnaires="nQuestionnaires"
                         @infinite="($state) => load($state, tab)" :immediate-check="false" :reverse="false">
@@ -180,9 +181,10 @@ export default {
 
         // 検索ワード
         const word = ref('');
-
         // 検索カテゴリ
         const categoryNames = ref<string[]>([])
+        // 検索実施ステータス
+        const isSearched = ref(false);
 
         watchEffect(() => {
             if (props.categories && props.categories.length > 0) {
@@ -222,6 +224,7 @@ export default {
             console.log(word)
             console.log(typeName.value)
             props.searchQuestionnaires(typeName.value, word);
+            isSearched.value = true;
         }
 
         return {
@@ -253,6 +256,7 @@ export default {
             categoryId,
             categoryName,
             setCategoryName,
+            isSearched
         }
     }
 }
