@@ -194,7 +194,7 @@ const postAnswer = async (questionId: string, choices: string[]) => {
         });
         const data = await response.json();
         if (response.ok) {
-            
+
         } else {
             console.error('アンケート回答APIの実行中にエラーが発生しました:', response.statusText);
             return { code: data.code, message: data.message };
@@ -262,32 +262,38 @@ const getRecommendQuestionnaires = async (questionId: string) => {
 
 
 // アンケート一覧のStore定義
-export const useQuestionnaires = (target: string, questionId: string) => {
+export const useQuestionnaires = (target: string, tabId: string, questionId: string) => {
 
     const state = ref<ResponseData>({ questionnaires: [], nextToken: '' });
     const isLoading = ref(true);
     const code = ref('');
 
     onMounted(async () => {
-        await updateUserId();
-        switch (target) {
-            // アンケート一覧を取得
-            case TARGET_QUESTIONNAIRES:
-                isLoading.value = true;
-                code.value = '';
-                const qObject = await getQuestionnaires(TAB_ID1);
-                state.value.questionnaires = qObject.questionnaires ? [...qObject.questionnaires] : state.value.questionnaires;
-                state.value.nextToken = qObject.nextToken ? qObject.nextToken : '';
-                isLoading.value = false;
-                code.value = qObject.code ? qObject.code : '';
-                break;
-            // おすすめアンケート一覧を取得
-            case TARGET_RECOMMENDS:
-                state.value = await getRecommendQuestionnaires(questionId);
-                isLoading.value = false;
-                break;
-            default:
-                break;
+        console.log(state.value.questionnaires)
+        if (state.value.questionnaires.length === 0) {
+            console.log("初回ロード")
+            await updateUserId();
+            switch (target) {
+                // アンケート一覧を取得
+                case TARGET_QUESTIONNAIRES:
+                    if (tabId !== TAB_ID4) {
+                        isLoading.value = true;
+                        code.value = '';
+                        const qObject = await getQuestionnaires(tabId);
+                        state.value.questionnaires = qObject.questionnaires ? [...qObject.questionnaires] : state.value.questionnaires;
+                        state.value.nextToken = qObject.nextToken ? qObject.nextToken : '';
+                        isLoading.value = false;
+                        code.value = qObject.code ? qObject.code : '';
+                    }
+                    break;
+                // おすすめアンケート一覧を取得
+                case TARGET_RECOMMENDS:
+                    state.value = await getRecommendQuestionnaires(questionId);
+                    isLoading.value = false;
+                    break;
+                default:
+                    break;
+            }
         }
     });
 
@@ -370,9 +376,10 @@ export const useQuestionnaires = (target: string, questionId: string) => {
                 code.value = postResult.code ? postResult.code : '';
                 return false; // 投稿に失敗した場合は false を返す
             }
-    
+
             // アンケート一覧取得APIを実行
-            if(code.value === '') {
+            if (code.value === '') {
+                resetQuestionnaires();
                 console.log("アンケート投稿後の一覧取得API");
                 const qObject = await getQuestionnaires(TAB_ID1);
                 console.log("アンケート再取得完了");
@@ -385,7 +392,7 @@ export const useQuestionnaires = (target: string, questionId: string) => {
             console.error("アンケート作成中にエラーが発生しました:", error);
             return false; // エラーが発生した場合は false を返す
         }
-    }    
+    }
 
     const resetQuestionnaires = () => {
         if (state.value) {
@@ -419,8 +426,8 @@ export const useQuestionnaire = (questionId: string) => {
         console.log(state.value)
         isLoading.value = false;
         code.value = state.value.code ? state.value.code : '';
-        if(state.value?.enableComment) {
-            
+        if (state.value?.enableComment) {
+
         }
     });
 
@@ -431,7 +438,7 @@ export const useQuestionnaire = (questionId: string) => {
         const postResult = await postAnswer(questionId, choices);
         code.value = postResult.code ? postResult.code : '';
 
-        if(code.value === '') {
+        if (code.value === '') {
             // アンケート回答APIが完了した後にアンケート情報取得APIを実行
             state.value = await getQuestionnaire(questionId);
             code.value = state.value.code ? state.value.code : '';

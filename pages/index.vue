@@ -1,8 +1,9 @@
 <template>
     <SnackBar :snackbar="snackbar" :snackbarText="snackbarText" @update:snackbar="snackbar = $event" :color="errorColor" />
-    <Top :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires"
-        :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire"
-        :answerSearchQuestionnaire="answerSearchQuestionnaire" :resetQuestionnaires="resetQuestionnaires"
+    <Top :nQuestionnaires="nQuestionnaires" :tQuestionnaires="tQuestionnaires" :rQuestionnaires="rQuestionnaires"
+        :sQuestionnaires="sQuestionnaires" :searchQuestionnaires="searchQuestionnaires"
+        :answerNewsQuestionnaire="answerNewsQuestionnaire" :answerTrendQuestionnaire="answerTrendQuestionnaire"
+        :answerRankingQuestionnaire="answerRankingQuestionnaire" :answerSearchQuestionnaire="answerSearchQuestionnaire"
         :categories="categories" :isLoading="isLoading" :load="load" :isInfiniteDisabled="isInfiniteDisabled" />
 </template>
 
@@ -24,7 +25,7 @@ import "v3-infinite-loading/lib/style.css";
 import { mainTheme } from '@/helpers/themes'
 import Top from '@/components/templates/Top.vue'
 import SnackBar from '@/components/molecules/SnackBar.vue'
-import { TARGET_QUESTIONNAIRES, TAB_ID1, TAB_NUM1, MAX_COUNT, ERR_MSG } from '@/constants';
+import { TARGET_QUESTIONNAIRES, TAB_ID1, TAB_NUM1, TAB_ID2, TAB_ID3, TAB_ID4, MAX_COUNT, ERR_MSG } from '@/constants';
 import { Questionnaire } from '~/composables/questionnaireStates';
 
 export default {
@@ -33,39 +34,82 @@ export default {
         SnackBar
     },
     setup() {
-        // アンケート一覧取得
-        const qStore = useQuestionnaires(TARGET_QUESTIONNAIRES, '');
-        const isLoading = qStore.isLoading;
-        const questionnaires = ref<Questionnaire[]>([]);
+        // アンケート一覧取得(新着)
+        const newsStore = useQuestionnaires(TARGET_QUESTIONNAIRES, TAB_ID1, '');   // 新着
+        const isLoading = newsStore.isLoading;
+        const nQuestionnaires = ref<Questionnaire[]>([]);
 
-        watch(() => qStore.state.value.questionnaires, (newVal) => {
-            console.log("アンケート一覧を最新化します。")
-            questionnaires.value = newVal.map(q => ({
+        watch(() => newsStore.state.value.questionnaires, (newVal) => {
+            console.log("アンケート一覧（新着）を最新化します。")
+            nQuestionnaires.value = newVal.map(q => ({
                 ...q,
                 choices: q.choices.map(choice => ({ ...choice })),
                 tags: [...q.tags]  // `tags`を新しい配列に展開
             }));
-            console.log(questionnaires.value)
         }, { deep: true });
 
-        // アンケートタブ切替
-        const changeQuestionnaires = (order: string) => {
-            qStore.changeQuestionnaires(order);
-        }
+        // アンケート一覧取得(急上昇)
+        const trendStore = useQuestionnaires(TARGET_QUESTIONNAIRES, TAB_ID2, '');
+        const tQuestionnaires = ref<Questionnaire[]>([]);
+
+        watch(() => trendStore.state.value.questionnaires, (newVal) => {
+            console.log("アンケート一覧（急上昇）を最新化します。")
+            tQuestionnaires.value = newVal.map(q => ({
+                ...q,
+                choices: q.choices.map(choice => ({ ...choice })),
+                tags: [...q.tags]  // `tags`を新しい配列に展開
+            }));
+        }, { deep: true });
+
+        // アンケート一覧取得(ランキング)
+        const rankingStore = useQuestionnaires(TARGET_QUESTIONNAIRES, TAB_ID3, '');
+        const rQuestionnaires = ref<Questionnaire[]>([]);
+
+        watch(() => rankingStore.state.value.questionnaires, (newVal) => {
+            console.log("アンケート一覧（ランキング）を最新化します。")
+            rQuestionnaires.value = newVal.map(q => ({
+                ...q,
+                choices: q.choices.map(choice => ({ ...choice })),
+                tags: [...q.tags]  // `tags`を新しい配列に展開
+            }));
+        }, { deep: true });
+
+        // アンケート一覧取得(検索)
+        const searchStore = useQuestionnaires(TARGET_QUESTIONNAIRES, TAB_ID4, '');
+        const sQuestionnaires = ref<Questionnaire[]>([]);
+
+        watch(() => searchStore.state.value.questionnaires, (newVal) => {
+            console.log("アンケート一覧（検索）を最新化します。")
+            sQuestionnaires.value = newVal.map(q => ({
+                ...q,
+                choices: q.choices.map(choice => ({ ...choice })),
+                tags: [...q.tags]  // `tags`を新しい配列に展開
+            }));
+        }, { deep: true });
 
         // アンケートタブ検索
         const searchQuestionnaires = (type: string, word: string) => {
-            qStore.searchQuestionnaires(type, word);
+            searchStore.searchQuestionnaires(type, word);
         }
 
-        // アンケート回答
-        const answerQuestionnaire = (id: string, name: string[]) => {
-            qStore.answerQuestionnaire(id, name)
+        // アンケート回答(最新)
+        const answerNewsQuestionnaire = (id: string, name: string[]) => {
+            newsStore.answerQuestionnaire(id, name)
+        }
+
+        // アンケート回答(急上昇)
+        const answerTrendQuestionnaire = (id: string, name: string[]) => {
+            trendStore.answerQuestionnaire(id, name)
+        }
+
+        // アンケート回答(ランキング)
+        const answerRankingQuestionnaire = (id: string, name: string[]) => {
+            rankingStore.answerQuestionnaire(id, name)
         }
 
         // アンケート回答(検索タブ)
         const answerSearchQuestionnaire = (id: string, name: string[], type: string, word: string) => {
-            qStore.answerSearchQuestionnaire(id, name, type, word)
+            searchStore.answerSearchQuestionnaire(id, name, type, word)
         }
 
         // カテゴリ一覧取得
@@ -75,14 +119,14 @@ export default {
         // 続きのアンケート一覧を取得
         const scrollQuestionnaires = async (order: string, nextToken: string) => {
             console.log('==start scrollQuestionnaires===')
-            await qStore.scrollQuestionnaires(order, nextToken)
-            console.log(qStore.state)
+            await newsStore.scrollQuestionnaires(order, nextToken)
+            console.log(newsStore.state)
         };
 
         const isInfiniteDisabled = ref(false); // 無限スクロール制御変数の定義
 
         watchEffect(() => {
-            if (qStore.state.value.nextToken === '') {
+            if (newsStore.state.value.nextToken === '') {
                 isInfiniteDisabled.value = true;
             } else {
                 isInfiniteDisabled.value = false;
@@ -96,18 +140,18 @@ export default {
                 return; // 無限ローディングが無効の場合は関数の処理を終了
             }
             try {
-                if (qStore.state.value.nextToken !== '') {
+                if (newsStore.state.value.nextToken !== '') {
                     console.log("nextTokenあり")
-                    await scrollQuestionnaires(TAB_ID1, qStore.state.value.nextToken);
+                    await scrollQuestionnaires(TAB_ID1, newsStore.state.value.nextToken);
                     $state.loaded();
                 } else {
                     console.log("nextTokenなし")
-                    await scrollQuestionnaires(TAB_ID1, qStore.state.value.nextToken);
+                    await scrollQuestionnaires(TAB_ID1, newsStore.state.value.nextToken);
                     $state.complete();
                     isInfiniteDisabled.value = true;
                 }
                 // 最大件数に達したらローディング完了にする
-                if (questionnaires.length >= MAX_COUNT) {
+                if (nQuestionnaires.value.length >= MAX_COUNT) {
                     $state.complete();
                     isInfiniteDisabled.value = true;
                 } else {
@@ -118,40 +162,33 @@ export default {
             }
         };
 
-        //アンケートのリセット
-        onBeforeUnmount(() => {
-            resetQuestionnaires();
-        });
-
-        // アンケートのリセット
-        const resetQuestionnaires = async () => {
-            await qStore.resetQuestionnaires();
-        }
-
         const snackbar = ref(false); // スナックバーの表示状態
         const snackbarText = ref(''); // スナックバーに表示するテキスト
 
-        // qStoreを監視し、エラーコードがあればスナックバーを表示
+        // newsStoreを監視し、エラーコードがあればスナックバーを表示
         watchEffect(() => {
-            console.log(qStore.code.value)
-            if (qStore.code.value !== '') {
+            console.log(newsStore.code.value)
+            if (newsStore.code.value !== '') {
                 Object.entries(ERR_MSG);
-                snackbarText.value = ERR_MSG[qStore.code.value];
+                snackbarText.value = ERR_MSG[newsStore.code.value];
                 snackbar.value = true;
             }
         });
 
         return {
-            questionnaires,
+            nQuestionnaires,
+            tQuestionnaires,
+            rQuestionnaires,
+            sQuestionnaires,
             isLoading,
-            changeQuestionnaires,
             searchQuestionnaires,
-            answerQuestionnaire,
+            answerNewsQuestionnaire,
+            answerTrendQuestionnaire,
+            answerRankingQuestionnaire,
             answerSearchQuestionnaire,
             categories,
             load,
             isInfiniteDisabled,
-            resetQuestionnaires,
             snackbar,
             snackbarText,
             errorColor: mainTheme.colors?.error

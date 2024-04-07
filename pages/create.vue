@@ -9,7 +9,7 @@
 import { mainTheme } from '@/helpers/themes'
 import CreateForm from '@/components/templates/CreateForm.vue'
 import SnackBar from '@/components/molecules/SnackBar.vue'
-import { TARGET_QUESTIONNAIRES, ERR_MSG } from '@/constants';
+import { TARGET_QUESTIONNAIRES, ERR_MSG, TAB_ID1 } from '@/constants';
 
 export default {
     components: {
@@ -23,7 +23,7 @@ export default {
         const categories = cStore.state;
 
         // アンケート投稿
-        const qStore = useQuestionnaires(TARGET_QUESTIONNAIRES, '');
+        const qStore = useQuestionnaires(TARGET_QUESTIONNAIRES, TAB_ID1, '');
         const createQuestionnaire = async (title: string, choices: string[], categoryId: string, tags: string[], options: object) => {
             await qStore.createQuestionnaire(title, choices, categoryId, tags, options);
         }

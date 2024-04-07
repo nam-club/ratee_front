@@ -1,15 +1,24 @@
 <template>
     <v-tabs v-if="!mobile" v-model="tab" color="primary" dark align-tabs="center" style="margin:4% 0% 0.5% 0%">
-        <v-tab :value="TAB_NUM1" @click="changeTab(TAB_ID1)"><span style="font-size: 1.5em;">{{ TAB_NAME1 }}</span></v-tab>
-        <v-tab :value="TAB_NUM2" @click="changeTab(TAB_ID2)"><span style="font-size: 1.5em;">{{ TAB_NAME2 }}</span></v-tab>
-        <v-tab :value="TAB_NUM3" @click="changeTab(TAB_ID3)"><span style="font-size: 1.5em;">{{ TAB_NAME3 }}</span></v-tab>
-        <v-tab :value="TAB_NUM4" @click="changeTab(TAB_ID4)"><span style="font-size: 1.5em;">{{ TAB_NAME4 }}</span></v-tab>
+        <v-tab :value="TAB_NUM1"><span style="font-size: 1.5em;">{{ TAB_NAME1 }}</span></v-tab>
+        <v-tab :value="TAB_NUM2"><span style="font-size: 1.5em;">{{ TAB_NAME2 }}</span></v-tab>
+        <v-tab :value="TAB_NUM3"><span style="font-size: 1.5em;">{{ TAB_NAME3 }}</span></v-tab>
+        <v-tab :value="TAB_NUM4"><span style="font-size: 1.5em;">{{ TAB_NAME4 }}</span></v-tab>
     </v-tabs>
     <v-card class="bg-secondary-lighten-7" variant="elevated" :class="{ 'back_mobile': mobile, 'back': !mobile }">
         <v-window v-model="tab">
             <v-window-item v-for="n in TAB_LENGTH" :key="n" :value="n">
                 <div v-if="!isLoading">
-                    <div v-if="n === TAB_NUM4">
+                    <QuestionnaireCard v-if="n === TAB_NUM1" style="margin:5%" :questionnaires="nQuestionnaires"
+                        :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerNewsQuestionnaire"
+                        :answerSearchQuestionnaire="answerSearchQuestionnaire" :goToSearchTab="goToSearchTab" />
+                    <QuestionnaireCard v-else-if="n === TAB_NUM2" style="margin:5%" :questionnaires="tQuestionnaires"
+                        :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerTrendQuestionnaire"
+                        :answerSearchQuestionnaire="answerSearchQuestionnaire" :goToSearchTab="goToSearchTab" />
+                    <QuestionnaireCard v-else-if="n === TAB_NUM3" style="margin:5%" :questionnaires="rQuestionnaires"
+                        :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerRankingQuestionnaire"
+                        :answerSearchQuestionnaire="answerSearchQuestionnaire" :goToSearchTab="goToSearchTab" />
+                    <div v-else-if="n === TAB_NUM4">
                         <v-container v-if="!mobile">
                             <v-row>
                                 <v-col cols="2" class="align-self-center">
@@ -18,11 +27,12 @@
                                 </v-col>
                                 <v-col v-if="typeName !== FORM_CATEGORY_TEXT" cols="10" class="align-self-center">
                                     <InputSet type="searchBox" :textModel="word" @input="word = $event"
-                                        :labelText="SEARCH_LABEL" :search="search"/>
+                                        :labelText="SEARCH_LABEL" :search="search" />
                                 </v-col>
                                 <v-col v-else cols="10" class="align-self-center">
-                                    <InputSet type="searchSelectBox" :selectItems="categoryNames" :selectModel="categoryName"
-                                        @update:selectModel="setCategoryName" :search="search" :searchId="categoryId"/>
+                                    <InputSet type="searchSelectBox" :selectItems="categoryNames"
+                                        :selectModel="categoryName" @update:selectModel="setCategoryName" :search="search"
+                                        :searchId="categoryId" />
                                 </v-col>
                             </v-row>
                         </v-container>
@@ -30,20 +40,16 @@
                             <InputSet type="selectBox" :selectItems="SEARCH_TYPES" :selectModel="typeName"
                                 @update:selectModel="setTypeName" />
                             <InputSet v-if="typeName !== FORM_CATEGORY_TEXT" type="searchBox" :textModel="word"
-                                @input="word = $event" :labelText="SEARCH_LABEL"
-                                :search="search" />
+                                @input="word = $event" :labelText="SEARCH_LABEL" :search="search" />
                             <InputSet v-else type="searchSelectBox" :selectItems="categoryNames" :selectModel="categoryName"
                                 @update:selectModel="setCategoryName" :search="search" :searchId="categoryId" />
                         </v-container>
-                        <QuestionnaireCard style="margin:5%" :questionnaires="questionnaires"
+                        <QuestionnaireCard style="margin:5%" :questionnaires="sQuestionnaires"
                             :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire"
                             :answerSearchQuestionnaire="answerSearchQuestionnaire" :searchType="typeName" :searchWord="word"
                             :searchCategory="categoryId" :goToSearchTab="goToSearchTab" />
                     </div>
-                    <QuestionnaireCard v-else style="margin:5%" :questionnaires="questionnaires"
-                        :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire"
-                        :answerSearchQuestionnaire="answerSearchQuestionnaire" :goToSearchTab="goToSearchTab" />
-                    <InfiniteLoading v-if="!isInfiniteDisabled" :questionnaires="questionnaires"
+                    <InfiniteLoading v-if="!isInfiniteDisabled && n === TAB_NUM1" :questionnaires="nQuestionnaires"
                         @infinite="($state) => load($state, tab)" :immediate-check="false" :reverse="false">
                         <template #spinner>
                             <div class="text-center" style="padding:10%">
@@ -64,10 +70,10 @@
     </v-card>
     <v-tabs v-if="mobile" v-model="tab" class="footer bg-background" color="primary" dark align-tabs="center"
         style="text-decoration: none; color: inherit;">
-        <v-tab :value="TAB_NUM1" @click="changeTab(TAB_ID1)"><span style="font-size: 1em;">{{ TAB_NAME1 }}</span></v-tab>
-        <v-tab :value="TAB_NUM2" @click="changeTab(TAB_ID2)"><span style="font-size: 1em;">{{ TAB_NAME2 }}</span></v-tab>
-        <v-tab :value="TAB_NUM3" @click="changeTab(TAB_ID3)"><span style="font-size: 1em;">{{ TAB_NAME3 }}</span></v-tab>
-        <v-tab :value="TAB_NUM4" @click="changeTab(TAB_ID4)"><span style="font-size: 1em;">{{ TAB_NAME4 }}</span></v-tab>
+        <v-tab :value="TAB_NUM1"><span style="font-size: 1em;">{{ TAB_NAME1 }}</span></v-tab>
+        <v-tab :value="TAB_NUM2"><span style="font-size: 1em;">{{ TAB_NAME2 }}</span></v-tab>
+        <v-tab :value="TAB_NUM3"><span style="font-size: 1em;">{{ TAB_NAME3 }}</span></v-tab>
+        <v-tab :value="TAB_NUM4"><span style="font-size: 1em;">{{ TAB_NAME4 }}</span></v-tab>
     </v-tabs>
 </template>
 
@@ -108,26 +114,35 @@ export default {
         QuestionnaireCard
     },
     props: {
-        questionnaires: {
+        nQuestionnaires: {
             type: Array as PropType<Questionnaire[]>
         },
-        changeQuestionnaires: {
-            type: Function,
-            required: true
+        tQuestionnaires: {
+            type: Array as PropType<Questionnaire[]>
+        },
+        rQuestionnaires: {
+            type: Array as PropType<Questionnaire[]>
+        },
+        sQuestionnaires: {
+            type: Array as PropType<Questionnaire[]>
         },
         searchQuestionnaires: {
             type: Function,
             required: true
         },
-        answerQuestionnaire: {
+        answerNewsQuestionnaire: {
+            type: Function,
+            required: true
+        },
+        answerTrendQuestionnaire: {
+            type: Function,
+            required: true
+        },
+        answerRankingQuestionnaire: {
             type: Function,
             required: true
         },
         answerSearchQuestionnaire: {
-            type: Function,
-            required: true
-        },
-        resetQuestionnaires: {
             type: Function,
             required: true
         },
@@ -193,14 +208,6 @@ export default {
         // タブの値をリアクティブにする
         const tab = ref<number | null>(null);
 
-        // タブを移動する
-        const changeTab = async (id: string) => {
-            await props.resetQuestionnaires();
-            if (tab.value !== TAB_NUM4) {
-                await props.changeQuestionnaires(id);
-            }
-        }
-
         // タグを押下して検索タブに移動する関数
         const goToSearchTab = (value: string) => {
             if (tab.value !== TAB_NUM4) {
@@ -221,7 +228,6 @@ export default {
             mobile,
             icons,
             tab,
-            changeTab,
             search,
             goToSearchTab,
             TAB_LENGTH,

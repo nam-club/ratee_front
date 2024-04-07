@@ -1,10 +1,12 @@
 <template>
     <v-app class="bg-secondary-lighten-6" style="display: flex; flex-direction: column;">
         <Header />
-        <ContentsView :questionnaires="questionnaires" :changeQuestionnaires="changeQuestionnaires"
-         :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire" 
-         :answerSearchQuestionnaire="answerSearchQuestionnaire" :resetQuestionnaires="resetQuestionnaires" 
-         :categories="categories" :isLoading="isLoading" :load="load" :isInfiniteDisabled="isInfiniteDisabled" />
+        <ContentsView :nQuestionnaires="nQuestionnaires" :tQuestionnaires="tQuestionnaires"
+            :rQuestionnaires="rQuestionnaires" :sQuestionnaires="sQuestionnaires"
+            :searchQuestionnaires="searchQuestionnaires" :answerNewsQuestionnaire="answerNewsQuestionnaire"
+            :answerTrendQuestionnaire="answerTrendQuestionnaire" :answerRankingQuestionnaire="answerRankingQuestionnaire"
+            :answerSearchQuestionnaire="answerSearchQuestionnaire" :categories="categories" :isLoading="isLoading"
+            :load="load" :isInfiniteDisabled="isInfiniteDisabled" />
         <Footer :buttonText="footerButtonText" />
     </v-app>
 </template>
@@ -24,18 +26,31 @@ export default defineComponent({
         Footer
     },
     props: {
-        questionnaires: {
+        nQuestionnaires: {
             type: Array as PropType<Questionnaire[]>
         },
-        changeQuestionnaires: {
-            type: Function,
-            required: true
+        tQuestionnaires: {
+            type: Array as PropType<Questionnaire[]>
+        },
+        rQuestionnaires: {
+            type: Array as PropType<Questionnaire[]>
+        },
+        sQuestionnaires: {
+            type: Array as PropType<Questionnaire[]>
         },
         searchQuestionnaires: {
             type: Function,
             required: true
         },
-        answerQuestionnaire: {
+        answerNewsQuestionnaire: {
+            type: Function,
+            required: true
+        },
+        answerTrendQuestionnaire: {
+            type: Function,
+            required: true
+        },
+        answerRankingQuestionnaire: {
             type: Function,
             required: true
         },
@@ -46,10 +61,6 @@ export default defineComponent({
         categories: {
             type: Array as PropType<Category[]>,
             required: true,
-        },
-        resetQuestionnaires: {
-            type: Function,
-            required: true
         },
         isLoading: {
             type: Boolean,
@@ -69,14 +80,15 @@ export default defineComponent({
 
         watchEffect(() => {
             console.log("===Topコンポーネント===")
-            console.log(props.questionnaires)
-            console.log(props.isInfiniteDisabled)
+            console.log(props.nQuestionnaires)
+            console.log(props.tQuestionnaires)
+            console.log(props.rQuestionnaires)
         });
 
         return {
             footerButtonText,
         }
     },
-    
+
 })
 </script>

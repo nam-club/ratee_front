@@ -112,7 +112,7 @@ export default defineComponent({
         }
 
         // おすすめアンケート一覧取得
-        const rStore = useQuestionnaires(TARGET_RECOMMENDS, questionId);
+        const rStore = useQuestionnaires(TARGET_RECOMMENDS, '', questionId);
         const recommends = rStore.state.value.questionnaires;
 
         // 時系列チャート取得
