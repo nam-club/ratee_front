@@ -171,6 +171,10 @@ export default defineComponent({
             scales: {
                 x: {
                     display: false, // x軸の目盛りと数値を非表示にする
+                    grid: {
+                        drawBorder: false, // x軸の境界線を非表示にする
+                        display: false, // x軸のグリッド線を非表示にする
+                    }
                 },
                 y: {
                     ticks: {
@@ -178,6 +182,10 @@ export default defineComponent({
                             family: "'Kosugi Maru'", // y軸のラベルにフォントを適用
                             size: 14
                         }
+                    },
+                    grid: {
+                        drawBorder: false, // y軸の境界線を非表示にする
+                        display: false, // y軸のグリッド線を非表示にする
                     }
                 }
             },
