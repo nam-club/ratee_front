@@ -48,7 +48,7 @@
                             :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerQuestionnaire"
                             :answerSearchQuestionnaire="answerSearchQuestionnaire" :searchType="typeName" :searchWord="word"
                             :searchCategory="categoryId" :goToSearchTab="goToSearchTab" />
-                        <Msg v-else-if="isSearched" color="grey" fontSize = "1.5em" style="text-align: center; margin: 0 0 3% 0;">検索したアンケートはヒットしませんでした。</Msg>
+                        <Msg v-else-if="isSearched" color="grey" fontSize = "1.5em" style="text-align: center; margin: 0 0 3% 0;">{{ SEARCH_NOT_FOUND }}</Msg>
                     </div>
                     <InfiniteLoading v-if="!isInfiniteDisabled && n === TAB_NUM1" :questionnaires="nQuestionnaires"
                         @infinite="($state) => load($state, tab)" :immediate-check="false" :reverse="false">
@@ -59,7 +59,7 @@
                             </div>
                         </template>
                         <template #complete>
-                            <span>読み込み終了</span>
+                            <span>{{ LOADING_END }}</span>
                         </template>
                     </InfiniteLoading>
                 </div>
@@ -105,7 +105,7 @@ import InfiniteLoading from "v3-infinite-loading";
 import "v3-infinite-loading/lib/style.css";
 import InputSet from '@/components/molecules/InputSet.vue'
 import QuestionnaireCard from '~/components/organisms/QuestionnaireCard.vue'
-import { TAB_LENGTH, TAB_ID1, TAB_NAME1, TAB_NUM1, TAB_ID2, TAB_NAME2, TAB_NUM2, TAB_ID3, TAB_NAME3, TAB_NUM3, TAB_ID4, TAB_NAME4, TAB_NUM4, FORM_TITLE_TEXT, FORM_CATEGORY_TEXT, FORM_TAG_TEXT, SEARCH_LABEL, SEARCH_TYPES } from '@/constants';
+import { TAB_LENGTH, TAB_ID1, TAB_NAME1, TAB_NUM1, TAB_ID2, TAB_NAME2, TAB_NUM2, TAB_ID3, TAB_NAME3, TAB_NUM3, TAB_ID4, TAB_NAME4, TAB_NUM4, FORM_TITLE_TEXT, FORM_CATEGORY_TEXT, FORM_TAG_TEXT, SEARCH_LABEL, SEARCH_TYPES, LOADING_END, SEARCH_NOT_FOUND } from '@/constants';
 import { Category } from '@/types';
 
 export default {
@@ -249,6 +249,8 @@ export default {
             FORM_CATEGORY_TEXT,
             SEARCH_LABEL,
             SEARCH_TYPES,
+            LOADING_END,
+            SEARCH_NOT_FOUND,
             typeName,
             setTypeName,
             word,

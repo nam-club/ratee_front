@@ -15,7 +15,7 @@
             <v-row class="justify-center" v-if="findChoicesByQuestionnaireId(questionnaire.id).length !== 0">
                 <v-col class="text-end">
                     <Button :textColor="confirmBtnTextColor" :variant="btnVariant" :buttonStyle="confirmBtnStyle"
-                        :onClick="() => answerQuestionnaire(questionnaire.id, findChoicesByQuestionnaireId(questionnaire.id))">確定</Button>
+                        :onClick="() => answerQuestionnaire(questionnaire.id, findChoicesByQuestionnaireId(questionnaire.id))">{{ CONFIRM_BUTTON }}</Button>
                 </v-col>
             </v-row>
         </div>
@@ -46,7 +46,7 @@
             <v-row class="justify-center" v-if="findChoicesByQuestionnaireId(questionnaire.id).length !== 0">
                 <v-col class="text-end">
                     <Button :textColor="confirmBtnTextColor" :variant="btnVariant" :buttonStyle="confirmBtnStyle"
-                        :onClick="() => answerQuestionnaire(questionnaire.id, findChoicesByQuestionnaireId(questionnaire.id))">確定</Button>
+                        :onClick="() => answerQuestionnaire(questionnaire.id, findChoicesByQuestionnaireId(questionnaire.id))">{{ CONFIRM_BUTTON }}</Button>
                 </v-col>
             </v-row>
         </div>
@@ -75,7 +75,7 @@ import { useDisplay } from 'vuetify'
 
 import { mainTheme } from '@/helpers/themes'
 import Button from '@/components/atoms/Button.vue'
-import { FORM_TITLE_TEXT, FORM_CATEGORY_TEXT, FORM_TAG_TEXT } from '@/constants';
+import { FORM_TITLE_TEXT, FORM_CATEGORY_TEXT, FORM_TAG_TEXT, CONFIRM_BUTTON } from '@/constants';
 
 export default defineComponent({
     components: {
@@ -174,6 +174,7 @@ export default defineComponent({
         return {
             mobile,
             FORM_TAG_TEXT,
+            CONFIRM_BUTTON,
             btnColor,
             btnTextColor,
             btnVariant,

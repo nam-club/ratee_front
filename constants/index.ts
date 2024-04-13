@@ -11,6 +11,11 @@ export const MENUS = [
     {title: "アンケート作成", path: "/create", icon: mdiPencilBox}
 ];
 
+/** 共通 */
+export const CONFIRM_BUTTON = "確定";
+export const CANCEL_BUTTON = "キャンセル";
+export const LOADING_END = "読み込み終了";
+
 /** タブ */
 export const TAB_LENGTH = 4; // タブの数（一覧画面）
 export const TAB_ID1 = "news";
@@ -26,11 +31,19 @@ export const TAB_ID4 = "search";
 export const TAB_NAME4 = "検索";
 export const TAB_NUM4 = 4;
 
+/** アンケート詳細画面 */
+export const DETAIL_BUTTON = "詳細を見る";
 export const DETAIL_TAB_LENGTH = 2; // タブの数（詳細画面）
 export const DETAIL_TAB_NAME1 = "投票数";
 export const DETAIL_TAB_NUM1 = 1;
 export const DETAIL_TAB_NAME2 = "投票推移";
 export const DETAIL_TAB_NUM2 = 2;
+
+export const RECOMMEND_TITLE = "あなたにおすすめのアンケート";
+
+/** コメントボックス */
+export const COMMENT_TITLE = "コメント";
+export const COMMENT_BUTTON = "コメントを投稿する";
 
 /** アンケート作成フォーム */
 export const FORM_CAPTION_REQUIRED_LABEL = "必須";
@@ -43,16 +56,17 @@ export const FORM_TAG_TEXT = "タグ";
 export const FORM_TAG_LABEL = "追加したいタグを入力してください。";
 export const FORM_COMMENT_LABEL = "コメントを有効にする";
 export const FORM_MULTI_LABEL = "複数の回答を有効にする";
+export const FORM_CONFIRM_BUTTON = "確認画面を開く";
+export const FORM_CONFIRM_TITLE = "確認画面";
+export const FORM_POST_BUTTON = "投稿する";
 
 /** 検索ボックス */
 export const SEARCH_LABEL = "検索ワードを入力";
 export const SEARCH_TYPES = [FORM_TITLE_TEXT, FORM_CATEGORY_TEXT, FORM_TAG_TEXT];
+export const SEARCH_NOT_FOUND = "検索したアンケートはヒットしませんでした。";
 
 /** アンケート・コメント取得件数 */
 export const MAX_COUNT = 9999;
-
-/** コメントボックス */
-export const COMMENT_BUTTON = "コメントを投稿する";
 
 /** バリデーションチェック */
 export const TITLE_MIN_LENGTH = 4; // アンケート質問の最低文字数

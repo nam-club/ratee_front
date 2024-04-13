@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-container>
-            <Msg fontWeight="normal" fontSize="1.5em" style="margin:2% 0">あなたにおすすめのアンケート</Msg>
+            <Msg fontWeight="normal" fontSize="1.5em" style="margin:2% 0">{{ RECOMMEND_TITLE }}</Msg>
             <v-row>
                 <v-col v-for="(recommend, index) in recommends" :key="index" cols="12" sm="4">
                     <nuxt-link :to="`/questionnaire/${recommend.id}`" style="text-decoration: none; color: inherit;">
@@ -18,6 +18,7 @@
 <script lang="ts">
 import Msg from '@/components/atoms/Msg.vue'
 import { Questionnaire } from '~/composables/questionnaireStates';
+import { RECOMMEND_TITLE } from '@/constants';
 
 export default defineComponent({
     components: {
@@ -32,6 +33,7 @@ export default defineComponent({
         const btnStyle = ref({ width: '100%'});
 
         return {
+            RECOMMEND_TITLE,
             btnStyle
         }
     }

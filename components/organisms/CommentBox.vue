@@ -5,7 +5,7 @@
                 <v-container v-if="!mobile">
                     <v-row v-if="comments && comments.length !== 0">
                         <v-col cols="6">
-                            <Msg fontWeight="normal" fontSize="1.5em">コメント</Msg>
+                            <Msg fontWeight="normal" fontSize="1.5em">{{ COMMENT_TITLE }}</Msg>
                         </v-col>
                         <v-col cols="6" class="text-end">
                             <Button :variant="btnVariant" @click="openDialog">
@@ -38,7 +38,7 @@
                             </div>
                         </template>
                         <template #complete>
-                            <span>読み込み終了</span>
+                            <span>{{ LOADING_END }}</span>
                         </template>
                     </InfiniteLoading>
                 </v-container>
@@ -46,7 +46,7 @@
                 <v-container v-else>
                     <v-row v-if="comments && comments.length !== 0">
                         <v-col cols="6">
-                            <Msg fontWeight="normal" fontSize="1.5em">コメント</Msg>
+                            <Msg fontWeight="normal" fontSize="1.5em">{{ COMMENT_TITLE }}</Msg>
                         </v-col>
                         <v-col cols="6" class="text-end">
                             <IconButton :icon="icons.mdiCommentPlus" :size="large" :variant="btnVariant"
@@ -78,7 +78,7 @@
                             </div>
                         </template>
                         <template #complete>
-                            <span>読み込み終了</span>
+                            <span>{{ LOADING_END }}</span>
                         </template>
                     </InfiniteLoading>
                 </v-container>
@@ -111,7 +111,7 @@
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="grey darken-1" text @click="dialog = false" style="margin: 0 2%">
-                    戻る
+                    {{ CANCEL_BUTTON }}
                 </v-btn>
                 <v-btn color="blue darken-1" text @click="dialog = false"
                     :onClick="() => postComment(questionId, iconNum, content)" :disabled="errFlg">
@@ -133,7 +133,7 @@ import IconButton from '@/components/atoms/IconButton.vue'
 import Msg from '@/components/atoms/Msg.vue'
 import InputSet from '@/components/molecules/InputSet.vue'
 import {
-    COMMENT_MIN_LENGTH, COMMENT_MAX_LENGTH, COMMENT_NULL_TEXT, COMMENT_BUTTON
+    COMMENT_MIN_LENGTH, COMMENT_MAX_LENGTH, COMMENT_NULL_TEXT, COMMENT_BUTTON, COMMENT_TITLE, LOADING_END, CANCEL_BUTTON
 } from '@/constants';
 
 export default defineComponent({
@@ -208,10 +208,13 @@ export default defineComponent({
         const commentLabel = ref(COMMENT_NULL_TEXT);
 
         return {
+            COMMENT_BUTTON,
+            COMMENT_TITLE,
+            LOADING_END,
+            CANCEL_BUTTON,
             mobile,
             icons,
             btnVariant,
-            COMMENT_BUTTON,
             confirmBtnColor,
             confirmBtnTextColor,
             dialog,

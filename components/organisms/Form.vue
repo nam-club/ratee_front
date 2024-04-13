@@ -28,14 +28,14 @@
                                     <v-col cols="5" justify="center">
                                         <nuxt-link to="/" style="text-decoration: none; color: inherit;">
                                             <Button :color="cancelBtnColor" :textColor="cancelBtnTextColor"
-                                                :variant="cancelBtnVariant" :buttonStyle="cancelBtnStyle">キャンセル</Button>
+                                                :variant="cancelBtnVariant" :buttonStyle="cancelBtnStyle">{{ CANCEL_BUTTON }}</Button>
                                         </nuxt-link>
                                     </v-col>
                                     <v-col cols="2" />
                                     <v-col cols="5" justify="center">
                                         <Button :color="confirmBtnColor" :textColor="confirmBtnTextColor"
                                             :variant="confirmBtnVariant" :buttonStyle="confirmBtnStyle" @click="openDialog"
-                                            :disabled="errFlg">確認画面を開く</Button>
+                                            :disabled="errFlg">{{ FORM_CONFIRM_BUTTON }}</Button>
                                     </v-col>
                                 </v-row>
                             </v-container>
@@ -43,7 +43,7 @@
                     </template>
                     <v-card>
                         <v-toolbar dark color="secondary">
-                            <v-toolbar-title>確認画面</v-toolbar-title>
+                            <v-toolbar-title>{{ FORM_CONFIRM_TITLE }}</v-toolbar-title>
                             <v-spacer></v-spacer>
                         </v-toolbar>
                         <v-divider></v-divider>
@@ -66,13 +66,13 @@
                                 <v-col cols="5" justify="center">
                                     <Button :color="cancelBtnColor" :textColor="cancelBtnTextColor"
                                         :variant="cancelBtnVariant" :buttonStyle="cancelBtnStyle"
-                                        @click="dialog = false">キャンセル</Button>
+                                        @click="dialog = false">{{ CANCEL_BUTTON }}</Button>
                                 </v-col>
                                 <v-col cols="2" />
                                 <v-col cols="5" justify="center">
                                     <Button :color="confirmBtnColor" :textColor="confirmBtnTextColor"
                                         :buttonStyle="confirmBtnStyle" :variant="confirmBtnVariant"
-                                        @click="onSubmit">投稿する</Button>
+                                        @click="onSubmit">{{ FORM_POST_BUTTON }}</Button>
                                 </v-col>
                             </v-row>
                         </v-container>
@@ -109,14 +109,14 @@
                                     <v-col cols="5" justify="center">
                                         <nuxt-link to="/" style="text-decoration: none; color: inherit;">
                                             <Button :color="cancelBtnColor" :textColor="cancelBtnTextColor"
-                                                :variant="cancelBtnVariant" :buttonStyle="cancelBtnStyle">キャンセル</Button>
+                                                :variant="cancelBtnVariant" :buttonStyle="cancelBtnStyle">{{ CANCEL_BUTTON }}</Button>
                                         </nuxt-link>
                                     </v-col>
                                     <v-col cols="2" />
                                     <v-col cols="5" justify="center">
                                         <Button :color="confirmBtnColor" :textColor="confirmBtnTextColor"
                                             :variant="confirmBtnVariant" :buttonStyle="confirmBtnStyle" @click="openDialog"
-                                            :disabled="errFlg">確認画面を開く</Button>
+                                            :disabled="errFlg">{{ FORM_CONFIRM_BUTTON }}</Button>
                                     </v-col>
                                 </v-row>
                             </v-container>
@@ -124,7 +124,7 @@
                     </template>
                     <v-card>
                         <v-toolbar dark color="secondary">
-                            <v-toolbar-title>確認画面</v-toolbar-title>
+                            <v-toolbar-title>{{ FORM_CONFIRM_TITLE }}</v-toolbar-title>
                             <v-spacer></v-spacer>
                         </v-toolbar>
                         <v-divider></v-divider>
@@ -147,13 +147,13 @@
                                 <v-col cols="5" justify="center">
                                     <Button :color="cancelBtnColor" :textColor="cancelBtnTextColor"
                                         :variant="cancelBtnVariant" :buttonStyle="cancelBtnStyle"
-                                        @click="dialog = false">キャンセル</Button>
+                                        @click="dialog = false">{{ CANCEL_BUTTON }}</Button>
                                 </v-col>
                                 <v-col cols="2" />
                                 <v-col cols="5" justify="center">
                                     <Button :color="confirmBtnColor" :textColor="confirmBtnTextColor"
                                         :buttonStyle="confirmBtnStyle" :variant="confirmBtnVariant"
-                                        @click="onSubmit">投稿する</Button>
+                                        @click="onSubmit">{{ FORM_POST_BUTTON }}</Button>
                                 </v-col>
                             </v-row>
                         </v-container>
@@ -189,8 +189,8 @@ import Paragraph from '@/components/molecules/Paragraph.vue'
 import { Category } from '@/types';
 import {
     FORM_CAPTION_REQUIRED_LABEL,
-    FORM_TITLE_TEXT, FORM_TITLE_LABEL, FORM_CHOICE_TEXT, FORM_ADD_CHOICE_TEXT, FORM_CATEGORY_TEXT, FORM_TAG_TEXT, FORM_TAG_LABEL, FORM_COMMENT_LABEL, FORM_MULTI_LABEL, FORM_ERR_TITLE, FORM_ERR_TEXT,
-    TITLE_MIN_LENGTH, TITLE_MAX_LENGTH, CHOICE_MIN_LENGTH, CHOICE_MAX_LENGTH, CHOICES_MAX_LENGTH, CHOICES_MIN_LENGTH, TAG_MIN_LENGTH, TAG_MAX_LENGTH, TAGS_MAX_LENGTH, TAGS_MIN_LENGTH
+    FORM_TITLE_TEXT, FORM_TITLE_LABEL, FORM_CHOICE_TEXT, FORM_ADD_CHOICE_TEXT, FORM_CATEGORY_TEXT, FORM_TAG_TEXT, FORM_TAG_LABEL, FORM_COMMENT_LABEL, FORM_MULTI_LABEL, FORM_ERR_TITLE, FORM_ERR_TEXT, FORM_CONFIRM_BUTTON, FORM_CONFIRM_TITLE,
+    TITLE_MIN_LENGTH, TITLE_MAX_LENGTH, CHOICE_MIN_LENGTH, CHOICE_MAX_LENGTH, CHOICES_MAX_LENGTH, CHOICES_MIN_LENGTH, TAG_MIN_LENGTH, TAG_MAX_LENGTH, TAGS_MAX_LENGTH, TAGS_MIN_LENGTH, CANCEL_BUTTON, FORM_POST_BUTTON
 } from '@/constants';
 
 export default defineComponent({
@@ -325,26 +325,33 @@ export default defineComponent({
             mobile,
             FORM_TITLE_TEXT,
             FORM_TITLE_LABEL,
+            FORM_CHOICE_TEXT,
+            FORM_ADD_CHOICE_TEXT,
+            FORM_CATEGORY_TEXT,
+            FORM_TAG_TEXT,
+            FORM_TAG_LABEL,
+            FORM_COMMENT_LABEL,
+            FORM_MULTI_LABEL,
+            FORM_ERR_TITLE,
+            FORM_ERR_TEXT,
+            FORM_CAPTION_REQUIRED_LABEL,
+            FORM_CONFIRM_BUTTON,
+            FORM_CONFIRM_TITLE,
+            CANCEL_BUTTON,
+            FORM_POST_BUTTON,
             title,
             titleRule,
-            FORM_CHOICE_TEXT,
             choiceStyle,
             choices,
             choiceRule,
             hasDuplicateChoices,
-            FORM_ADD_CHOICE_TEXT,
-            FORM_CATEGORY_TEXT,
             categoryNames,
             categoryId,
             categoryName,
             setCategoryName,
-            FORM_TAG_TEXT,
-            FORM_TAG_LABEL,
             tags,
             tagRule,
-            FORM_COMMENT_LABEL,
             enableComment,
-            FORM_MULTI_LABEL,
             enableMultiAns,
             options,
             cancelBtnStyle,
@@ -360,9 +367,6 @@ export default defineComponent({
             paragraphStyle,
             switchStyle,
             errFlg,
-            FORM_ERR_TITLE,
-            FORM_ERR_TEXT,
-            FORM_CAPTION_REQUIRED_LABEL,
             onSubmit,
             isLoading
         }

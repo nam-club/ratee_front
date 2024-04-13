@@ -14,7 +14,7 @@
                                 <v-col cols="4" class="text-end">
                                     <nuxt-link :to="`/questionnaire/${questionnaire.id}`">
                                         <Button :textColor="detailBtnTextColor" :variant="btnVariant">
-                                            詳細を見る
+                                            {{ DETAIL_BUTTON }}
                                         </Button>
                                     </nuxt-link>
                                 </v-col>
@@ -103,7 +103,7 @@ import Button from '@/components/atoms/Button.vue'
 import AnswerBox from '@/components/organisms/AnswerBox.vue'
 import QuestionnaireBarChart from '@/components/organisms/QuestionnaireBarChart.vue'
 import { Questionnaire } from '~/composables/questionnaireStates';
-import { FORM_TAG_TEXT } from '@/constants';
+import { FORM_TAG_TEXT, DETAIL_BUTTON } from '@/constants';
 
 export default defineComponent({
     components: {
@@ -187,6 +187,7 @@ export default defineComponent({
             mobile,
             icons,
             FORM_TAG_TEXT,
+            DETAIL_BUTTON,
             btnVariant,
             iconBtnVariant,
             detailBtnTextColor,
