@@ -17,7 +17,7 @@
                         :answerSearchQuestionnaire="answerSearchQuestionnaire" :goToSearchTab="goToSearchTab" />
                     <QuestionnaireCard v-else-if="n === TAB_NUM3" style="margin:5%" :questionnaires="rQuestionnaires"
                         :searchQuestionnaires="searchQuestionnaires" :answerQuestionnaire="answerRankingQuestionnaire"
-                        :answerSearchQuestionnaire="answerSearchQuestionnaire" :goToSearchTab="goToSearchTab" />
+                        :answerSearchQuestionnaire="answerSearchQuestionnaire" :goToSearchTab="goToSearchTab" :verticalDisplay="true" />
                     <div v-else-if="n === TAB_NUM4">
                         <v-container v-if="!mobile">
                             <v-row>

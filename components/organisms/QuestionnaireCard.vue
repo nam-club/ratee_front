@@ -1,5 +1,5 @@
 <template>
-    <v-row v-if="!mobile">
+    <v-row v-if="!mobile && !verticalDisplay">
         <v-col cols="4" v-for="(questionnaire, index) in questionnaires" :key="index">
             <v-card>
                 <v-container>
@@ -96,6 +96,8 @@
 <script lang="ts">
 import { useDisplay } from 'vuetify'
 import { mdiChevronRight } from '@mdi/js';
+import { Scale } from 'chart.js';
+
 
 import { mainTheme } from '@/helpers/themes'
 import Msg from '@/components/atoms/Msg.vue'
@@ -146,6 +148,10 @@ export default defineComponent({
         goToSearchTab: {
             type: Function,
             required: true
+        },
+        verticalDisplay: {
+            type: Boolean,
+            default: false
         }
     },
     setup() {
@@ -157,6 +163,12 @@ export default defineComponent({
         const btnVariant = ref("text");
         const iconBtnVariant = ref("text");
         const detailBtnTextColor = ref(mainTheme.colors!.primary);
+
+        // ウィンドウ幅の変更時にリサイズ
+        const windowWidth = ref(window.innerWidth);
+        window.addEventListener('resize', () => {
+            windowWidth.value = window.innerWidth;
+        });
 
         const options = computed(() => ({
             responsive: true,
@@ -180,8 +192,10 @@ export default defineComponent({
                     ticks: {
                         font: {
                             family: "'Kosugi Maru'", // y軸のラベルにフォントを適用
-                            size: 14
-                        }
+                            // ウィンドウ幅に応じてフォントサイズを動的に調整
+                            size: windowWidth.value > 800 ? 14 : 12
+                        },
+                        autoSkip: false,
                     },
                     grid: {
                         drawBorder: false, // y軸の境界線を非表示にする
