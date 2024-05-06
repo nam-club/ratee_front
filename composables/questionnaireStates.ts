@@ -343,7 +343,7 @@ export const useQuestionnaires = (target: string, tabId: string, questionId: str
         console.log(postResult.code)
 
         // アンケート回答APIが完了した後にアンケート一覧取得APIを実行
-        if (postResult.code === '') {
+        if (code.value === '') {
             const qObject = await getQuestionnaires(TAB_ID1);
             state.value.questionnaires = qObject.questionnaires ? [...qObject.questionnaires] : state.value.questionnaires;
             state.value.nextToken = qObject.nextToken ? qObject.nextToken : '';
@@ -359,7 +359,7 @@ export const useQuestionnaires = (target: string, tabId: string, questionId: str
         code.value = postResult.code ? postResult.code : '';
 
         // アンケート回答APIが完了した後にアンケート一覧取得API（検索）を実行
-        if (postResult.code === '') {
+        if (code.value === '') {
             const qObject = await getSearchQuestionnaires(type, word);
             state.value.questionnaires = qObject.questionnaires ? [...qObject.questionnaires] : state.value.questionnaires;
             state.value.nextToken = qObject.nextToken ? qObject.nextToken : '';
