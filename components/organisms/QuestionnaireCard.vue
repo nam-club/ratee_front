@@ -236,8 +236,6 @@ export default defineComponent({
                     ticks: {
                         font: {
                             family: "'Kosugi Maru'", // y軸のラベルにフォントを適用
-                            // ウィンドウ幅に応じてフォントサイズを動的に調整
-                            size: windowWidth.value > 800 ? 14 : 12
                         },
                         autoSkip: false,
                     },
