@@ -5,6 +5,7 @@ import vuetify from 'vite-plugin-vuetify'
 export default defineNuxtConfig({
     head: {
         link: [
+            { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
             // M PLUS Rounded 1c
             //{ rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=M+PLUS+1p&family=M+PLUS+Rounded+1c&display=swap' },
             // Kosugi Maru
