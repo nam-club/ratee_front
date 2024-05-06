@@ -340,7 +340,6 @@ export const useQuestionnaires = (target: string, tabId: string, questionId: str
         code.value = '';
         const postResult = await postAnswer(questionId, choices);
         code.value = postResult.code ? postResult.code : '';
-        console.log(postResult.code)
 
         // アンケート回答APIが完了した後にアンケート一覧取得APIを実行
         if (code.value === '') {
