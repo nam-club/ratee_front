@@ -194,7 +194,7 @@ const postAnswer = async (questionId: string, choices: string[]) => {
         });
         const data = await response.json();
         if (response.ok) {
-
+            return { code: '', message: '' };
         } else {
             console.error('アンケート回答APIの実行中にエラーが発生しました:', response.statusText);
             return { code: data.code, message: data.message };
