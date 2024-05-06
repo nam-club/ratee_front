@@ -6,6 +6,7 @@
 </template>
 
 <script lang="ts">
+import { useRouter } from 'vue-router';
 import { mainTheme } from '@/helpers/themes'
 import CreateForm from '@/components/templates/CreateForm.vue'
 import SnackBar from '@/components/molecules/SnackBar.vue'
@@ -18,6 +19,8 @@ export default {
     },
 
     setup() {
+        const router = useRouter();
+        
         // カテゴリ一覧取得
         const cStore = useCategories();
         const categories = cStore.state;
@@ -26,6 +29,9 @@ export default {
         const qStore = useQuestionnaires(TARGET_QUESTIONNAIRES, TAB_ID1, '');
         const createQuestionnaire = async (title: string, choices: string[], categoryId: string, tags: string[], options: object) => {
             await qStore.createQuestionnaire(title, choices, categoryId, tags, options);
+            if (qStore.code.value === '') {
+                router.push('/');
+            }
         }
 
         const snackbar = ref(false); // スナックバーの表示状態

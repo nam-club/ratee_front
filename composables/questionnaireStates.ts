@@ -372,14 +372,10 @@ export const useQuestionnaires = (target: string, tabId: string, questionId: str
             code.value = '';
             // アンケート投稿APIを実行し、成功したかどうかを確認
             const postResult = await postQuestionnaire(title, choices, categoryId, tags, options);
-            if (postResult.code !== '') {
-                code.value = postResult.code ? postResult.code : '';
-                return false; // 投稿に失敗した場合は false を返す
-            }
+            code.value = postResult.code ? postResult.code : '';
 
             // アンケート一覧取得APIを実行
             if (code.value === '') {
-                resetQuestionnaires();
                 console.log("アンケート投稿後の一覧取得API");
                 const qObject = await getQuestionnaires(TAB_ID1);
                 console.log("アンケート再取得完了");
@@ -387,17 +383,10 @@ export const useQuestionnaires = (target: string, tabId: string, questionId: str
                 state.value.nextToken = qObject.nextToken ? qObject.nextToken : '';
                 code.value = qObject.code ? qObject.code : '';
             }
-            return true; // 成功時に true を返す
+
         } catch (error) {
             console.error("アンケート作成中にエラーが発生しました:", error);
             return false; // エラーが発生した場合は false を返す
-        }
-    }
-
-    const resetQuestionnaires = () => {
-        if (state.value) {
-            state.value.questionnaires = [];
-            state.value.nextToken = '';
         }
     }
 
@@ -410,8 +399,7 @@ export const useQuestionnaires = (target: string, tabId: string, questionId: str
         searchQuestionnaires,
         answerQuestionnaire,
         answerSearchQuestionnaire,
-        createQuestionnaire,
-        resetQuestionnaires
+        createQuestionnaire
     }
 }
 

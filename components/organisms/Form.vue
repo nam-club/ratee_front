@@ -180,7 +180,6 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import { useDisplay } from 'vuetify'
-import { useRouter } from 'vue-router';
 
 import { mainTheme } from '@/helpers/themes'
 import Button from '@/components/atoms/Button.vue'
@@ -210,7 +209,6 @@ export default defineComponent({
         },
     },
     setup(props) {
-        const router = useRouter();
         const isLoading = ref(false);
         const { mobile } = useDisplay();
         const hasDuplicateChoices = ref(false); // 選択肢の重複チェック
@@ -307,13 +305,7 @@ export default defineComponent({
         const onSubmit = async () => {
             isLoading.value = true; // ローディング開始
             try {
-                console.log(1);
-                let result = await props.createQuestionnaire(title.value, choices.value, categoryId.value, tags.value, options.value);
-                dialog.value = false;
-                if (result) {
-                    router.push('/');
-                    console.log(2);
-                }
+                await props.createQuestionnaire(title.value, choices.value, categoryId.value, tags.value, options.value);
             } catch (error) {
                 console.error("アンケート投稿エラーが発生しました:", error);
             } finally {
