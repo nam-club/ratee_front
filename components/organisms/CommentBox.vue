@@ -212,6 +212,7 @@ export default defineComponent({
             try {
                 if (!isLoading.value) {
                     isLoading.value = true; // ローディング開始
+                    await new Promise(resolve => setTimeout(resolve, 500)); // 0.5秒待機する
                     await props.postComment(questionId, iconNum, content);
                 }
             } catch (error) {

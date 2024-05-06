@@ -162,8 +162,9 @@ export default defineComponent({
         const answerQuestionnaire = async (questionId: string, choices: string[]) => {
             try {
                 if (!isLoading.value) {
+                    isLoading.value = true; // ローディング開始
+                    await new Promise(resolve => setTimeout(resolve, 500)); // 0.5秒待機する
                     if (props.searchType === '') {
-                        isLoading.value = true; // ローディング開始
                         await props.answerQuestionnaire(questionId, [...choices]);
                     } else {
                         if (props.searchType === FORM_TITLE_TEXT || props.searchType === FORM_TAG_TEXT) {
