@@ -160,17 +160,18 @@ export default defineComponent({
         };
 
         const answerQuestionnaire = async (questionId: string, choices: string[]) => {
+            if (isLoading.value) {
+                return;
+            }
             try {
-                if (!isLoading.value) {
-                    isLoading.value = true; // ローディング開始
-                    if (props.searchType === '') {
-                        await props.answerQuestionnaire(questionId, [...choices]);
-                    } else {
-                        if (props.searchType === FORM_TITLE_TEXT || props.searchType === FORM_TAG_TEXT) {
-                            await props.answerSearchQuestionnaire(questionId, [...choices], props.searchType, props.searchWord);
-                        } else if (props.searchType === FORM_CATEGORY_TEXT) {
-                            await props.answerSearchQuestionnaire(questionId, [...choices], props.searchType, props.searchCategory);
-                        }
+                isLoading.value = true; // ローディング開始
+                if (props.searchType === '') {
+                    await props.answerQuestionnaire(questionId, [...choices]);
+                } else {
+                    if (props.searchType === FORM_TITLE_TEXT || props.searchType === FORM_TAG_TEXT) {
+                        await props.answerSearchQuestionnaire(questionId, [...choices], props.searchType, props.searchWord);
+                    } else if (props.searchType === FORM_CATEGORY_TEXT) {
+                        await props.answerSearchQuestionnaire(questionId, [...choices], props.searchType, props.searchCategory);
                     }
                 }
             } catch (error) {
@@ -178,9 +179,6 @@ export default defineComponent({
             } finally {
                 isLoading.value = false; // ローディング終了
             }
-
-
-
         }
 
         return {

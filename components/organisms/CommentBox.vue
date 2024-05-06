@@ -29,8 +29,7 @@
                             <v-divider inset></v-divider>
                         </v-list>
                     </v-card>
-                    <InfiniteLoading v-if="!isInfiniteDisabled" @infinite="load" :immediate-check="false"
-                        :reverse="false">
+                    <InfiniteLoading v-if="!isInfiniteDisabled" @infinite="load" :immediate-check="false" :reverse="false">
                         <template #spinner>
                             <div class="text-center" style="padding:10%">
                                 <v-progress-circular indeterminate color="primary" :size="100"
@@ -69,8 +68,7 @@
                             <v-divider inset></v-divider>
                         </v-list>
                     </v-card>
-                    <InfiniteLoading v-if="!isInfiniteDisabled" @infinite="load" :immediate-check="false"
-                        :reverse="false">
+                    <InfiniteLoading v-if="!isInfiniteDisabled" @infinite="load" :immediate-check="false" :reverse="false">
                         <template #spinner>
                             <div class="text-center" style="padding:10%">
                                 <v-progress-circular indeterminate color="primary" :size="100"
@@ -209,11 +207,12 @@ export default defineComponent({
         const commentLabel = ref(COMMENT_NULL_TEXT);
 
         const comment = async (questionId: string, iconNum: number, content: string) => {
+            if (isLoading.value) {
+                return;
+            }
             try {
-                if (!isLoading.value) {
-                    isLoading.value = true; // ローディング開始
-                    await props.postComment(questionId, iconNum, content);
-                }
+                isLoading.value = true; // ローディング開始
+                await props.postComment(questionId, iconNum, content);
             } catch (error) {
                 console.error("コメント投稿エラーが発生しました:", error);
             } finally {

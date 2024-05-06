@@ -305,11 +305,12 @@ export default defineComponent({
 
         // 投稿内容を送信する
         const onSubmit = async () => {
+            if (isLoading.value) {
+                return;
+            }
             try {
-                if (!isLoading.value) {
-                    isLoading.value = true; // ローディング開始
-                    await props.createQuestionnaire(title.value, choices.value, categoryId.value, tags.value, options.value);
-                }
+                isLoading.value = true; // ローディング開始
+                await props.createQuestionnaire(title.value, choices.value, categoryId.value, tags.value, options.value);
             } catch (error) {
                 console.error("アンケート投稿エラーが発生しました:", error);
             } finally {
