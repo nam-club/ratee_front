@@ -28,7 +28,8 @@
                                     <v-col cols="5" justify="center">
                                         <nuxt-link to="/" style="text-decoration: none; color: inherit;">
                                             <Button :color="cancelBtnColor" :textColor="cancelBtnTextColor"
-                                                :variant="cancelBtnVariant" :buttonStyle="cancelBtnStyle">{{ CANCEL_BUTTON }}</Button>
+                                                :variant="cancelBtnVariant" :buttonStyle="cancelBtnStyle">{{ CANCEL_BUTTON
+                                                }}</Button>
                                         </nuxt-link>
                                     </v-col>
                                     <v-col cols="2" />
@@ -65,14 +66,14 @@
                             <v-row no-gutters>
                                 <v-col cols="5" justify="center">
                                     <Button :color="cancelBtnColor" :textColor="cancelBtnTextColor"
-                                        :variant="cancelBtnVariant" :buttonStyle="cancelBtnStyle"
-                                        @click="dialog = false">{{ CANCEL_BUTTON }}</Button>
+                                        :variant="cancelBtnVariant" :buttonStyle="cancelBtnStyle" @click="dialog = false">{{
+                                            CANCEL_BUTTON }}</Button>
                                 </v-col>
                                 <v-col cols="2" />
                                 <v-col cols="5" justify="center">
                                     <Button :color="confirmBtnColor" :textColor="confirmBtnTextColor"
-                                        :buttonStyle="confirmBtnStyle" :variant="confirmBtnVariant"
-                                        @click="onSubmit">{{ FORM_POST_BUTTON }}</Button>
+                                        :buttonStyle="confirmBtnStyle" :variant="confirmBtnVariant" @click="onSubmit"
+                                        :disabled="isLoading">{{ FORM_POST_BUTTON }}</Button>
                                 </v-col>
                             </v-row>
                         </v-container>
@@ -109,7 +110,8 @@
                                     <v-col cols="5" justify="center">
                                         <nuxt-link to="/" style="text-decoration: none; color: inherit;">
                                             <Button :color="cancelBtnColor" :textColor="cancelBtnTextColor"
-                                                :variant="cancelBtnVariant" :buttonStyle="cancelBtnStyle">{{ CANCEL_BUTTON }}</Button>
+                                                :variant="cancelBtnVariant" :buttonStyle="cancelBtnStyle">{{ CANCEL_BUTTON
+                                                }}</Button>
                                         </nuxt-link>
                                     </v-col>
                                     <v-col cols="2" />
@@ -146,14 +148,14 @@
                             <v-row no-gutters>
                                 <v-col cols="5" justify="center">
                                     <Button :color="cancelBtnColor" :textColor="cancelBtnTextColor"
-                                        :variant="cancelBtnVariant" :buttonStyle="cancelBtnStyle"
-                                        @click="dialog = false">{{ CANCEL_BUTTON }}</Button>
+                                        :variant="cancelBtnVariant" :buttonStyle="cancelBtnStyle" @click="dialog = false">{{
+                                            CANCEL_BUTTON }}</Button>
                                 </v-col>
                                 <v-col cols="2" />
                                 <v-col cols="5" justify="center">
                                     <Button :color="confirmBtnColor" :textColor="confirmBtnTextColor"
-                                        :buttonStyle="confirmBtnStyle" :variant="confirmBtnVariant"
-                                        @click="onSubmit">{{ FORM_POST_BUTTON }}</Button>
+                                        :buttonStyle="confirmBtnStyle" :variant="confirmBtnVariant" @click="onSubmit"
+                                        :disabled="isLoading">{{ FORM_POST_BUTTON }}</Button>
                                 </v-col>
                             </v-row>
                         </v-container>
@@ -303,9 +305,11 @@ export default defineComponent({
 
         // 投稿内容を送信する
         const onSubmit = async () => {
-            isLoading.value = true; // ローディング開始
             try {
-                await props.createQuestionnaire(title.value, choices.value, categoryId.value, tags.value, options.value);
+                if (!isLoading.value) {
+                    isLoading.value = true; // ローディング開始
+                    await props.createQuestionnaire(title.value, choices.value, categoryId.value, tags.value, options.value);
+                }
             } catch (error) {
                 console.error("アンケート投稿エラーが発生しました:", error);
             } finally {

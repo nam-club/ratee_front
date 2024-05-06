@@ -15,7 +15,8 @@
             <v-row class="justify-center" v-if="findChoicesByQuestionnaireId(questionnaire.id).length !== 0">
                 <v-col class="text-end">
                     <Button :textColor="confirmBtnTextColor" :variant="btnVariant" :buttonStyle="confirmBtnStyle"
-                        :onClick="() => answerQuestionnaire(questionnaire.id, findChoicesByQuestionnaireId(questionnaire.id))">{{ CONFIRM_BUTTON }}</Button>
+                        :onClick="() => answerQuestionnaire(questionnaire.id, findChoicesByQuestionnaireId(questionnaire.id))">{{
+                            CONFIRM_BUTTON }}</Button>
                 </v-col>
             </v-row>
         </div>
@@ -46,7 +47,9 @@
             <v-row class="justify-center" v-if="findChoicesByQuestionnaireId(questionnaire.id).length !== 0">
                 <v-col class="text-end">
                     <Button :textColor="confirmBtnTextColor" :variant="btnVariant" :buttonStyle="confirmBtnStyle"
-                        :onClick="() => answerQuestionnaire(questionnaire.id, findChoicesByQuestionnaireId(questionnaire.id))">{{ CONFIRM_BUTTON }}</Button>
+                        :disabled="isLoading"
+                        :onClick="() => answerQuestionnaire(questionnaire.id, findChoicesByQuestionnaireId(questionnaire.id))">{{
+                            CONFIRM_BUTTON }}</Button>
                 </v-col>
             </v-row>
         </div>
@@ -54,7 +57,7 @@
             <v-row class="justify-center" v-for="(choice, index) in questionnaire.choices" :key="index">
                 <v-col xs12 sm12 md12 align-self="center">
                     <Button :color="btnColor" :textColor="btnTextColor" :variant="btnVariant" :buttonStyle="btnStyle"
-                        :onClick="() => answerQuestionnaire(questionnaire.id, [choice.id])">
+                        :disabled="isLoading" :onClick="() => answerQuestionnaire(questionnaire.id, [choice.id])">
                         {{ choice.name }}
                     </Button>
                 </v-col>
@@ -92,7 +95,7 @@ export default defineComponent({
         },
         answerSearchQuestionnaire: {
             type: Function,
-            default: () => () => {}
+            default: () => () => { }
         },
         searchType: {
             type: String,
@@ -108,9 +111,8 @@ export default defineComponent({
         },
     },
     setup(props) {
+        const isLoading = ref(false);
         const { mobile } = useDisplay()
-
-        console.log(props.questionnaire)
 
         const btnColor = ref(mainTheme.colors!.primary);
         const btnTextColor = ref(mainTheme.colors!.primary);
@@ -152,23 +154,33 @@ export default defineComponent({
         };
 
         // 選択肢を選択した場合に色を変えるため、questionnaire.idに対応するanswersオブジェクトのchoicesを取得するヘルパー関数
-        const findChoicesByQuestionnaireId = (questionnaireId) => {
+        const findChoicesByQuestionnaireId = (questionnaireId: string) => {
             const answer = answers.value.find(answer => answer.questionId === questionnaireId);
             return answer ? answer.choices : [];
         };
 
-        const answerQuestionnaire = (questionId: string, choices: string[]) => {
-            console.log([...choices])
-            console.log(props.searchType)
-            if (props.searchType === '') {
-                props.answerQuestionnaire(questionId, [...choices]);
-            } else {
-                if (props.searchType === FORM_TITLE_TEXT || props.searchType === FORM_TAG_TEXT) {
-                    props.answerSearchQuestionnaire(questionId, [...choices], props.searchType, props.searchWord);
-                } else if (props.searchType === FORM_CATEGORY_TEXT) {
-                    props.answerSearchQuestionnaire(questionId, [...choices], props.searchType, props.searchCategory);
+        const answerQuestionnaire = async (questionId: string, choices: string[]) => {
+            try {
+                if (!isLoading.value) {
+                    if (props.searchType === '') {
+                        isLoading.value = true; // ローディング開始
+                        await props.answerQuestionnaire(questionId, [...choices]);
+                    } else {
+                        if (props.searchType === FORM_TITLE_TEXT || props.searchType === FORM_TAG_TEXT) {
+                            await props.answerSearchQuestionnaire(questionId, [...choices], props.searchType, props.searchWord);
+                        } else if (props.searchType === FORM_CATEGORY_TEXT) {
+                            await props.answerSearchQuestionnaire(questionId, [...choices], props.searchType, props.searchCategory);
+                        }
+                    }
                 }
+            } catch (error) {
+                console.error("アンケート回答エラーが発生しました:", error);
+            } finally {
+                isLoading.value = false; // ローディング終了
             }
+
+
+
         }
 
         return {
@@ -186,6 +198,7 @@ export default defineComponent({
             toggleChoice,
             findChoicesByQuestionnaireId,
             answerQuestionnaire,
+            isLoading
         }
     }
 })

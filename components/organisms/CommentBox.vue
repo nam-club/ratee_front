@@ -114,7 +114,7 @@
                     {{ CANCEL_BUTTON }}
                 </v-btn>
                 <v-btn color="blue darken-1" text @click="dialog = false"
-                    :onClick="() => postComment(questionId, iconNum, content)" :disabled="errFlg">
+                    :onClick="() => comment(questionId, iconNum, content)" :disabled="errFlg || isLoading">
                     {{ COMMENT_BUTTON }}
                 </v-btn>
             </v-card-actions>
@@ -166,6 +166,7 @@ export default defineComponent({
         }
     },
     setup(props) {
+        const isLoading = ref(false);
         const { mobile } = useDisplay();
         const icons = ref({
             mdiCommentPlus,
@@ -207,6 +208,19 @@ export default defineComponent({
 
         const commentLabel = ref(COMMENT_NULL_TEXT);
 
+        const comment = async (questionId: string, iconNum: number, content: string) => {
+            try {
+                if (!isLoading.value) {
+                    isLoading.value = true; // ローディング開始
+                    await props.postComment(questionId, iconNum, content);
+                }
+            } catch (error) {
+                console.error("コメント投稿エラーが発生しました:", error);
+            } finally {
+                isLoading.value = false; // ローディング終了
+            }
+        }
+
         return {
             COMMENT_BUTTON,
             COMMENT_TITLE,
@@ -226,6 +240,7 @@ export default defineComponent({
             content,
             commentLabel,
             commentRule,
+            comment,
             errFlg
         }
     }
