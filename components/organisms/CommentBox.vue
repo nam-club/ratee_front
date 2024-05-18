@@ -216,7 +216,7 @@ export default defineComponent({
             }
             try {
                 isLoading.value = true; // ローディング開始
-                await props.postComment(questionId, iconNum, content);
+                await props.postComment(questionId, iconNum-1, content);
             } catch (error) {
                 console.error("コメント投稿エラーが発生しました:", error);
             } finally {
