@@ -24,7 +24,7 @@
                         <v-list lines="two" style="width: 100%;">
                             <v-list-item v-for="(comment, index) in comments" :key="index" :title="comment.comment"
                                 :subtitle="comment.createdAt + ' ID:' + comment.ipaddrHashed"
-                                :prepend-avatar="'https://randomuser.me/api/portraits/lego/' + comment.iconId + '.jpg'">
+                                :prepend-avatar="iconImg[comment.iconId]">
                             </v-list-item>
                             <v-divider inset></v-divider>
                         </v-list>
@@ -63,7 +63,7 @@
                         <v-list lines="two" style="width: 100%;">
                             <v-list-item v-for="(comment, index) in comments" :key="index" :title="comment.comment"
                                 :subtitle="comment.createdAt + ' ID:' + comment.ipaddrHashed"
-                                :prepend-avatar="'https://randomuser.me/api/portraits/lego/' + comment.iconId + '.jpg'">
+                                :prepend-avatar="iconImg[comment.iconId]">
                             </v-list-item>
                             <v-divider inset></v-divider>
                         </v-list>
@@ -88,16 +88,16 @@
         <v-card>
             <v-card-text>
                 <v-btn-toggle v-if="!mobile" v-model="toggle" color="primary">
-                    <Button v-for="n in 9" :key="n" @click="setIcon(n)">
+                    <Button v-for="n in 10" :key="n" @click="setIcon(n)">
                         <v-avatar>
-                            <v-img :src="'https://randomuser.me/api/portraits/lego/' + n + '.jpg'" />
+                            <v-img :src="iconImg[n-1]" />
                         </v-avatar>
                     </Button>
                 </v-btn-toggle>
                 <v-tabs v-else v-model="tab" align-tabs="center">
-                    <v-tab :value="n" v-for="n in 9" :key="n" @click="setIcon(n)">
+                    <v-tab :value="n" v-for="n in 10" :key="n" @click="setIcon(n)">
                         <v-avatar>
-                            <v-img :src="'https://randomuser.me/api/portraits/lego/' + n + '.jpg'" />
+                            <v-img :src="iconImg[n-1]" />
                         </v-avatar>
                     </v-tab>
                 </v-tabs>
@@ -131,7 +131,7 @@ import IconButton from '@/components/atoms/IconButton.vue'
 import Msg from '@/components/atoms/Msg.vue'
 import InputSet from '@/components/molecules/InputSet.vue'
 import {
-    COMMENT_MIN_LENGTH, COMMENT_MAX_LENGTH, COMMENT_NULL_TEXT, COMMENT_BUTTON, COMMENT_TITLE, LOADING_END, CANCEL_BUTTON
+    COMMENT_MIN_LENGTH, COMMENT_MAX_LENGTH, COMMENT_NULL_TEXT, COMMENT_BUTTON, COMMENT_TITLE, LOADING_END, CANCEL_BUTTON, ICON_IMG
 } from '@/constants';
 
 export default defineComponent({
@@ -166,6 +166,10 @@ export default defineComponent({
     setup(props) {
         const isLoading = ref(false);
         const { mobile } = useDisplay();
+
+        const iconImg = ICON_IMG;
+        console.log(iconImg)
+
         const icons = ref({
             mdiCommentPlus,
         })
@@ -221,6 +225,7 @@ export default defineComponent({
         }
 
         return {
+            iconImg,
             COMMENT_BUTTON,
             COMMENT_TITLE,
             LOADING_END,

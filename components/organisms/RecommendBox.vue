@@ -5,7 +5,7 @@
             <v-row>
                 <v-col v-for="(recommend, index) in recommends" :key="index" cols="12" sm="4">
                     <nuxt-link :to="`/questionnaire/${recommend.id}`" style="text-decoration: none; color: inherit;">
-                        <Button :buttonStyle="btnStyle">
+                        <Button :buttonStyle="btnStyle" :variant="btnVariant">
                             {{ recommend.content }}
                         </Button>
                     </nuxt-link>
@@ -30,10 +30,12 @@ export default defineComponent({
         },
     },
     setup() {
+        const btnVariant = ref("elevated");
         const btnStyle = ref({ width: '100%'});
 
         return {
             RECOMMEND_TITLE,
+            btnVariant,
             btnStyle
         }
     }

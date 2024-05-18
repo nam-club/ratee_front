@@ -87,6 +87,7 @@ export const COMMENT_NULL_TEXT = 'コメントを入力してください。' //
 
 /** 画像パス */
 export const TITLE_IMG = '/logo.png';
+export const ICON_IMG = [ '/1.png', '/2.png', '/3.png', '/4.png', '/5.png', '/6.png', '/7.png', '/8.png', '/9.png', '/10.png',];
 
 /** エラーメッセージ */
 export const ERR_MSG: Record<string, string> = {
