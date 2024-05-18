@@ -282,13 +282,16 @@ export const useQuestionnaires = (target: string, tabId: string, questionId: str
                         const qObject = await getQuestionnaires(tabId);
                         state.value.questionnaires = qObject.questionnaires ? [...qObject.questionnaires] : state.value.questionnaires;
                         state.value.nextToken = qObject.nextToken ? qObject.nextToken : '';
-                        isLoading.value = false;
                         code.value = qObject.code ? qObject.code : '';
+                        isLoading.value = false;
                     }
                     break;
                 // おすすめアンケート一覧を取得
                 case TARGET_RECOMMENDS:
-                    state.value = await getRecommendQuestionnaires(questionId);
+                    isLoading.value = true;
+                    const qObject = await getRecommendQuestionnaires(questionId);
+                    state.value.questionnaires = qObject.questionnaires ? [...qObject.questionnaires] : state.value.questionnaires;
+                    code.value = qObject.code ? qObject.code : '';
                     isLoading.value = false;
                     break;
                 default:

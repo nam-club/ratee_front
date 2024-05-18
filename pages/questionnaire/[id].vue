@@ -3,7 +3,7 @@
         <SnackBar :snackbar="message.show" :snackbarText="message.text" @update:snackbar="message.show = $event"
             :color="errorColor" />
     </div>
-    <div v-if="!isQuestionnaireLoading && !isCommentLoading && !isChartLoading">
+    <div v-if="!isQuestionnaireLoading && !isCommentLoading && !isChartLoading && !isRecommendLoading">
         <Questionnaire :questionnaire="questionnaire" :answerQuestionnaire="answerQuestionnaire" :comments="comments"
             :postComment="postComment" :recommends="recommends" :chart="chart" :load="load"
             :isInfiniteDisabled="isInfiniteDisabled" />
@@ -43,6 +43,7 @@ export default defineComponent({
         const router = useRoute();
         const questionId = Array.isArray(router.params.id) ? router.params.id[0] : router.params.id;
         const isQuestionnaireLoading = ref(true);
+        const isRecommendLoading = ref(false);
         const isCommentLoading = ref(false);
         const isChartLoading = ref(true);
         const snackbarMessages = ref<{ text: string; show: boolean }[]>([]); // スナックバーのメッセージを格納する配列
@@ -113,7 +114,13 @@ export default defineComponent({
 
         // おすすめアンケート一覧取得
         const rStore = useQuestionnaires(TARGET_RECOMMENDS, '', questionId);
-        const recommends = rStore.state.value.questionnaires;
+        const recommends = ref({});
+
+        watchEffect(() => {
+            recommends.value = rStore.state.value.questionnaires;
+            isRecommendLoading.value = rStore.isLoading.value;
+            console.log(recommends.value)
+        });
 
         // 時系列チャート取得
         const chStore = useChart(questionId);
@@ -174,6 +181,7 @@ export default defineComponent({
             isQuestionnaireLoading,
             answerQuestionnaire,
             recommends,
+            isRecommendLoading,
             comments,
             isCommentLoading,
             postComment,
