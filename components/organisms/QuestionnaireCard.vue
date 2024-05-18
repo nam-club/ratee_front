@@ -11,7 +11,7 @@
                                     }}
                                     </Msg>
                                 </v-col>
-                                <v-col cols="4" class="text-end">
+                                <v-col v-if="questionnaire.isAnswered === true" cols="4" class="text-end">
                                     <nuxt-link :to="`/questionnaire/${questionnaire.id}`">
                                         <Button :textColor="detailBtnTextColor" :variant="btnVariant">
                                             {{ DETAIL_BUTTON }}
@@ -55,7 +55,7 @@
                                     }}
                                     </Msg>
                                 </v-col>
-                                <v-col cols="4" class="text-end">
+                                <v-col v-if="questionnaire.isAnswered === true" cols="4" class="text-end">
                                     <nuxt-link :to="`/questionnaire/${questionnaire.id}`">
                                         <Button :textColor="detailBtnTextColor" :variant="btnVariant">
                                             {{ DETAIL_BUTTON }}
@@ -196,7 +196,7 @@ export default defineComponent({
         verticalDisplay: {
             type: Boolean,
             default: false
-        }
+        },
     },
     setup() {
         const { mobile } = useDisplay()
