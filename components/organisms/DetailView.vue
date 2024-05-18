@@ -113,6 +113,7 @@ export default defineComponent({
                     display: true,
                     position: 'top',
                     labels: {
+                        usePointStyle: true,
                         font: {
                             family: "'Kosugi Maru'",
                             size: 14,
