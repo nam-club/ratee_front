@@ -32,7 +32,7 @@
                         </div>
                         <div v-if="n === DETAIL_TAB_NUM2">
                             <v-row>
-                                <TimeChart :timeData="chart" :options="options" />
+                                <TimeChart :timeData="chart" :options="timeOptions" />
                             </v-row>
                         </div>
                     </v-window-item>
@@ -49,6 +49,7 @@ import AnswerBox from '@/components/organisms/AnswerBox.vue'
 import QuestionnaireBarChart from '@/components/organisms/QuestionnaireBarChart.vue'
 import TimeChart from '@/components/organisms/TimeChart.vue'
 import { DETAIL_TAB_LENGTH, DETAIL_TAB_NAME1, DETAIL_TAB_NUM1, DETAIL_TAB_NAME2, DETAIL_TAB_NUM2, } from '@/constants';
+import { scales } from 'chart.js'
 
 export default defineComponent({
     components: {
@@ -104,10 +105,76 @@ export default defineComponent({
             },
         }));
 
+        const timeOptions = computed(() => ({
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        font: {
+                            family: "'Kosugi Maru'",
+                            size: 14,
+                        },
+                        color: '#333'
+                    }
+                },
+                tooltip: {
+                    enabled: true,
+                    callbacks: {
+                        label: function (context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                                label += context.parsed.y;
+                            }
+                            return label;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    type: 'category',
+                    grid: {
+                        drawBorder: false,
+                        color: '#e0e0e0'
+                    },
+                    ticks: {
+                        font: {
+                            family: "'Kosugi Maru'",
+                            size: 12,
+                        },
+                        color: '#333'
+                    }
+                },
+                y: {
+                    grid: {
+                        drawBorder: false,
+                        color: '#e0e0e0'
+                    },
+                    ticks: {
+                        font: {
+                            family: "'Kosugi Maru'",
+                            size: 12,
+                        },
+                        color: '#333',
+                        stepSize: 1, // Y軸の目盛りを整数にする場合
+                        precision: 0, // 小数点以下の桁数を0にする
+                        callback: (value) => Number(value).toFixed(0) // 小数点を表示しないようにする
+                    },
+                }
+            }
+        }));
+
         return {
             mobile,
             tab,
             options,
+            timeOptions,
             DETAIL_TAB_LENGTH,
             DETAIL_TAB_NAME1,
             DETAIL_TAB_NUM1,

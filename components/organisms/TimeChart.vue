@@ -1,5 +1,5 @@
 <template>
-    <AreaChart :chartData="chartData" :options="options" />
+    <AreaChart :chartData="chartData" :chartOptions="options" />
 </template>
     
 <script>
