@@ -8,7 +8,7 @@
                         :textColor="findChoicesByQuestionnaireId(questionnaire.id).includes(choice.id) ? clickedMultiTextColor : btnTextColor"
                         :buttonStyle="btnStyle" :variant="btnVariant"
                         :disabled="isLoading"
-                        :onClick="() => toggleChoice(questionnaire.id, choice.id)">
+                        @click="() => toggleChoice(questionnaire.id, choice.id)">
                         {{ choice.name }}
                     </Button>
                 </v-col>
@@ -17,7 +17,7 @@
                 <v-col class="text-end">
                     <Button :textColor="confirmBtnTextColor" :variant="btnVariant" :buttonStyle="confirmBtnStyle"
                         :disabled="isLoading"
-                        :onClick="() => answerQuestionnaire(questionnaire.id, findChoicesByQuestionnaireId(questionnaire.id))">{{
+                        @click="handleAnswer(questionnaire.id, findChoicesByQuestionnaireId(questionnaire.id))">{{
                             CONFIRM_BUTTON }}</Button>
                 </v-col>
             </v-row>
@@ -27,7 +27,7 @@
                 <v-col xs12 sm12 md12 align-self="center">
                     <Button :color="btnColor" :textColor="btnTextColor" :variant="btnVariant" :buttonStyle="btnStyle"
                         :disabled="isLoading"
-                        :onClick="() => answerQuestionnaire(questionnaire.id, [choice.id])">
+                        @click="handleAnswer(questionnaire.id, [choice.id])">
                         {{ choice.name }}
                     </Button>
                 </v-col>
@@ -43,7 +43,7 @@
                         :textColor="findChoicesByQuestionnaireId(questionnaire.id).includes(choice.id) ? clickedMultiTextColor : btnTextColor"
                         :buttonStyle="btnStyle" :variant="btnVariant"
                         :disabled="isLoading"
-                        :onClick="() => toggleChoice(questionnaire.id, choice.id)">
+                        @click="() => toggleChoice(questionnaire.id, choice.id)">
                         {{ choice.name }}
                     </Button>
                 </v-col>
@@ -52,7 +52,7 @@
                 <v-col class="text-end">
                     <Button :textColor="confirmBtnTextColor" :variant="btnVariant" :buttonStyle="confirmBtnStyle"
                         :disabled="isLoading"
-                        :onClick="() => answerQuestionnaire(questionnaire.id, findChoicesByQuestionnaireId(questionnaire.id))">{{
+                        @click="handleAnswer(questionnaire.id, findChoicesByQuestionnaireId(questionnaire.id))">{{
                             CONFIRM_BUTTON }}</Button>
                 </v-col>
             </v-row>
@@ -62,7 +62,7 @@
                 <v-col xs12 sm12 md12 align-self="center">
                     <Button :color="btnColor" :textColor="btnTextColor" :variant="btnVariant" :buttonStyle="btnStyle"
                         :disabled="isLoading"
-                        :onClick="() => answerQuestionnaire(questionnaire.id, [choice.id])">
+                        @click="handleAnswer(questionnaire.id, [choice.id])">
                         {{ choice.name }}
                     </Button>
                 </v-col>
@@ -163,27 +163,29 @@ export default defineComponent({
             return answer ? answer.choices : [];
         };
 
-        const answerQuestionnaire = async (questionId: string, choices: string[]) => {
-            if (isLoading.value) {
-                return;
-            }
+        // ボタンのクリックハンドラをラップして二重押下を防止
+        const handleAnswer = async (questionId: string, choices: string[]) => {
+            if (isLoading.value) return;
+            isLoading.value = true; // ここで即座にフラグを立てる
+
             try {
-                isLoading.value = true; // ローディング開始
-                if (props.searchType === '') {
-                    await props.answerQuestionnaire(questionId, [...choices]);
-                } else {
-                    if (props.searchType === FORM_TITLE_TEXT || props.searchType === FORM_TAG_TEXT) {
-                        await props.answerSearchQuestionnaire(questionId, [...choices], props.searchType, props.searchWord);
-                    } else if (props.searchType === FORM_CATEGORY_TEXT) {
-                        await props.answerSearchQuestionnaire(questionId, [...choices], props.searchType, props.searchCategory);
-                    }
-                }
-            } catch (error) {
-                console.error("アンケート回答エラーが発生しました:", error);
+                await answerQuestionnaire(questionId, choices);
             } finally {
-                isLoading.value = false; // ローディング終了
+                isLoading.value = false; // 処理終了後にフラグを下げる
             }
-        }
+        };
+
+        const answerQuestionnaire = async (questionId: string, choices: string[]) => {
+            if (props.searchType === '') {
+                await props.answerQuestionnaire(questionId, [...choices]);
+            } else {
+                if (props.searchType === FORM_TITLE_TEXT || props.searchType === FORM_TAG_TEXT) {
+                    await props.answerSearchQuestionnaire(questionId, [...choices], props.searchType, props.searchWord);
+                } else if (props.searchType === FORM_CATEGORY_TEXT) {
+                    await props.answerSearchQuestionnaire(questionId, [...choices], props.searchType, props.searchCategory);
+                }
+            }
+        };
 
         return {
             mobile,
@@ -199,7 +201,7 @@ export default defineComponent({
             choices,
             toggleChoice,
             findChoicesByQuestionnaireId,
-            answerQuestionnaire,
+            handleAnswer,
             isLoading
         }
     }
