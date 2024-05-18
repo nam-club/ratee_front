@@ -45,7 +45,8 @@ export default {
                     fill: true,
                     borderColor: borderColor,
                     backgroundColor: borderColor.replace('rgb', 'rgba').replace(')', ', 0.2)'),
-                    tension: 0.1
+                    cubicInterpolationMode: 'monotone',
+                    tension: 0.4
                 });
             });
 

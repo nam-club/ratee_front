@@ -73,7 +73,7 @@
   
   <style scoped>
   .background-on-click {
-    background-color: #3A98B9;
+    background-color: #42A5F5;
     /* クリックされた時の背景色 */
   }
   </style>
