@@ -7,38 +7,7 @@
                         :class="{ 'background-on-click': findChoicesByQuestionnaireId(questionnaire.id).includes(choice.id) }"
                         :textColor="findChoicesByQuestionnaireId(questionnaire.id).includes(choice.id) ? clickedMultiTextColor : btnTextColor"
                         :buttonStyle="btnStyle" :variant="btnVariant"
-                        :onClick="() => toggleChoice(questionnaire.id, choice.id)">
-                        {{ choice.name }}
-                    </Button>
-                </v-col>
-            </v-row>
-            <v-row class="justify-center" v-if="findChoicesByQuestionnaireId(questionnaire.id).length !== 0">
-                <v-col class="text-end">
-                    <Button :textColor="confirmBtnTextColor" :variant="btnVariant" :buttonStyle="confirmBtnStyle"
-                        :onClick="() => answerQuestionnaire(questionnaire.id, findChoicesByQuestionnaireId(questionnaire.id))">{{
-                            CONFIRM_BUTTON }}</Button>
-                </v-col>
-            </v-row>
-        </div>
-        <div v-else>
-            <v-row class="justify-center" v-for="(choice, index) in questionnaire.choices" :key="index">
-                <v-col xs12 sm12 md12 align-self="center">
-                    <Button :color="btnColor" :textColor="btnTextColor" :variant="btnVariant" :buttonStyle="btnStyle"
-                        :onClick="() => answerQuestionnaire(questionnaire.id, [choice.id])">
-                        {{ choice.name }}
-                    </Button>
-                </v-col>
-            </v-row>
-        </div>
-    </div>
-    <div v-else>
-        <div v-if="questionnaire.enableMultiAnswer">
-            <v-row class="justify-center" v-for="(choice, index) in questionnaire.choices" :key="index">
-                <v-col xs12 sm12 md12 align-self="center">
-                    <Button
-                        :class="{ 'background-on-click': findChoicesByQuestionnaireId(questionnaire.id).includes(choice.id) }"
-                        :textColor="findChoicesByQuestionnaireId(questionnaire.id).includes(choice.id) ? clickedMultiTextColor : btnTextColor"
-                        :buttonStyle="btnStyle" :variant="btnVariant"
+                        :disabled="isLoading"
                         :onClick="() => toggleChoice(questionnaire.id, choice.id)">
                         {{ choice.name }}
                     </Button>
@@ -57,7 +26,43 @@
             <v-row class="justify-center" v-for="(choice, index) in questionnaire.choices" :key="index">
                 <v-col xs12 sm12 md12 align-self="center">
                     <Button :color="btnColor" :textColor="btnTextColor" :variant="btnVariant" :buttonStyle="btnStyle"
-                        :disabled="isLoading" :onClick="() => answerQuestionnaire(questionnaire.id, [choice.id])">
+                        :disabled="isLoading"
+                        :onClick="() => answerQuestionnaire(questionnaire.id, [choice.id])">
+                        {{ choice.name }}
+                    </Button>
+                </v-col>
+            </v-row>
+        </div>
+    </div>
+    <div v-else>
+        <div v-if="questionnaire.enableMultiAnswer">
+            <v-row class="justify-center" v-for="(choice, index) in questionnaire.choices" :key="index">
+                <v-col xs12 sm12 md12 align-self="center">
+                    <Button
+                        :class="{ 'background-on-click': findChoicesByQuestionnaireId(questionnaire.id).includes(choice.id) }"
+                        :textColor="findChoicesByQuestionnaireId(questionnaire.id).includes(choice.id) ? clickedMultiTextColor : btnTextColor"
+                        :buttonStyle="btnStyle" :variant="btnVariant"
+                        :disabled="isLoading"
+                        :onClick="() => toggleChoice(questionnaire.id, choice.id)">
+                        {{ choice.name }}
+                    </Button>
+                </v-col>
+            </v-row>
+            <v-row class="justify-center" v-if="findChoicesByQuestionnaireId(questionnaire.id).length !== 0">
+                <v-col class="text-end">
+                    <Button :textColor="confirmBtnTextColor" :variant="btnVariant" :buttonStyle="confirmBtnStyle"
+                        :disabled="isLoading"
+                        :onClick="() => answerQuestionnaire(questionnaire.id, findChoicesByQuestionnaireId(questionnaire.id))">{{
+                            CONFIRM_BUTTON }}</Button>
+                </v-col>
+            </v-row>
+        </div>
+        <div v-else>
+            <v-row class="justify-center" v-for="(choice, index) in questionnaire.choices" :key="index">
+                <v-col xs12 sm12 md12 align-self="center">
+                    <Button :color="btnColor" :textColor="btnTextColor" :variant="btnVariant" :buttonStyle="btnStyle"
+                        :disabled="isLoading"
+                        :onClick="() => answerQuestionnaire(questionnaire.id, [choice.id])">
                         {{ choice.name }}
                     </Button>
                 </v-col>
@@ -75,7 +80,6 @@
 
 <script lang="ts">
 import { useDisplay } from 'vuetify'
-
 import { mainTheme } from '@/helpers/themes'
 import Button from '@/components/atoms/Button.vue'
 import { FORM_TITLE_TEXT, FORM_CATEGORY_TEXT, FORM_TAG_TEXT, CONFIRM_BUTTON } from '@/constants';
