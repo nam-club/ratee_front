@@ -141,7 +141,7 @@ export default defineComponent({
                     type: 'category',
                     grid: {
                         drawBorder: false,
-                        color: '#e0e0e0'
+                        display: false // グリッド線を非表示に設定
                     },
                     ticks: {
                         font: {
@@ -154,7 +154,7 @@ export default defineComponent({
                 y: {
                     grid: {
                         drawBorder: false,
-                        color: '#e0e0e0'
+                        display: false // グリッド線を非表示に設定
                     },
                     ticks: {
                         font: {
