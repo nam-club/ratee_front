@@ -293,3 +293,8 @@ npm install vue-chartjs chart.js --save
 ```bash
 npm install v3-infinite-loading
 ```
+
+## 二重押下防止のインストール
+```bash
+npm install lodash
+```
