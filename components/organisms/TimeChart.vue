@@ -1,12 +1,12 @@
 <template>
     <AreaChart :chartData="chartData" :chartOptions="options" />
 </template>
-    
-<script>
-import { ref, watch } from 'vue';
+
+<script lang="ts">
+import { ref, watch, defineComponent } from 'vue';
 import AreaChart from '@/components/molecules/AreaChart.vue';
 
-export default {
+export default defineComponent({
     components: {
         AreaChart,
     },
@@ -23,6 +23,19 @@ export default {
     setup(props) {
         const chartData = ref({ labels: [], datasets: [] });
 
+        const defaultColors = [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)',
+            'rgba(199, 199, 199, 1)',
+            'rgba(83, 102, 255, 1)',
+            'rgba(255, 205, 86, 1)',
+            'rgba(101, 143, 143, 1)',
+        ];
+
         const processData = (obj) => {
             if (!obj || Object.keys(obj).length === 0) {
                 console.log('timeData is empty or undefined');
@@ -32,19 +45,17 @@ export default {
             const labels = new Set();
             const datasets = [];
             const dataPoints = Object.entries(obj.data);
-            // choicesの取得方法を変更します。obj.choicesを直接使用します。
             const choices = Object.entries(obj.choices);
 
-            choices.forEach(([key, value]) => {
-                const borderColor = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`;
-                console.log(key)
-                // labelをobj.choicesのvalueに設定します。
+            choices.forEach(([key, value], index) => {
+                const colorIndex = index % defaultColors.length;
+                const borderColor = defaultColors[colorIndex];
                 datasets.push({
-                    label: value, // keyではなく、valueを使用
+                    label: value,
                     data: [],
                     fill: true,
                     borderColor: borderColor,
-                    backgroundColor: borderColor.replace('rgb', 'rgba').replace(')', ', 0.2)'),
+                    backgroundColor: borderColor.replace('1)', '0.2)'),
                     cubicInterpolationMode: 'monotone',
                     tension: 0.4
                 });
@@ -54,9 +65,8 @@ export default {
                 labels.add(date);
 
                 Object.entries(values).forEach(([key, value], index) => {
-                    // keyに基づいて正しいdatasetを見つけて、そのdataにvalueを追加します。
                     const datasetIndex = choices.findIndex(([choiceKey]) => choiceKey === key);
-                    if (datasetIndex !== -1) { // 見つかった場合のみ追加
+                    if (datasetIndex !== -1) {
                         datasets[datasetIndex].data.push(value);
                     }
                 });
@@ -66,16 +76,15 @@ export default {
             chartData.value.datasets = datasets;
         };
 
-        // timeDataの変更を監視
         watch(() => props.timeData, (newVal) => {
             processData(newVal);
         }, {
-            immediate: true, // コンポーネントのマウント時にも実行
+            immediate: true,
         });
 
         return {
             chartData,
         };
     },
-};
-</script>  
+});
+</script>
