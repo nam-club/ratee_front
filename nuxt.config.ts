@@ -3,42 +3,39 @@
 import vuetify from 'vite-plugin-vuetify'
 
 export default defineNuxtConfig({
+  app: {
     head: {
-        link: [
-            { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-            // M PLUS Rounded 1c
-            //{ rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=M+PLUS+1p&family=M+PLUS+Rounded+1c&display=swap' },
-            // Kosugi Maru
-            { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=M+PLUS+1p&family=M+PLUS+Rounded+1c&display=swap' },
-            // Zen Maru Gothic
-            //{ rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=M+PLUS+1p&family=M+PLUS+Rounded+1c&family=Zen+Maru+Gothic&display=swap' },
-        ]
+      link: [
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=M+PLUS+1p&family=M+PLUS+Rounded+1c&display=swap' },
+      ],
     },
-    build: {
-        transpile: ['vuetify'],
+  },
+  build: {
+    transpile: ['vuetify'],
+  },
+  hooks: {
+    'vite:extendConfig': (config) => {
+      config.plugins!.push(vuetify())
     },
-    hooks: {
-        'vite:extendConfig': (config) => {
-            config.plugins!.push(vuetify())
-        },
+  },
+  vite: {
+    ssr: {
+      noExternal: ['vuetify'],
     },
-    vite: {
-        ssr: {
-            noExternal: ['vuetify'],
-        },
-        define: {
-            'process.env.DEBUG': false,
-        },
+    define: {
+      'process.env.DEBUG': false,
     },
-    css: ['@/assets/main.scss'],
-    vuetify: {
-        defaultAssets: false,
-    },
-    components: [
-        '~/components/templates',
-        '~/components/atoms',
-        '~/components/molecules',
-        '~/components/organisms',
-    ],
-    plugins: ['~/plugins/vuetify.ts'],
+  },
+  css: ['@/assets/main.scss'],
+  vuetify: {
+    defaultAssets: false,
+  },
+  components: [
+    '~/components/templates',
+    '~/components/atoms',
+    '~/components/molecules',
+    '~/components/organisms',
+  ],
+  plugins: ['~/plugins/vuetify.ts'],
 })
