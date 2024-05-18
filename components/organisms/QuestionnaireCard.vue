@@ -130,7 +130,7 @@
     </v-row>
 </template>
 
-<style>
+<style scoped>
 .background-on-click {
     background-color: #3A98B9;
     /* クリックされた時の背景色 */
