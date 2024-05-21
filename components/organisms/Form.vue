@@ -314,6 +314,7 @@ export default defineComponent({
             } catch (error) {
                 console.error("アンケート投稿エラーが発生しました:", error);
             } finally {
+                dialog.value = false;
                 isLoading.value = false; // ローディング終了
             }
         };

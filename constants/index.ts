@@ -145,4 +145,6 @@ export const ERR_MSG: Record<string, string> = {
     'comment.too_many_request': '連続でのコメント投稿は禁止されています。時間を置いてお試しください。',
     // 許可された期間より短い期間でアンケートを投稿しようとしている
     'q.too_many_request': 'アンケートは5分に1回までしか投稿できません。時間を置いてお試しください。',
+    // タイトルのみなど不完全な状態でアンケートを投稿しようとしている
+    'request.body.invalid': 'アンケート投稿に失敗しました。'
 }

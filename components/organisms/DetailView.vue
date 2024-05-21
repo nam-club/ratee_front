@@ -49,7 +49,6 @@ import AnswerBox from '@/components/organisms/AnswerBox.vue'
 import QuestionnaireBarChart from '@/components/organisms/QuestionnaireBarChart.vue'
 import TimeChart from '@/components/organisms/TimeChart.vue'
 import { DETAIL_TAB_LENGTH, DETAIL_TAB_NAME1, DETAIL_TAB_NUM1, DETAIL_TAB_NAME2, DETAIL_TAB_NUM2, } from '@/constants';
-import { scales } from 'chart.js'
 
 export default defineComponent({
     components: {
@@ -100,6 +99,10 @@ export default defineComponent({
                             family: "'Kosugi Maru'", // y軸のラベルにフォントを適用
                             size: 14
                         }
+                    },
+                    grid: {
+                        drawBorder: false, // y軸の境界線を非表示にする
+                        display: false, // y軸のグリッド線を非表示にする
                     }
                 }
             },
