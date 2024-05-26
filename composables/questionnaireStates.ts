@@ -34,37 +34,34 @@ const baseURL = import.meta.env.VITE_BASE_URL
 
 // ユーザID生成・更新
 const updateUserId = async () => {
-    const response = await fetch(`${baseURL}/user/guest/id`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        credentials: 'include'
-    });
-
-    if (response.ok) {
-        const resp = await response.json();
-        resp.cookie
-        console.log(resp);
-    } else {
-        console.error('ユーザID生成・更新APIの実行中にエラーが発生しました:', response.statusText);
+    try {
+        const response = await fetch(`${baseURL}/user/guest/id`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        });
+        if (response.ok) {
+            const resp = await response.json();
+            console.log(resp);
+        } else {
+            console.error('ユーザID生成・更新APIの実行中にエラーが発生しました:', response.statusText);
+        }
+    } catch (error) {
+        console.error('ユーザID生成・更新APIの実行中にエラーが発生しました:', error);
     }
 }
 
 // アンケート一覧取得API
 const getQuestionnaires = async (order: string): Promise<ResponseData> => {
-    console.log("アンケート一覧取得API")
+    console.log("アンケート一覧取得API");
     try {
         const url = new URL(`${baseURL}/questionnaires`);
-        const params = new URLSearchParams({
-            order: order
-        });
+        const params = new URLSearchParams({ order });
         url.search = params.toString();
-        const response = await fetch(
-            url, { credentials: 'include' }
-        );
+        const response = await fetch(url, { credentials: 'include' });
         const data = await response.json();
-        console.log(data)
         if (response.ok) {
             return { questionnaires: data.questionnaires, nextToken: data.nextToken };
         } else {
@@ -73,7 +70,7 @@ const getQuestionnaires = async (order: string): Promise<ResponseData> => {
         }
     } catch (error) {
         console.error('アンケート一覧取得APIの実行中にエラーが発生しました:', error);
-        return { code: data.code, message: data.message };
+        return { code: '', message: 'アンケート一覧取得に失敗しました' };
     }
 }
 
@@ -269,33 +266,24 @@ export const useQuestionnaires = (target: string, tabId: string, questionId: str
     const code = ref('');
 
     onMounted(async () => {
-        console.log(state.value.questionnaires)
+        console.log(state.value.questionnaires);
         if (state.value.questionnaires.length === 0) {
-            console.log("初回ロード")
+            console.log("初回ロード");
             await updateUserId();
-            switch (target) {
-                // アンケート一覧を取得
-                case TARGET_QUESTIONNAIRES:
-                    if (tabId !== TAB_ID4) {
-                        isLoading.value = true;
-                        code.value = '';
-                        const qObject = await getQuestionnaires(tabId);
-                        state.value.questionnaires = qObject.questionnaires ? [...qObject.questionnaires] : state.value.questionnaires;
-                        state.value.nextToken = qObject.nextToken ? qObject.nextToken : '';
-                        code.value = qObject.code ? qObject.code : '';
-                        isLoading.value = false;
-                    }
-                    break;
-                // おすすめアンケート一覧を取得
-                case TARGET_RECOMMENDS:
-                    isLoading.value = true;
-                    const qObject = await getRecommendQuestionnaires(questionId);
-                    state.value.questionnaires = qObject.questionnaires ? [...qObject.questionnaires] : state.value.questionnaires;
-                    code.value = qObject.code ? qObject.code : '';
-                    isLoading.value = false;
-                    break;
-                default:
-                    break;
+            if (target === TARGET_QUESTIONNAIRES && tabId !== TAB_ID4) {
+                isLoading.value = true;
+                code.value = '';
+                const qObject = await getQuestionnaires(tabId);
+                state.value.questionnaires = qObject.questionnaires || [];
+                state.value.nextToken = qObject.nextToken || '';
+                code.value = qObject.code || '';
+                isLoading.value = false;
+            } else if (target === TARGET_RECOMMENDS) {
+                isLoading.value = true;
+                const qObject = await getRecommendQuestionnaires(questionId);
+                state.value.questionnaires = qObject.questionnaires || [];
+                code.value = qObject.code || '';
+                isLoading.value = false;
             }
         }
     });
