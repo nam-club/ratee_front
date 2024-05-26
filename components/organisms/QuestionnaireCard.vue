@@ -98,7 +98,7 @@
                                     <Msg fontWeight="normal" fontSize="1em">{{ questionnaire.content }}
                                     </Msg>
                                 </v-col>
-                                <v-col cols="4" class="text-end">
+                                <v-col v-if="questionnaire.isAnswered === true" cols="4" class="text-end">
                                     <nuxt-link :to="`/questionnaire/${questionnaire.id}`" style="color: black;">
                                         <IconButton :icon="icons.mdiChevronRight" :size="large" :variant="iconBtnVariant" />
                                     </nuxt-link>
