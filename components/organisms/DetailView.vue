@@ -3,8 +3,9 @@
         <v-container>
             <v-row>
                 <v-col>
-                    <Msg fontWeight="normal" :fontSize="mobile ? '1em' : '2em'" style="margin:2% 0">{{ questionnaire.content
-                    }}</Msg>
+                    <Msg fontWeight="normal" :fontSize="mobile ? '1em' : '2em'" style="margin:2% 0">{{
+        questionnaire.content
+    }}</Msg>
                     <v-row no-gutters>
                         <v-col cols="auto" v-for="(tag, i) in questionnaire.tags" :key="i">
                             <v-chip class="ma-2">
@@ -20,8 +21,10 @@
 
             <v-container v-if="questionnaire.isAnswered === true">
                 <v-tabs v-model="tab" color="primary" dark align-tabs="center">
-                    <v-tab :value="DETAIL_TAB_NUM1"><span style="font-size: 1.5em;">{{ DETAIL_TAB_NAME1 }}</span></v-tab>
-                    <v-tab :value="DETAIL_TAB_NUM2"><span style="font-size: 1.5em;">{{ DETAIL_TAB_NAME2 }}</span></v-tab>
+                    <v-tab :value="DETAIL_TAB_NUM1"><span style="font-size: 1.5em;">{{ DETAIL_TAB_NAME1
+                            }}</span></v-tab>
+                    <v-tab :value="DETAIL_TAB_NUM2"><span style="font-size: 1.5em;">{{ DETAIL_TAB_NAME2
+                            }}</span></v-tab>
                 </v-tabs>
                 <v-window v-model="tab">
                     <v-window-item v-for="n in DETAIL_TAB_LENGTH" :key="n" :value="n" style="padding:5%">
@@ -32,7 +35,7 @@
                         </div>
                         <div v-if="n === DETAIL_TAB_NUM2">
                             <v-row>
-                                <TimeChart :timeData="chart" :options="timeOptions"/>
+                                <TimeChart :timeData="chart" :options="timeOptions" />
                             </v-row>
                         </div>
                     </v-window-item>
@@ -114,7 +117,7 @@ export default defineComponent({
             plugins: {
                 legend: {
                     display: true,
-                    position: 'top',
+                    position: 'bottom',
                     labels: {
                         usePointStyle: true,
                         font: {
@@ -122,7 +125,7 @@ export default defineComponent({
                             size: 14,
                         },
                         color: '#333'
-                    }
+                    },
                 },
                 tooltip: {
                     enabled: true,

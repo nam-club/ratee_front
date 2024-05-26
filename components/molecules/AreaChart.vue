@@ -39,14 +39,12 @@ export default {
 .chart-container {
   position: relative;
   width: 100%;
-  height: 50vh; /* ビューポートの高さの50%を指定 */
-  max-height: 400px; /* 最大高さを400pxに制限 */
+  height: 100%;
 }
 
 @media (max-width: 768px) {
   .chart-container {
-    height: 70vh; /* 画面幅が768px以下の場合の高さを調整 */
-    max-height: 300px; /* 最大高さを300pxに制限 */
+    height: 40vh; /* 画面幅が768px以下の場合の高さを調整 */
   }
 }
 </style>
