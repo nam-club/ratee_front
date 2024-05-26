@@ -30,6 +30,7 @@ const getChart = async (questionId: string): Promise<ResponseData> => {
             url, { credentials: 'include' }
         );
         const data = await response.json();
+        console.log(data);
         if (response.ok) {
             console.log(data)
             return { chart: data };

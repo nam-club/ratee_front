@@ -32,7 +32,7 @@
                         </div>
                         <div v-if="n === DETAIL_TAB_NUM2">
                             <v-row>
-                                <TimeChart :timeData="chart" :options="timeOptions" />
+                                <TimeChart :timeData="chart" :options="timeOptions"/>
                             </v-row>
                         </div>
                     </v-window-item>
@@ -110,7 +110,7 @@ export default defineComponent({
 
         const timeOptions = computed(() => ({
             responsive: true,
-            maintainAspectRatio: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: {
                     display: true,

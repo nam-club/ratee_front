@@ -14,13 +14,12 @@
         </v-container>
         <v-container v-else style="margin-top: 5%;">
             <v-row>
-                <v-col cols="12" style="display: flex; justify-content: center;">
+                <v-col cols="12" class="text-center">
                     <Msg fontWeight="normal" fontSize="1em">{{ RECOMMEND_TITLE }}</Msg>
                 </v-col>
             </v-row>
             <v-row>
-                <v-col v-for="(recommend, index) in recommends" :key="index" cols="12" sm="4"
-                    style="display: flex; justify-content: center;">
+                <v-col v-for="(recommend, index) in recommends" :key="index" cols="12" sm="4" class="text-center">
                     <nuxt-link :to="`/questionnaire/${recommend.id}`" style="text-decoration: none; color: inherit;">
                         <Button :buttonStyle="mobileBtnStyle" :variant="btnVariant">
                             {{ truncate(recommend.content, 20) }}

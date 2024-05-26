@@ -42,12 +42,13 @@
                     </InfiniteLoading>
                 </v-container>
 
-                <v-container v-else>
+                <v-container v-else style="margin-top: 5%;">
                     <v-row v-if="comments && comments.length !== 0">
-                        <v-col cols="6">
-                            <Msg fontWeight="normal" fontSize="1.5em">{{ COMMENT_TITLE }}</Msg>
+                        <v-col cols="4"/>
+                        <v-col cols="4" class="text-center">
+                            <Msg fontWeight="normal" fontSize="1.2em">{{ COMMENT_TITLE }}</Msg>
                         </v-col>
-                        <v-col cols="6" class="text-end">
+                        <v-col cols="4" class="text-end">
                             <IconButton :icon="icons.mdiCommentPlus" :size="large" :variant="btnVariant"
                                 @click="openDialog" />
                         </v-col>
@@ -55,7 +56,8 @@
                     <v-row v-else>
                         <v-row justify="center">
                             <v-col cols="auto">
-                                <Button :variant="btnVariant" @click="openDialog">{{ COMMENT_BUTTON }}</Button>
+                                <IconButton :icon="icons.mdiCommentPlus" :size="large" :variant="btnVariant"
+                                @click="openDialog" />
                             </v-col>
                         </v-row>
                     </v-row>
