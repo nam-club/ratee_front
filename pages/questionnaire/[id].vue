@@ -3,7 +3,7 @@
         <SnackBar :snackbar="message.show" :snackbarText="message.text" @update:snackbar="message.show = $event"
             :color="errorColor" />
     </div>
-    <div v-if="!isQuestionnaireLoading">
+    <div v-if="!isQuestionnaireLoading && !isChartLoading && !isCommentLoading">
         <Questionnaire :questionnaire="questionnaire" :answerQuestionnaire="answerQuestionnaire"
         :comments="comments" :postComment="postComment" :recommends="recommends" :chart="chart" :load="load"
         :isInfiniteDisabled="isInfiniteDisabled" />
@@ -43,6 +43,8 @@ export default defineComponent({
         const router = useRoute();
         const questionId = Array.isArray(router.params.id) ? router.params.id[0] : router.params.id;
         const isQuestionnaireLoading = ref(true);
+        const isChartLoading = ref(true);
+        const isCommentLoading = ref(true);
         const snackbarMessages = ref<{ text: string; show: boolean }[]>([]); // スナックバーのメッセージを格納する配列
 
         // コメント一覧
@@ -86,6 +88,7 @@ export default defineComponent({
         watchEffect(async () => {
             questionnaire.value = await qStore.state.value;
             console.log(questionnaire.value)
+            isQuestionnaireLoading.value = false;
 
             if (questionnaire.value?.isAnswered) {
                 // useChart, useRecommends, useComments を並行して実行
@@ -99,6 +102,7 @@ export default defineComponent({
                 if (chartResult) {
                     chStore.value = chartResult;
                     chart.value = chStore.value.state.chart;
+                    isChartLoading.value = false;
                 }
 
                 if (recommendsResult) {
@@ -110,6 +114,7 @@ export default defineComponent({
                     cStore.value = commentsResult;
                     if (cStore.value && cStore.value.state) {
                         comments.value = cStore.value.state.comments;
+                        isCommentLoading.value = false;
                     }
                 }
 
@@ -129,7 +134,6 @@ export default defineComponent({
                     }
                 });
             }
-            isQuestionnaireLoading.value = qStore.isLoading.value;
         });
 
         // アンケート回答
@@ -184,7 +188,6 @@ export default defineComponent({
 
         return {
             questionnaire,
-            isQuestionnaireLoading,
             answerQuestionnaire,
             recommends,
             comments,
@@ -192,6 +195,9 @@ export default defineComponent({
             load,
             isInfiniteDisabled,
             chart,
+            isQuestionnaireLoading,
+            isChartLoading,
+            isCommentLoading,
             snackbarMessages,
             errorColor: mainTheme.colors?.error
         }
