@@ -3,13 +3,13 @@
         <SnackBar :snackbar="message.show" :snackbarText="message.text" @update:snackbar="message.show = $event"
             :color="errorColor" />
     </div>
-    <div v-if="!isQuestionnaireLoading && !isChartLoading && !isCommentLoading && questionnaire">
-        <Questionnaire :questionnaire="questionnaire" :answerQuestionnaire="answerQuestionnaire"
-        :comments="comments" :postComment="postComment" :recommends="recommends" :chart="chart" :load="load"
-        :isInfiniteDisabled="isInfiniteDisabled" />
+    <div v-if="!isQuestionnaireLoading && !isChartLoading && questionnaire">
+        <Questionnaire :questionnaire="questionnaire" :answerQuestionnaire="answerQuestionnaire" :comments="comments"
+            :postComment="postComment" :recommends="recommends" :chart="chart" :load="load"
+            :isInfiniteDisabled="isInfiniteDisabled" />
     </div>
     <div v-else class="text-center center-content">
-        <v-progress-circular indeterminate color="primary" :size=" 100 " :width=" 10 "></v-progress-circular>
+        <v-progress-circular indeterminate color="primary" :size="100" :width="10"></v-progress-circular>
     </div>
 </template>
 
@@ -31,7 +31,7 @@ import "v3-infinite-loading/lib/style.css";
 import { mainTheme } from '@/helpers/themes'
 import SnackBar from '@/components/molecules/SnackBar.vue'
 import Questionnaire from '@/components/templates/Questionnaire.vue'
-import { TARGET_RECOMMENDS, MAX_COUNT, ERR_MSG } from '@/constants';
+import { MAX_COUNT, ERR_MSG } from '@/constants';
 
 export default defineComponent({
     components: {
@@ -44,7 +44,6 @@ export default defineComponent({
         const questionId = Array.isArray(router.params.id) ? router.params.id[0] : router.params.id;
         const isQuestionnaireLoading = ref(true);
         const isChartLoading = ref(true);
-        const isCommentLoading = ref(true);
         const snackbarMessages = ref<{ text: string; show: boolean }[]>([]); // スナックバーのメッセージを格納する配列
 
         // コメント一覧
@@ -111,14 +110,14 @@ export default defineComponent({
 
                 if (recommendsResult) {
                     rStore.value = recommendsResult;
-                    recommends.value = rStore.value.state.questionnaires;
+                    console.log(rStore.value)
+                    recommends.value = rStore.value.state;
                 }
 
                 if (commentsResult) {
                     cStore.value = commentsResult;
                     if (cStore.value && cStore.value.state) {
                         comments.value = cStore.value.state.comments;
-                        isCommentLoading.value = false;
                     }
                 }
 
@@ -130,9 +129,8 @@ export default defineComponent({
                         isInfiniteDisabled.value = false;
                     }
                 });
-            }else {
+            } else {
                 isChartLoading.value = false;
-                isCommentLoading.value = false;
             }
         });
 
@@ -145,7 +143,7 @@ export default defineComponent({
 
         const load = async ($state: InfiniteLoadingState) => {
             if (isInfiniteDisabled.value) {
-                return; // 無限ローディングが無効の場合は関数の処理を終了
+                return; // 無限ローディ���グが無効の場合は関数の処理を終了
             }
             try {
                 if (cStore.value && cStore.value.state && cStore.value.state.nextToken !== '') {
@@ -195,7 +193,6 @@ export default defineComponent({
             chart,
             isQuestionnaireLoading,
             isChartLoading,
-            isCommentLoading,
             snackbarMessages,
             errorColor: mainTheme.colors?.error
         }
