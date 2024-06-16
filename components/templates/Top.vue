@@ -1,12 +1,15 @@
 <template>
     <v-app class="bg-secondary-lighten-6" style="display: flex; flex-direction: column;">
         <Header />
-        <ContentsView :nQuestionnaires="nQuestionnaires" :tQuestionnaires="tQuestionnaires"
-            :rQuestionnaires="rQuestionnaires" :sQuestionnaires="sQuestionnaires"
-            :searchQuestionnaires="searchQuestionnaires" :answerNewsQuestionnaire="answerNewsQuestionnaire"
-            :answerTrendQuestionnaire="answerTrendQuestionnaire" :answerRankingQuestionnaire="answerRankingQuestionnaire"
-            :answerSearchQuestionnaire="answerSearchQuestionnaire" :categories="categories" :isLoading="isLoading"
-            :load="load" :isInfiniteDisabled="isInfiniteDisabled" />
+        <div style="margin:0 0 20% 0">
+            <ContentsView :nQuestionnaires="nQuestionnaires" :tQuestionnaires="tQuestionnaires"
+                :rQuestionnaires="rQuestionnaires" :sQuestionnaires="sQuestionnaires"
+                :searchQuestionnaires="searchQuestionnaires" :answerNewsQuestionnaire="answerNewsQuestionnaire"
+                :answerTrendQuestionnaire="answerTrendQuestionnaire"
+                :answerRankingQuestionnaire="answerRankingQuestionnaire"
+                :answerSearchQuestionnaire="answerSearchQuestionnaire" :categories="categories" :isLoading="isLoading"
+                :load="load" :isInfiniteDisabled="isInfiniteDisabled" />
+        </div>
         <Footer :buttonText="footerButtonText" />
     </v-app>
 </template>

@@ -3,7 +3,7 @@
         <div v-if="categories.length">
             <Header />
         </div>
-        <Form :categories="categories" :createQuestionnaire="createQuestionnaire"/>
+        <Form :categories="categories" :createQuestionnaire="createQuestionnaire" style="margin:0 0 10% 0"/>
     </v-app>
 </template>
 
