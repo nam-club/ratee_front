@@ -1,14 +1,14 @@
 <template>
-    <AreaChart :chartData="chartData" :chartOptions="options" />
+    <LineChart :chartData="chartData" :chartOptions="options" />
 </template>
 
 <script lang="ts">
 import { ref, watch, defineComponent } from 'vue';
-import AreaChart from '@/components/molecules/AreaChart.vue';
+import LineChart from '@/components/molecules/LineChart.vue';
 
 export default defineComponent({
     components: {
-        AreaChart,
+        LineChart,
     },
     props: {
         timeData: {
@@ -53,7 +53,6 @@ export default defineComponent({
                 datasets.push({
                     label: value,
                     data: [],
-                    fill: true,
                     borderColor: borderColor,
                     backgroundColor: borderColor.replace('1)', '0.2)'),
                     cubicInterpolationMode: 'monotone',
