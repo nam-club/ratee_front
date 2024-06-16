@@ -75,10 +75,7 @@ export default defineComponent({
     },
     setup(props) {
         const { mobile } = useDisplay()
-
         const footerButtonText = ref('アンケートを作る')
-        console.log(props.comments)
-        console.log(props.recommends)
 
         return {
             mobile,

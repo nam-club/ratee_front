@@ -170,7 +170,6 @@ export default defineComponent({
         const { mobile } = useDisplay();
 
         const iconImg = ICON_IMG;
-        console.log(iconImg)
 
         const icons = ref({
             mdiCommentPlus,

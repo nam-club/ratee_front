@@ -44,7 +44,6 @@ const updateUserId = async () => {
         });
         if (response.ok) {
             const resp = await response.json();
-            console.log(resp);
         } else {
             console.error('ユーザID生成・更新APIの実行中にエラーが発生しました:', response.statusText);
         }
@@ -55,7 +54,6 @@ const updateUserId = async () => {
 
 // アンケート一覧取得API
 const getQuestionnaires = async (order: string): Promise<ResponseData> => {
-    console.log("アンケート一覧取得API");
     try {
         const url = new URL(`${baseURL}/questionnaires`);
         const params = new URLSearchParams({ order });
@@ -76,7 +74,6 @@ const getQuestionnaires = async (order: string): Promise<ResponseData> => {
 
 // アンケート一覧取得API（続き）
 const getNextQuestionnaires = async (order: string, nextToken: string): Promise<ResponseData> => {
-    console.log("アンケート一覧取得API（続き）")
     try {
         const url = new URL(`${baseURL}/questionnaires`);
         const params = new URLSearchParams({
@@ -102,7 +99,6 @@ const getNextQuestionnaires = async (order: string, nextToken: string): Promise<
 
 // アンケート一覧取得API（検索）
 const getSearchQuestionnaires = async (type: string, word: string): Promise<ResponseData> => {
-    console.log("アンケート一覧取得API（検索）")
     try {
         const url = new URL(`${baseURL}/questionnaires`);
         let params;
@@ -174,8 +170,6 @@ const getQuestionnaire = async (questionId: string) => {
 
 // アンケート回答API
 const postAnswer = async (questionId: string, choices: string[]) => {
-
-    console.log(choices)
 
     try {
         const response = await fetch(`${baseURL}/questionnaire/answer`, {
@@ -266,9 +260,7 @@ export const useQuestionnaires = (tabId: string) => {
     const code = ref('');
 
     onMounted(async () => {
-        console.log(state.value.questionnaires);
         if (state.value.questionnaires.length === 0) {
-            console.log("初回ロード");
             await updateUserId();
             if (tabId !== TAB_ID4) {
                 isLoading.value = true;
@@ -321,7 +313,6 @@ export const useQuestionnaires = (tabId: string) => {
 
     // アンケート回答
     const answerQuestionnaire = async (questionId: string, choices: string[]) => {
-        console.log(choices)
         code.value = '';
         const postResult = await postAnswer(questionId, choices);
         code.value = postResult.code ? postResult.code : '';
@@ -361,9 +352,7 @@ export const useQuestionnaires = (tabId: string) => {
 
             // アンケート一覧取得APIを実行
             if (code.value === '') {
-                console.log("アンケート投稿後の一覧取得API");
                 const qObject = await getQuestionnaires(TAB_ID1);
-                console.log("アンケート再取得完了");
                 state.value.questionnaires = qObject.questionnaires ? [...qObject.questionnaires] : state.value.questionnaires;
                 state.value.nextToken = qObject.nextToken ? qObject.nextToken : '';
                 code.value = qObject.code ? qObject.code : '';
@@ -396,7 +385,6 @@ export const useQuestionnaire = (questionId: string) => {
 
     onMounted(async () => {
         state.value = await getQuestionnaire(questionId);
-        console.log(state.value)
         isLoading.value = false;
         code.value = state.value.code ? state.value.code : '';
         if (state.value?.enableComment) {
@@ -406,7 +394,6 @@ export const useQuestionnaire = (questionId: string) => {
 
     // アンケート回答
     const answerQuestionnaire = async (questionId: string, choices: string[]) => {
-        console.log(choices)
         code.value = '';
         const postResult = await postAnswer(questionId, choices);
         code.value = postResult.code ? postResult.code : '';

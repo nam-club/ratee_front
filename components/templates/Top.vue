@@ -81,13 +81,6 @@ export default defineComponent({
     setup(props) {
         const footerButtonText = ref('アンケートを作る')
 
-        watchEffect(() => {
-            console.log("===Topコンポーネント===")
-            console.log(props.nQuestionnaires)
-            console.log(props.tQuestionnaires)
-            console.log(props.rQuestionnaires)
-        });
-
         return {
             footerButtonText,
         }

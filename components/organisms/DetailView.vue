@@ -77,8 +77,6 @@ export default defineComponent({
     setup(props) {
         const { mobile } = useDisplay()
 
-        console.log(props.questionnaire)
-
         // タブの値をリアクティブにする
         const tab = ref<number | null>(null);
 

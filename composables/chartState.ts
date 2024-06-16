@@ -30,9 +30,7 @@ const getChart = async (questionId: string): Promise<ResponseData> => {
             url, { credentials: 'include' }
         );
         const data = await response.json();
-        console.log(data);
         if (response.ok) {
-            console.log(data)
             return { chart: data };
         } else {
             console.error('時系列チャート取得APIの実行中にエラーが発生しました:', response.statusText);

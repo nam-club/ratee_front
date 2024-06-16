@@ -40,7 +40,6 @@ export default {
         const nQuestionnaires = ref<Questionnaire[]>([]);
 
         watch(() => newsStore.state.value.questionnaires, (newVal) => {
-            console.log("アンケート一覧（新着）を最新化します。")
             nQuestionnaires.value = newVal.map(q => ({
                 ...q,
                 choices: q.choices.map(choice => ({ ...choice })),
@@ -53,7 +52,6 @@ export default {
         const tQuestionnaires = ref<Questionnaire[]>([]);
 
         watch(() => trendStore.state.value.questionnaires, (newVal) => {
-            console.log("アンケート一覧（急上昇）を最新化します。")
             tQuestionnaires.value = newVal.map(q => ({
                 ...q,
                 choices: q.choices.map(choice => ({ ...choice })),
@@ -66,7 +64,6 @@ export default {
         const rQuestionnaires = ref<Questionnaire[]>([]);
 
         watch(() => rankingStore.state.value.questionnaires, (newVal) => {
-            console.log("アンケート一覧（ランキング）を最新化します。")
             rQuestionnaires.value = newVal.map(q => ({
                 ...q,
                 choices: q.choices.map(choice => ({ ...choice })),
@@ -79,7 +76,6 @@ export default {
         const sQuestionnaires = ref<Questionnaire[]>([]);
 
         watch(() => searchStore.state.value.questionnaires, (newVal) => {
-            console.log("アンケート一覧（検索）を最新化します。")
             sQuestionnaires.value = newVal.map(q => ({
                 ...q,
                 choices: q.choices.map(choice => ({ ...choice })),
@@ -118,9 +114,7 @@ export default {
 
         // 続きのアンケート一覧を取得
         const scrollQuestionnaires = async (order: string, nextToken: string) => {
-            console.log('==start scrollQuestionnaires===')
             await newsStore.scrollQuestionnaires(order, nextToken)
-            console.log(newsStore.state)
         };
 
         const isInfiniteDisabled = ref(false); // 無限スクロール制御変数の定義
@@ -134,18 +128,15 @@ export default {
         });
 
         const load = async ($state: InfiniteLoadingState, tabNum: number) => {
-            console.log(tabNum)
             if (isInfiniteDisabled.value || tabNum !== TAB_NUM1) {
                 $state.loaded();
                 return; // 無限ローディングが無効の場合は関数の処理を終了
             }
             try {
                 if (newsStore.state.value.nextToken !== '') {
-                    console.log("nextTokenあり")
                     await scrollQuestionnaires(TAB_ID1, newsStore.state.value.nextToken);
                     $state.loaded();
                 } else {
-                    console.log("nextTokenなし")
                     await scrollQuestionnaires(TAB_ID1, newsStore.state.value.nextToken);
                     $state.complete();
                     isInfiniteDisabled.value = true;

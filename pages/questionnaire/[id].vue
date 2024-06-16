@@ -63,7 +63,6 @@ export default defineComponent({
         const postComment = async (questionId: string, iconId: number, comment: string) => {
             if (cStore.value) {
                 await cStore.value.sendComment(questionId, iconId, comment);
-                console.log(cStore.value)
                 comments.value = cStore.value.state.comments;
             } else {
                 console.error("cStore is not initialized.");
@@ -73,7 +72,6 @@ export default defineComponent({
         // 続きのコメント一覧を取得する関数もここに移動
         const scrollComments = async (nextToken: string) => {
             if (cStore.value) {
-                console.log('==start scrollComments==')
                 await cStore.value.scrollComments(questionId, nextToken)
             } else {
                 console.error("cStore is not initialized.");
@@ -87,7 +85,6 @@ export default defineComponent({
         // アンケート情報取得後、時系列チャート・おすすめアンケート・コメント一覧取得を実行
         watchEffect(async () => {
             questionnaire.value = await qStore.state.value;
-            console.log(questionnaire.value)
             isQuestionnaireLoading.value = false;
 
             if (questionnaire.value?.isAnswered) {
@@ -152,11 +149,9 @@ export default defineComponent({
             }
             try {
                 if (cStore.value && cStore.value.state && cStore.value.state.nextToken !== '') {
-                    console.log("nextTokenあり")
                     await scrollComments(cStore.value.state.nextToken);
                     $state.loaded();
                 } else {
-                    console.log("nextTokenなし")
                     await scrollComments(cStore.value.state.nextToken);
                     $state.complete();
                     isInfiniteDisabled.value = true;

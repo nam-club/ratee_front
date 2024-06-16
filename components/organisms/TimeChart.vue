@@ -38,10 +38,8 @@ export default defineComponent({
 
         const processData = (obj) => {
             if (!obj || Object.keys(obj).length === 0) {
-                console.log('timeData is empty or undefined');
                 return;
             }
-            console.log(obj);
             const labels = new Set();
             const datasets = [];
             const dataPoints = Object.entries(obj.data);

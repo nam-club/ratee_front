@@ -42,7 +42,6 @@ const getComments = async (questionId: string, nextToken: string): Promise<Respo
             url, { credentials: 'include' }
         );
         const data = await response.json();
-        console.log(data)
         if (response.ok) {
             return { comments: data.comments, nextToken: data.nextToken };
         } else {

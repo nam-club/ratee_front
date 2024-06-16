@@ -66,7 +66,6 @@ export default defineComponent({
         // 画像が正常にロードされた場合の処理
         const imageLoaded = () => {
             imageLoaded.value = true;
-            console.log('画像が正常にロードされました。');
         };
 
         const icons = ref({

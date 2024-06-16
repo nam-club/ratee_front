@@ -272,7 +272,6 @@ export default defineComponent({
         }
 
         const removeTexts = (index: number) => {
-            console.log('removeTexts called with index:', index);
             if (props.textsModel) {
                 if (index >= 0 && index < props.textsModel.length) {  // インデックスが有効な範囲にあることを確認
                     // props.textsModelのクローンを作成
@@ -296,7 +295,6 @@ export default defineComponent({
         }
 
         const removeChip = (index: number) => {
-            console.log('removeChip called with index:', index);
             if (props.chipsModel) {
                 if (index >= 0 && index < props.chipsModel.length) {  // インデックスが有効な範囲にあることを確認
                     // props.chipsModelのクローンを作成
@@ -305,7 +303,6 @@ export default defineComponent({
                     updatedChipsModel.splice(index, 1);
                     // 更新された配列を親コンポーネントに伝播
                     context.emit('update:chipsModel', updatedChipsModel);
-                    console.log(props.chipsModel)
                 } else {
                     console.error('Invalid index:', index);  // インデックスが無効な場合はエラーを表示
                 }
