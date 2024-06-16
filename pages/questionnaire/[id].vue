@@ -3,13 +3,13 @@
         <SnackBar :snackbar="message.show" :snackbarText="message.text" @update:snackbar="message.show = $event"
             :color="errorColor" />
     </div>
-    <div v-if="!isQuestionnaireLoading && !isCommentLoading && !isChartLoading && !isRecommendLoading">
-        <Questionnaire :questionnaire="questionnaire" :answerQuestionnaire="answerQuestionnaire" :comments="comments"
-            :postComment="postComment" :recommends="recommends" :chart="chart" :load="load"
-            :isInfiniteDisabled="isInfiniteDisabled" />
+    <div v-if="!isQuestionnaireLoading">
+        <Questionnaire :questionnaire="questionnaire" :answerQuestionnaire="answerQuestionnaire"
+        :comments="comments" :postComment="postComment" :recommends="recommends" :chart="chart" :load="load"
+        :isInfiniteDisabled="isInfiniteDisabled" />
     </div>
     <div v-else class="text-center center-content">
-        <v-progress-circular indeterminate color="primary" :size="100" :width="10"></v-progress-circular>
+        <v-progress-circular indeterminate color="primary" :size=" 100 " :width=" 10 "></v-progress-circular>
     </div>
 </template>
 
@@ -43,9 +43,6 @@ export default defineComponent({
         const router = useRoute();
         const questionId = Array.isArray(router.params.id) ? router.params.id[0] : router.params.id;
         const isQuestionnaireLoading = ref(true);
-        const isRecommendLoading = ref(true);
-        const isCommentLoading = ref(true);
-        const isChartLoading = ref(true);
         const snackbarMessages = ref<{ text: string; show: boolean }[]>([]); // スナックバーのメッセージを格納する配列
 
         // コメント一覧
@@ -88,28 +85,23 @@ export default defineComponent({
         // アンケート情報取得後、時系列チャート・おすすめアンケート・コメント一覧取得を実行
         watchEffect(async () => {
             questionnaire.value = await qStore.state.value;
-            isQuestionnaireLoading.value = false;
+            console.log(questionnaire.value)
 
             // questionnaire.valueが存在し、isAnsweredがtrueでことを確認
             if (questionnaire.value?.isAnswered) {
                 chStore.value = await useChart(questionId);
                 chart.value = await chStore.value.state.chart;
                 console.log(chart.value)
-                isChartLoading.value = false;
 
                 rStore.value = await useRecommendQuestionnaires(questionId)
                 recommends.value = await rStore.value.state.questionnaires;
-                isRecommendLoading.value = false;
 
                 // enableCommentがtrueであることを確認
                 if (questionnaire.value.enableComment) {
                     // cStoreの初期化
-                    isCommentLoading.value = true;
                     cStore.value = await useComments(questionId, "");
                     if (cStore.value && cStore.value.state) {
                         comments.value = await cStore.value.state.comments;
-                        console.log(comments.value)
-                        isCommentLoading.value = false;
                     }
 
                     watchEffect(() => {
@@ -126,6 +118,7 @@ export default defineComponent({
                     });
                 }
             }
+            isQuestionnaireLoading.value = qStore.isLoading.value;
         });
 
         // アンケート回答
@@ -183,14 +176,11 @@ export default defineComponent({
             isQuestionnaireLoading,
             answerQuestionnaire,
             recommends,
-            isRecommendLoading,
             comments,
-            isCommentLoading,
             postComment,
             load,
             isInfiniteDisabled,
             chart,
-            isChartLoading,
             snackbarMessages,
             errorColor: mainTheme.colors?.error
         }

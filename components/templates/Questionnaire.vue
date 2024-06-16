@@ -3,7 +3,7 @@
         <Header />
         <DetailView :class="{'detail_mobile': mobile, 'detail': !mobile}" :questionnaire="questionnaire" :answerQuestionnaire="answerQuestionnaire" :chart="chart" />
         <RecommendBox v-if="recommends && recommends.length !== 0" :recommends="recommends" />
-        <CommentBox v-if="questionnaire.enableComment" :questionId="questionnaire.id" :comments="comments" :postComment="postComment"
+        <CommentBox v-if="questionnaire.enableComment && questionnaire.isAnswered" :questionId="questionnaire.id" :comments="comments" :postComment="postComment"
          :load="load" :isInfiniteDisabled="isInfiniteDisabled" />
         <Footer :buttonText="footerButtonText" />
     </v-app>
