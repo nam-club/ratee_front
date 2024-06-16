@@ -43,14 +43,22 @@ export default defineComponent({
         const router = useRoute();
         const questionId = Array.isArray(router.params.id) ? router.params.id[0] : router.params.id;
         const isQuestionnaireLoading = ref(true);
-        const isRecommendLoading = ref(false);
-        const isCommentLoading = ref(false);
+        const isRecommendLoading = ref(true);
+        const isCommentLoading = ref(true);
         const isChartLoading = ref(true);
         const snackbarMessages = ref<{ text: string; show: boolean }[]>([]); // スナックバーのメッセージを格納する配列
 
-        // コメント一覧取得
+        // コメント一覧
         const cStore = ref(null); // cStoreをrefとして定義
         const comments = ref([]);
+
+        // 時系列チャート
+        const chStore = ref(null); // chStoreをrefとして定義
+        const chart = ref({});
+
+        // おすすめアンケート一覧
+        const rStore = ref(null);
+        const recommends = ref({});
 
         // コメント投稿関数をsetup関数の直下で定義
         const postComment = async (questionId: string, iconId: number, comment: string) => {
@@ -77,33 +85,46 @@ export default defineComponent({
         const qStore = useQuestionnaire(questionId);
         const questionnaire = ref({});
 
-        // アンケート情報取得後、enableCommentがtrueの場合のみコメント一覧取得を実行
+        // アンケート情報取得後、時系列チャート・おすすめアンケート・コメント一覧取得を実行
         watchEffect(async () => {
-            questionnaire.value = qStore.state.value;
-            isQuestionnaireLoading.value = qStore.isLoading.value;
-            // questionnaire.valueが存在し、かつenableCommentがtrueであることを確認
-            if (questionnaire.value && questionnaire.value.enableComment) {
-                // cStoreの初期化
-                isCommentLoading.value = true;
-                cStore.value = await useComments(questionId, "");
-                if (cStore.value && cStore.value.state) {
-                    comments.value = cStore.value.state.comments;
-                    console.log(comments.value)
-                    isCommentLoading.value = cStore.value.isLoading.value;
-                }
+            questionnaire.value = await qStore.state.value;
+            isQuestionnaireLoading.value = false;
 
-                watchEffect(() => {
-                    if (cStore.value && cStore.value.state && cStore.value.state.nextToken === '') {
-                        isInfiniteDisabled.value = true;
-                    } else {
-                        isInfiniteDisabled.value = false;
+            // questionnaire.valueが存在し、isAnsweredがtrueでことを確認
+            if (questionnaire.value?.isAnswered) {
+                chStore.value = await useChart(questionId);
+                chart.value = await chStore.value.state.chart;
+                console.log(chart.value)
+                isChartLoading.value = false;
+
+                rStore.value = await useRecommendQuestionnaires(questionId)
+                recommends.value = await rStore.value.state.questionnaires;
+                isRecommendLoading.value = false;
+
+                // enableCommentがtrueであることを確認
+                if (questionnaire.value.enableComment) {
+                    // cStoreの初期化
+                    isCommentLoading.value = true;
+                    cStore.value = await useComments(questionId, "");
+                    if (cStore.value && cStore.value.state) {
+                        comments.value = await cStore.value.state.comments;
+                        console.log(comments.value)
+                        isCommentLoading.value = false;
                     }
-                });
 
-                // コメントのリセットもここに移動
-                onBeforeUnmount(() => {
-                    cStore.value.resetComment();
-                });
+                    watchEffect(() => {
+                        if (cStore.value && cStore.value.state && cStore.value.state.nextToken === '') {
+                            isInfiniteDisabled.value = true;
+                        } else {
+                            isInfiniteDisabled.value = false;
+                        }
+                    });
+
+                    // コメントのリセットもここに移動
+                    onBeforeUnmount(() => {
+                        cStore.value.resetComment();
+                    });
+                }
             }
         });
 
@@ -111,25 +132,6 @@ export default defineComponent({
         const answerQuestionnaire = (id: string, name: string) => {
             qStore.answerQuestionnaire(id, name);
         }
-
-        // おすすめアンケート一覧取得
-        const rStore = useQuestionnaires(TARGET_RECOMMENDS, '', questionId);
-        const recommends = ref({});
-
-        watchEffect(() => {
-            recommends.value = rStore.state.value.questionnaires;
-            isRecommendLoading.value = rStore.isLoading.value;
-            console.log(recommends.value)
-        });
-
-        // 時系列チャート取得
-        const chStore = useChart(questionId);
-        const chart = ref({});
-
-        watchEffect(() => {
-            chart.value = chStore.state.value.chart;
-            isChartLoading.value = chStore.isLoading.value;
-        });
 
         const isInfiniteDisabled = ref(false); // 無限スクロール制御変数の定義
 
@@ -162,16 +164,16 @@ export default defineComponent({
 
         // qStoreとcStoreとrStoreを監視し、エラーコードがあればスナックバー用のメッセージ配列に追加
         watchEffect(() => {
-            if (qStore.code.value !== '') {
+            if (qStore.code && qStore.code.value !== '') {
                 snackbarMessages.value.push({ text: ERR_MSG[qStore.code.value], show: true });
             }
-            if (cStore.value && cStore.value.state && cStore.value.code !== '') {
+            if (cStore.value && cStore.value.state && cStore.value.code && cStore.value.code !== '') {
                 snackbarMessages.value.push({ text: ERR_MSG[cStore.value.code], show: true });
             }
-            if (rStore.code.value !== '') {
+            if (rStore.code && rStore.code.value !== '') {
                 snackbarMessages.value.push({ text: ERR_MSG[rStore.code.value], show: true });
             }
-            if (chStore.code.value !== '') {
+            if (chStore.code && chStore.code.value !== '') {
                 snackbarMessages.value.push({ text: ERR_MSG[chStore.code.value], show: true });
             }
         });

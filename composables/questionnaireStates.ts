@@ -259,7 +259,7 @@ const getRecommendQuestionnaires = async (questionId: string) => {
 
 
 // アンケート一覧のStore定義
-export const useQuestionnaires = (target: string, tabId: string, questionId: string) => {
+export const useQuestionnaires = (tabId: string) => {
 
     const state = ref<ResponseData>({ questionnaires: [], nextToken: '' });
     const isLoading = ref(true);
@@ -270,18 +270,12 @@ export const useQuestionnaires = (target: string, tabId: string, questionId: str
         if (state.value.questionnaires.length === 0) {
             console.log("初回ロード");
             await updateUserId();
-            if (target === TARGET_QUESTIONNAIRES && tabId !== TAB_ID4) {
+            if (tabId !== TAB_ID4) {
                 isLoading.value = true;
                 code.value = '';
                 const qObject = await getQuestionnaires(tabId);
                 state.value.questionnaires = qObject.questionnaires || [];
                 state.value.nextToken = qObject.nextToken || '';
-                code.value = qObject.code || '';
-                isLoading.value = false;
-            } else if (target === TARGET_RECOMMENDS) {
-                isLoading.value = true;
-                const qObject = await getRecommendQuestionnaires(questionId);
-                state.value.questionnaires = qObject.questionnaires || [];
                 code.value = qObject.code || '';
                 isLoading.value = false;
             }
@@ -428,6 +422,23 @@ export const useQuestionnaire = (questionId: string) => {
         state: readonly(state),
         answerQuestionnaire,
         isLoading,
+        code
+    }
+
+}
+
+// おすすめアンケート一覧のStore定義
+export const useRecommendQuestionnaires = async (questionId: string) => {
+
+    const state = ref<Questionnaire[]>(); // 初期値は空のオブジェクト
+    const code = ref('');
+
+    const qObject = await getRecommendQuestionnaires(questionId);
+    state.value = qObject.questionnaires || [];
+    code.value = qObject.code || '';
+
+    return {
+        state: readonly(state),
         code
     }
 

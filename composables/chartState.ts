@@ -45,20 +45,18 @@ const getChart = async (questionId: string): Promise<ResponseData> => {
 }
 
 // 時系列チャートのStore定義
-export const useChart = (questionId: string) => {
+export const useChart = async (questionId: string) => {
     const state = ref<ResponseData>({ chart: { id: questionId, choices: {}, interval: '', data: {} } });
     const isLoading = ref(true);
     const code = ref('');
 
     // 時系列チャートの取得
-    onMounted(async () => {
-        const cObject = await getChart(questionId);
-        state.value.chart.choices = cObject.chart.choices ? cObject.chart.choices : {};
-        state.value.chart.interval = cObject.chart.interval ? cObject.chart.interval : '';
-        state.value.chart.data = cObject.chart.data ? cObject.chart.data : {};
-        isLoading.value = false;
-        code.value = cObject.code ? cObject.code : '';
-    });
+    const cObject = await getChart(questionId);
+    state.value.chart.choices = cObject.chart.choices ? cObject.chart.choices : {};
+    state.value.chart.interval = cObject.chart.interval ? cObject.chart.interval : '';
+    state.value.chart.data = cObject.chart.data ? cObject.chart.data : {};
+    isLoading.value = false;
+    code.value = cObject.code ? cObject.code : '';
 
     return {
         state: readonly(state),

@@ -35,7 +35,7 @@ export default {
     },
     setup() {
         // アンケート一覧取得(新着)
-        const newsStore = useQuestionnaires(TARGET_QUESTIONNAIRES, TAB_ID1, '');   // 新着
+        const newsStore = useQuestionnaires(TAB_ID1);   // 新着
         const isLoading = newsStore.isLoading;
         const nQuestionnaires = ref<Questionnaire[]>([]);
 
@@ -49,7 +49,7 @@ export default {
         }, { deep: true });
 
         // アンケート一覧取得(急上昇)
-        const trendStore = useQuestionnaires(TARGET_QUESTIONNAIRES, TAB_ID2, '');
+        const trendStore = useQuestionnaires(TAB_ID2);
         const tQuestionnaires = ref<Questionnaire[]>([]);
 
         watch(() => trendStore.state.value.questionnaires, (newVal) => {
@@ -62,7 +62,7 @@ export default {
         }, { deep: true });
 
         // アンケート一覧取得(ランキング)
-        const rankingStore = useQuestionnaires(TARGET_QUESTIONNAIRES, TAB_ID3, '');
+        const rankingStore = useQuestionnaires(TAB_ID3);
         const rQuestionnaires = ref<Questionnaire[]>([]);
 
         watch(() => rankingStore.state.value.questionnaires, (newVal) => {
@@ -75,7 +75,7 @@ export default {
         }, { deep: true });
 
         // アンケート一覧取得(検索)
-        const searchStore = useQuestionnaires(TARGET_QUESTIONNAIRES, TAB_ID4, '');
+        const searchStore = useQuestionnaires(TAB_ID4);
         const sQuestionnaires = ref<Questionnaire[]>([]);
 
         watch(() => searchStore.state.value.questionnaires, (newVal) => {
