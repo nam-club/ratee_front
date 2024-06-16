@@ -55,7 +55,7 @@ export default defineComponent({
 
         // おすすめアンケート一覧
         const rStore = ref(null);
-        const recommends = ref({});
+        const recommends = ref([]);
 
         // コメント投稿関数をsetup関数の直下で定義
         const postComment = async (questionId: string, iconId: number, comment: string) => {
@@ -87,36 +87,47 @@ export default defineComponent({
             questionnaire.value = await qStore.state.value;
             console.log(questionnaire.value)
 
-            // questionnaire.valueが存在し、isAnsweredがtrueでことを確認
             if (questionnaire.value?.isAnswered) {
-                chStore.value = await useChart(questionId);
-                chart.value = await chStore.value.state.chart;
-                console.log(chart.value)
+                // useChart, useRecommends, useComments を並行して実行
+                const [chartResult, recommendsResult, commentsResult] = await Promise.all([
+                    useChart(questionId),
+                    useRecommends(questionId),
+                    questionnaire.value.enableComment ? useComments(questionId, "") : Promise.resolve(null)
+                ]);
 
-                rStore.value = await useRecommendQuestionnaires(questionId)
-                recommends.value = await rStore.value.state.questionnaires;
-
-                // enableCommentがtrueであることを確認
-                if (questionnaire.value.enableComment) {
-                    // cStoreの初期化
-                    cStore.value = await useComments(questionId, "");
-                    if (cStore.value && cStore.value.state) {
-                        comments.value = await cStore.value.state.comments;
-                    }
-
-                    watchEffect(() => {
-                        if (cStore.value && cStore.value.state && cStore.value.state.nextToken === '') {
-                            isInfiniteDisabled.value = true;
-                        } else {
-                            isInfiniteDisabled.value = false;
-                        }
-                    });
-
-                    // コメントのリセットもここに移動
-                    onBeforeUnmount(() => {
-                        cStore.value.resetComment();
-                    });
+                // 結果を適切に処理
+                if (chartResult) {
+                    chStore.value = chartResult;
+                    chart.value = chStore.value.state.chart;
                 }
+
+                if (recommendsResult) {
+                    rStore.value = recommendsResult;
+                    recommends.value = rStore.value.state.questionnaires;
+                }
+
+                if (commentsResult) {
+                    cStore.value = commentsResult;
+                    if (cStore.value && cStore.value.state) {
+                        comments.value = cStore.value.state.comments;
+                    }
+                }
+
+                // 無限スクロールの制御
+                watchEffect(() => {
+                    if (cStore.value && cStore.value.state && cStore.value.state.nextToken === '') {
+                        isInfiniteDisabled.value = true;
+                    } else {
+                        isInfiniteDisabled.value = false;
+                    }
+                });
+
+                // コメントのリセット
+                onBeforeUnmount(() => {
+                    if (cStore.value) {
+                        cStore.value.resetComment();
+                    }
+                });
             }
             isQuestionnaireLoading.value = qStore.isLoading.value;
         });

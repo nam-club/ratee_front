@@ -75,6 +75,7 @@ export default defineComponent({
 
         const footerButtonText = ref('アンケートを作る')
         console.log(props.comments)
+        console.log(props.recommends)
 
         return {
             mobile,

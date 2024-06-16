@@ -428,7 +428,7 @@ export const useQuestionnaire = (questionId: string) => {
 }
 
 // おすすめアンケート一覧のStore定義
-export const useRecommendQuestionnaires = async (questionId: string) => {
+export const useRecommends = async (questionId: string) => {
 
     const state = ref<Questionnaire[]>(); // 初期値は空のオブジェクト
     const code = ref('');
