@@ -185,6 +185,7 @@ const postAnswer = async (questionId: string, choices: string[]) => {
         });
         const data = await response.json();
         if (response.ok) {
+            // return { code: '', message: '', questionnaires: data.questionnaires };
             return { code: '', message: '' };
         } else {
             console.error('アンケート回答APIの実行中にエラーが発生しました:', response.statusText);
@@ -401,6 +402,8 @@ export const useQuestionnaire = (questionId: string) => {
         if (code.value === '') {
             // アンケート回答APIが完了した後にアンケート情報取得APIを実行
             state.value = await getQuestionnaire(questionId);
+            // state.value = postResult.questionnaires;
+            // 下を消す
             code.value = state.value.code ? state.value.code : '';
         }
     }
