@@ -5,7 +5,7 @@
             <DetailView :class="{ 'detail_mobile': mobile, 'detail': !mobile }" :questionnaire="questionnaire"
                 :answerQuestionnaire="answerQuestionnaire" :chart="chart" />
             <RecommendBox v-if="recommends && recommends.length !== 0" :recommends="recommends" />
-            <CommentBox v-if="questionnaire.enableComment && questionnaire.isAnswered" :questionId="questionnaire.id"
+            <CommentBox v-if="comments && comments.length !== 0 && questionnaire.enableComment && questionnaire.isAnswered" :questionId="questionnaire.id"
                 :comments="comments" :postComment="postComment" :load="load" :isInfiniteDisabled="isInfiniteDisabled" />
         </div>
         <Footer :buttonText="footerButtonText" />

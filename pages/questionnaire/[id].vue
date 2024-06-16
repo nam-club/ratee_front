@@ -133,6 +133,9 @@ export default defineComponent({
                         cStore.value.resetComment();
                     }
                 });
+            }else {
+                isChartLoading.value = false;
+                isCommentLoading.value = false;
             }
         });
 
