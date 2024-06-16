@@ -13,7 +13,7 @@
         </v-footer>
         <nuxt-link v-else to="/create"
             style="text-decoration: none; color: inherit; position: fixed; right: 0; bottom: 6%; margin: 20px; z-index: 1000;">
-            <IconButton :icon="icons.mdiPencilPlus" :size="large" :variant="iconBtnVariant" />
+            <IconButton :icon="icons.mdiPencilPlus" size="large" :variant="iconBtnVariant" />
         </nuxt-link>
     </div>
 </template>

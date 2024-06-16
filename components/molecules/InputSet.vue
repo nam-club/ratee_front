@@ -62,7 +62,7 @@
             </v-row>
             <v-row no-gutters>
                 <v-col cols="auto" v-for="(c, i) in computedChipsModel" :key="i">
-                    <v-chip v-model="computedChipsModel[i]" class="ma-2" closable
+                    <v-chip class="ma-2" closable
                         @click:close="($event: Event) => { $event.stopPropagation(); removeChip(i); }">
                         {{ computedChipsModel[i] }}
                     </v-chip>
@@ -187,6 +187,7 @@ export default defineComponent({
             default: false
         }
     },
+    emits: ['input', 'update', 'update:textsModel', 'update:selectModel', 'update:checkModel', 'update:chipsModel'],
     computed: {
         computedTextModel: {
             get(): string {

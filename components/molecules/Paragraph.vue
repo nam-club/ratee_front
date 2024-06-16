@@ -41,10 +41,10 @@ export default defineComponent({
             type: String
         },
         texts: {
-            type: []
+            type: Array
         },
         chips: {
-            type: []
+            type: Array
         },
         labelText: {
             type: String

@@ -9,7 +9,6 @@ export default defineComponent({
     props: {
         color: {
             type: String,
-            required: true,
         },
         icon: {
             type: String,

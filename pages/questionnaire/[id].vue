@@ -3,7 +3,7 @@
         <SnackBar :snackbar="message.show" :snackbarText="message.text" @update:snackbar="message.show = $event"
             :color="errorColor" />
     </div>
-    <div v-if="!isQuestionnaireLoading && !isChartLoading && !isCommentLoading">
+    <div v-if="!isQuestionnaireLoading && !isChartLoading && !isCommentLoading && questionnaire">
         <Questionnaire :questionnaire="questionnaire" :answerQuestionnaire="answerQuestionnaire"
         :comments="comments" :postComment="postComment" :recommends="recommends" :chart="chart" :load="load"
         :isInfiniteDisabled="isInfiniteDisabled" />
@@ -78,11 +78,18 @@ export default defineComponent({
             }
         };
 
+        // コメントのリセット
+        onBeforeUnmount(() => {
+            if (cStore.value) {
+                cStore.value.resetComment();
+            }
+        });
+
         // アンケート情報取得
         const qStore = useQuestionnaire(questionId);
         const questionnaire = ref({});
 
-        // アンケート情報取得後、時系列チャート・おすすめアンケート・コメント一覧取得を実行
+        // アンケート情報取得後、時列チャート・おすすめアンケート・コメント一覧取得を実行
         watchEffect(async () => {
             questionnaire.value = await qStore.state.value;
             isQuestionnaireLoading.value = false;
@@ -121,13 +128,6 @@ export default defineComponent({
                         isInfiniteDisabled.value = true;
                     } else {
                         isInfiniteDisabled.value = false;
-                    }
-                });
-
-                // コメントのリセット
-                onBeforeUnmount(() => {
-                    if (cStore.value) {
-                        cStore.value.resetComment();
                     }
                 });
             }else {
