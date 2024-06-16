@@ -9,6 +9,20 @@ export default defineNuxtConfig({
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
         { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=M+PLUS+1p&family=M+PLUS+Rounded+1c&display=swap' },
       ],
+      script: [
+        { src: 'https://www.googletagmanager.com/gtag/js?id=G-PQES2NWW75', async: true },
+        { 
+          innerHTML: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-PQES2NWW75');
+          `,
+          type: 'text/javascript',
+          charset: 'utf-8'
+        }
+      ],
+      __dangerouslyDisableSanitizers: ['script']
     },
   },
   build: {
