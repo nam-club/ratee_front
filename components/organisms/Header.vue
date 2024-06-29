@@ -1,105 +1,165 @@
 <template>
-    <v-app-bar v-if="!mobile" class="px-0 app-bar">
-        <!-- 左端に配置されるボタン -->
-        <v-btn icon @click="toggleMenu"
-            style="text-decoration: none; color: inherit; position: fixed; left: 0; top: 0; margin: 10px;">
-            <v-icon>{{ icons.mdiMenu }}</v-icon>
-        </v-btn>
-        <nuxt-link to="/" style="text-decoration: none; color: inherit; ">
-            <img :src="titleImg" style="width: 10%;" @load="imageLoaded" @error="imageError" class="logo-img" />
+  <v-app-bar v-if="!mobile" class="px-0 app-bar">
+    <!-- 左端に配置されるボタン -->
+    <v-btn
+      icon
+      @click="toggleMenu"
+      style="
+        text-decoration: none;
+        color: inherit;
+        position: fixed;
+        left: 0;
+        top: 0;
+        margin: 10px;
+      "
+    >
+      <v-icon>{{ icons.mdiMenu }}</v-icon>
+    </v-btn>
+    <nuxt-link :to="HOME_LINK" style="text-decoration: none; color: inherit">
+      <img
+        :src="titleImg"
+        style="width: 10%"
+        @load="imageLoaded"
+        @error="imageError"
+        class="logo-img"
+      />
+    </nuxt-link>
+  </v-app-bar>
+  <v-app-bar
+    v-else
+    class="px-0 app-bar"
+    :class="{ 'app-header': isApp }"
+    style="display: flex"
+  >
+    <!-- 左端に配置されるボタン -->
+    <v-btn
+      icon
+      @click="toggleMenu"
+      style="
+        text-decoration: none;
+        color: inherit;
+        position: fixed;
+        left: 0;
+        top: 0;
+        margin: 10px;
+      "
+    >
+      <v-icon>{{ icons.mdiMenu }}</v-icon>
+    </v-btn>
+    <!-- 中央に配置されるコンテナ -->
+    <nuxt-link
+      :to="{ path: HOME_LINK, query: currentQuery }"
+      style="
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        justify-content: center;
+      "
+    >
+      <img
+        :src="titleImg"
+        style="width: 35%"
+        @load="imageLoaded"
+        @error="imageError"
+      />
+    </nuxt-link>
+  </v-app-bar>
+  <v-navigation-drawer v-model="drawer" temporary>
+    <v-list :class="{ 'app-menu': isApp }">
+      <template v-for="(item, index) in menus" :key="item.title">
+        <!-- リストアイテム -->
+        <nuxt-link
+          :to="{ path: item.path, query: currentQuery }"
+          style="text-decoration: none; color: inherit"
+        >
+          <v-list-item>
+            <v-icon left>{{ item.icon }}</v-icon>
+            {{ item.title }}
+          </v-list-item>
         </nuxt-link>
-    </v-app-bar>
-    <v-app-bar v-else class="px-0 app-bar" style="display: flex;">
-        <!-- 左端に配置されるボタン -->
-        <v-btn icon @click="toggleMenu"
-            style="text-decoration: none; color: inherit; position: fixed; left: 0; top: 0; margin: 10px;">
-            <v-icon>{{ icons.mdiMenu }}</v-icon>
-        </v-btn>
-        <!-- 中央に配置されるコンテナ -->
-        <nuxt-link to="/" style="text-decoration: none; color: inherit; display: flex; justify-content: center;">
-            <img :src="titleImg" style="width: 35%;" @load="imageLoaded" @error="imageError" />
-        </nuxt-link>
-    </v-app-bar>
-    <v-navigation-drawer v-model="drawer" temporary>
-        <v-list>
-            <template v-for="(item, index) in menus" :key="item.title">
-                <!-- リストアイテム -->
-                <nuxt-link :to="item.path" style="text-decoration: none; color: inherit;">
-                    <v-list-item>
-                        <v-icon left>{{ item.icon }}</v-icon>
-                        {{ item.title }}
-                    </v-list-item>
-                </nuxt-link>
 
-                <!-- 最後のアイテム以外の後に Divider を挿入 -->
-                <v-divider v-if="index < menus.length - 1"></v-divider>
-            </template>
-        </v-list>
-    </v-navigation-drawer>
+        <!-- 最後のアイテム以外の後に Divider を挿入 -->
+        <v-divider v-if="index < menus.length - 1"></v-divider>
+      </template>
+    </v-list>
+  </v-navigation-drawer>
 </template>
 
 <style scoped>
-.logo-img {
-    height: auto;
-    /* 高さは自動調整 */
-}
 </style>
   
 <script>
-import { defineComponent } from 'vue'
-import { useDisplay } from 'vuetify'
-import {
-    mdiMenu
-} from '@mdi/js'
-import { TITLE_IMG, MENUS } from '@/constants';
+import { useRoute } from "vue-router";
+import { defineComponent } from "vue";
+import { useDisplay } from "vuetify";
+import { mdiMenu } from "@mdi/js";
+import { HOME_LINK, TITLE_IMG, MENUS } from "@/constants";
 
 export default defineComponent({
-    setup() {
-        const { mobile } = useDisplay()
+  props: {
+    isApp: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  setup() {
+    const { mobile } = useDisplay();
 
-        const titleImg = TITLE_IMG;
+    const route = useRoute();
+    // 現在のクエリパラメータを取得
+    const currentQuery = route.query;
 
-        const imageError = () => {
-            console.error('画像の読み込みに失敗しました。');
-        };
+    const titleImg = TITLE_IMG;
 
-        // 画像が正常にロードされた場合の処理
-        const imageLoaded = () => {
-            imageLoaded.value = true;
-        };
+    const imageError = () => {
+      console.error("画像の読み込みに失敗しました。");
+    };
 
-        const icons = ref({
-            mdiMenu,
-        })
+    // 画像が正常にロードされた場合の処理
+    const imageLoaded = () => {
+      imageLoaded.value = true;
+    };
 
-        const drawer = ref(false) // ドロワーの状態を管理するためのリアクティブプロパティ
+    const icons = ref({
+      mdiMenu,
+    });
 
-        const toggleMenu = () => {
-            drawer.value = !drawer.value // ドロワーの状態を切り替える
-        }
+    const drawer = ref(false); // ドロワーの状態を管理するためのリアクティブプロパティ
 
-        const menus = MENUS;
+    const toggleMenu = () => {
+      drawer.value = !drawer.value; // ドロワーの状態を切り替える
+    };
 
-        return {
-            mobile,
-            titleImg,
-            icons,
-            drawer,
-            menus,
-            toggleMenu,
-            imageLoaded,
-            imageError
-        }
-    }
-})
+    const menus = MENUS;
+
+    return {
+      HOME_LINK,
+      mobile,
+      currentQuery,
+      titleImg,
+      icons,
+      drawer,
+      menus,
+      toggleMenu,
+      imageLoaded,
+      imageError,
+    };
+  },
+});
 </script>
 
 <style scoped>
-.app-bar {
-    border-bottom: 1px solid #ccc;
+.app-header {
+  margin-top: 10%; /* Adjust the margin as needed */
 }
-
+.app-menu {
+  margin-top: 13%;
+}
+.app-bar {
+  border-bottom: 1px solid #ccc;
+}
 .logo-img {
-    margin-left: 5%;
+  margin-left: 5%;
+  height: auto;
 }
 </style>

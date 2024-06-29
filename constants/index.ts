@@ -5,6 +5,11 @@ import {
 export const TARGET_QUESTIONNAIRES = "QUESTIONNAIRES";
 export const TARGET_RECOMMENDS = "RECOMMENDS";
 
+/** リンク */
+export const HOME_LINK = "/";
+export const DETAIL_LINK = "/questionnaire"
+export const CREATE_LINK = "/create";
+
 /** メニュー */
 export const MENUS = [
     {title: "アンケート一覧", path: "/", icon: mdiListBox}, 

@@ -1,39 +1,53 @@
 <template>
-    <v-app class="bg-background">
-        <div v-if="categories.length">
-            <Header />
-        </div>
-        <Form :categories="categories" :createQuestionnaire="createQuestionnaire" style="margin:0 0 10% 0"/>
-    </v-app>
+  <v-app class="bg-background" :class="{ 'app-header': isApp }">
+    <div v-if="categories.length">
+      <Header :isApp="isApp" />
+    </div>
+    <Form
+      :categories="categories"
+      :createQuestionnaire="createQuestionnaire"
+      style="margin: 0 0 10% 0"
+    />
+  </v-app>
 </template>
 
+<style scoped>
+.app-header {
+  margin-top: 10%; /* Adjust the margin as needed */
+}
+</style>
+
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
-import Header from '@/components/organisms/Header.vue'
-import Form from '@/components/organisms/Form.vue'
-import { Category } from '@/types';
+import { defineComponent, ref } from "vue";
+import Header from "@/components/organisms/Header.vue";
+import Form from "@/components/organisms/Form.vue";
+import { Category } from "@/types";
 
 export default defineComponent({
-    components: {
-        Header,
-        Form
+  components: {
+    Header,
+    Form,
+  },
+  props: {
+    categories: {
+      type: Array as PropType<Category[]>,
+      required: true,
     },
-    props: {
-        categories: {
-            type: Array as PropType<Category[]>,
-            required: true,
-        },
-        createQuestionnaire: {
-            type: Function,
-            required: true
-        },
+    createQuestionnaire: {
+      type: Function,
+      required: true,
     },
-    setup() {
-        const contentsBg = ref('#E8D5C4')
+    isApp: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  setup() {
+    const contentsBg = ref("#E8D5C4");
 
-        return {
-            contentsBg,
-        }
-    }
-})
+    return {
+      contentsBg,
+    };
+  },
+});
 </script>
