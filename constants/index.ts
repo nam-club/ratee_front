@@ -104,6 +104,8 @@ export const ERR_MSG: Record<string, string> = {
     'page.limit.out_of_range': '読み込みに失敗しました。',
      // ページングに不正なフォーマットの値を指定している
     'limit.invalid_value': '読み込みに失敗しました。',
+    // # ページングに不正なフォーマットの値を指定している
+    'next_token.invalid_value': '読み込みに失敗しました。',
     // ユーザがアンケートに未回答
     'user.not_yet_answered': '読み込みに失敗しました。アンケートに未回答のため表示できません。',
     // ユーザがアンケートに回答済み
