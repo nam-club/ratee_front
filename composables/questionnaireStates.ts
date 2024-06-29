@@ -185,8 +185,7 @@ const postAnswer = async (questionId: string, choices: string[]) => {
         });
         const data = await response.json();
         if (response.ok) {
-            // return { code: '', message: '', questionnaires: data.questionnaires };
-            return { code: '', message: '' };
+            return data;
         } else {
             console.error('アンケート回答APIの実行中にエラーが発生しました:', response.statusText);
             return { code: data.code, message: data.message };
@@ -318,12 +317,14 @@ export const useQuestionnaires = (tabId: string) => {
         const postResult = await postAnswer(questionId, choices);
         code.value = postResult.code ? postResult.code : '';
 
-        // アンケート回答APIが完了した後にアンケート一覧取得APIを実行
+        // アンケート回答APIが完了した後に該当アンケートのみを最新状態に更新
         if (code.value === '') {
-            const qObject = await getQuestionnaires(TAB_ID1);
-            state.value.questionnaires = qObject.questionnaires ? [...qObject.questionnaires] : state.value.questionnaires;
-            state.value.nextToken = qObject.nextToken ? qObject.nextToken : '';
-            code.value = qObject.code ? qObject.code : '';
+            state.value.questionnaires = state.value.questionnaires.map(q => {
+                if (q.id === postResult.id) {
+                    return { ...q, ...postResult };
+                }
+                return q;
+            });
         }
     }
 
@@ -334,12 +335,14 @@ export const useQuestionnaires = (tabId: string) => {
         const postResult = await postAnswer(questionId, choices);
         code.value = postResult.code ? postResult.code : '';
 
-        // アンケート回答APIが完了した後にアンケート一覧取得API（検索）を実行
+        // アンケート回答APIが完了した後に該当アンケートのみを最新状態に更新
         if (code.value === '') {
-            const qObject = await getSearchQuestionnaires(type, word);
-            state.value.questionnaires = qObject.questionnaires ? [...qObject.questionnaires] : state.value.questionnaires;
-            state.value.nextToken = qObject.nextToken ? qObject.nextToken : '';
-            code.value = qObject.code ? qObject.code : '';
+            state.value.questionnaires = state.value.questionnaires.map(q => {
+                if (q.id === postResult.id) {
+                    return { ...q, ...postResult };
+                }
+                return q;
+            });
         }
     }
 
@@ -397,6 +400,7 @@ export const useQuestionnaire = (questionId: string) => {
     const answerQuestionnaire = async (questionId: string, choices: string[]) => {
         code.value = '';
         const postResult = await postAnswer(questionId, choices);
+        console.log(postResult)
         code.value = postResult.code ? postResult.code : '';
 
         if (code.value === '') {
