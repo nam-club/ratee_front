@@ -15,13 +15,23 @@
     >
       <v-icon>{{ icons.mdiMenu }}</v-icon>
     </v-btn>
-    <nuxt-link :to="HOME_LINK" style="text-decoration: none; color: inherit">
+    <nuxt-link
+      :to="HOME_LINK"
+      style="
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        justify-content: center;
+        position: fixed; /* 固定位置 */
+        left: 50%; /* 左から50%の位置に設定 */
+        transform: translateX(-50%); /* X軸方向に-50%移動して中央に配置 */
+      "
+    >
       <img
         :src="titleImg"
-        style="width: 10%"
+        style="width: 50%"
         @load="imageLoaded"
         @error="imageError"
-        class="logo-img"
       />
     </nuxt-link>
   </v-app-bar>
@@ -54,11 +64,14 @@
         color: inherit;
         display: flex;
         justify-content: center;
+        position: fixed; /* 固定位置 */
+        left: 50%; /* 左から50%の位置に設定 */
+        transform: translateX(-50%); /* X軸方向に-50%移動して中央に配置 */
       "
     >
       <img
         :src="titleImg"
-        style="width: 35%"
+        style="width: 60%"
         @load="imageLoaded"
         @error="imageError"
       />

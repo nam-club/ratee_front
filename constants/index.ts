@@ -12,8 +12,8 @@ export const CREATE_LINK = "/create";
 
 /** メニュー */
 export const MENUS = [
-    {title: "アンケート一覧", path: "/", icon: mdiListBox}, 
-    {title: "アンケート作成", path: "/create", icon: mdiPencilBox}
+    { title: "アンケート一覧", path: "/", icon: mdiListBox },
+    { title: "アンケート作成", path: "/create", icon: mdiPencilBox }
 ];
 
 /** 共通 */
@@ -92,18 +92,20 @@ export const COMMENT_NULL_TEXT = 'コメントを入力してください。' //
 
 /** 画像パス */
 export const TITLE_IMG = '/logo.png';
-export const ICON_IMG = [ '/1.png', '/2.png', '/3.png', '/4.png', '/5.png', '/6.png', '/7.png', '/8.png', '/9.png', '/10.png',];
+export const ICON_IMG = ['/1.png', '/2.png', '/3.png', '/4.png', '/5.png', '/6.png', '/7.png', '/8.png', '/9.png', '/10.png',];
 
 /** エラーメッセージ */
 export const ERR_MSG: Record<string, string> = {
     // リクエストで必要なパラメータが不足している
     'missing_required_params': 'エラーが発生しました。',
     // ゲストユーザの認証に失敗
-    'guest_auth_failed': 'ユーザ認証に失敗しました。',    
+    'guest_auth_failed': 'ユーザ認証に失敗しました。',
     // ページングに範囲外の数値を指定している      
     'page.limit.out_of_range': '読み込みに失敗しました。',
-     // ページングに不正なフォーマットの値を指定している
+    // ページングに不正なフォーマットの値を指定している
     'limit.invalid_value': '読み込みに失敗しました。',
+    // # ページングに不正なフォーマットの値を指定している
+    'next_token.invalid_value': '読み込みに失敗しました。',
     // ユーザがアンケートに未回答
     'user.not_yet_answered': '読み込みに失敗しました。アンケートに未回答のため表示できません。',
     // ユーザがアンケートに回答済み
