@@ -12,7 +12,7 @@
           sm="4"
         >
           <nuxt-link
-            :to="`${DETAIL_LINK}/${questionnaire.id}`"
+            :to="`${DETAIL_LINK}/${recommend.id}`"
             style="text-decoration: none; color: inherit"
           >
             <Button :buttonStyle="btnStyle" :variant="btnVariant">
@@ -37,7 +37,7 @@
           class="text-center"
         >
           <nuxt-link
-            :to="{path: `${DETAIL_LINK}/${questionnaire.id}`, query: currentQuery}"
+            :to="{path: `${DETAIL_LINK}/${recommend.id}`, query: currentQuery}"
             style="text-decoration: none; color: inherit"
           >
             <Button :buttonStyle="mobileBtnStyle" :variant="btnVariant">
@@ -66,7 +66,7 @@ export default defineComponent({
       type: Array as PropType<Questionnaire[]>,
     },
   },
-  setup() {
+  setup(props) {
     const { mobile } = useDisplay();
     const route = useRoute();
     // 現在のクエリパラメータを取得

@@ -400,7 +400,6 @@ export const useQuestionnaire = (questionId: string) => {
     const answerQuestionnaire = async (questionId: string, choices: string[]) => {
         code.value = '';
         const postResult = await postAnswer(questionId, choices);
-        console.log(postResult)
         code.value = postResult.code ? postResult.code : '';
 
         if (code.value === '') {

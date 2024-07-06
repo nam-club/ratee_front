@@ -14,8 +14,6 @@
       />
       <CommentBox
         v-if="
-          comments &&
-          comments.length !== 0 &&
           questionnaire.enableComment &&
           questionnaire.isAnswered
         "

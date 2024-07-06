@@ -144,7 +144,6 @@ export default defineComponent({
 
         if (recommendsResult) {
           rStore.value = recommendsResult;
-          console.log(rStore.value);
           recommends.value = rStore.value.state;
         }
 
