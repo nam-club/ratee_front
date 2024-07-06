@@ -257,10 +257,10 @@ export default defineComponent({
         const confirmBtnColor = ref(mainTheme.colors?.primary);
         const confirmBtnTextColor = ref("#ffffff");
         const confirmBtnVariant = ref("elevated");
-        const confirmBtnStyle = ref({ fontSize: '1.2em', height: '70%', width: '100%' });
+        const confirmBtnStyle = ref({ fontSize: '1em', height: '70%', width: '100%' });
 
         const tagTextColor = ref('#515254');
-        const tagBtnStyle = ref({ fontSize: '1.2em', height: '70%', width: '100%', display: 'block' })
+        const tagBtnStyle = ref({ fontSize: '1em', height: '70%', width: '100%', display: 'block' })
 
         const newChip = ref('');
         const chips = ref([]);
