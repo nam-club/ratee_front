@@ -26,16 +26,21 @@
             v-if="comments && comments.length !== 0"
             style="margin: 2% 0 10% 0"
           >
-            <v-list lines="two" style="width: 100%">
+            <v-list
+              v-for="(comment, index) in comments"
+              :key="index"
+              lines="two"
+              style="width: 100%"
+            >
               <v-list-item
-                v-for="(comment, index) in comments"
-                :key="index"
-                :title="comment.comment"
                 :subtitle="comment.createdAt + ' ID:' + comment.ipaddrHashed"
                 :prepend-avatar="iconImg[comment.iconId]"
               >
+                <div style="margin: 0.5% 0">
+                  <span>{{ comment.comment }}</span>
+                </div>
               </v-list-item>
-              <v-divider inset></v-divider>
+              <v-divider v-if="index !== comments.length - 1"></v-divider>
             </v-list>
           </v-card>
           <InfiniteLoading
@@ -96,16 +101,21 @@
             v-if="comments && comments.length !== 0"
             style="margin: 2% 0 10% 0"
           >
-            <v-list lines="two" style="width: 100%">
+            <v-list
+              v-for="(comment, index) in comments"
+              :key="index"
+              lines="two"
+              style="width: 100%"
+            >
               <v-list-item
-                v-for="(comment, index) in comments"
-                :key="index"
-                :title="comment.comment"
                 :subtitle="comment.createdAt + ' ID:' + comment.ipaddrHashed"
                 :prepend-avatar="iconImg[comment.iconId]"
               >
+                <div style="margin: 2% 0">
+                  <span>{{ comment.comment }}</span>
+                </div>
               </v-list-item>
-              <v-divider inset></v-divider>
+              <v-divider v-if="index !== comments.length - 1"></v-divider>
             </v-list>
           </v-card>
           <InfiniteLoading
