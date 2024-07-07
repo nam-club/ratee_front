@@ -23,7 +23,7 @@
                 <v-tabs v-model="tab" color="primary" dark align-tabs="center">
                     <v-tab :value="DETAIL_TAB_NUM1"><span style="font-size: 1.5em;">{{ DETAIL_TAB_NAME1
                             }}</span></v-tab>
-                    <v-tab :value="DETAIL_TAB_NUM2"><span style="font-size: 1.5em;">{{ DETAIL_TAB_NAME2
+                    <v-tab v-if="Object.keys(chart).length !== 0" :value="DETAIL_TAB_NUM2"><span style="font-size: 1.5em;">{{ DETAIL_TAB_NAME2
                             }}</span></v-tab>
                 </v-tabs>
                 <v-window v-model="tab">
@@ -75,6 +75,7 @@ export default defineComponent({
         }
     },
     setup(props) {
+        console.log(props.chart)
         const { mobile } = useDisplay()
 
         // タブの値をリアクティブにする
