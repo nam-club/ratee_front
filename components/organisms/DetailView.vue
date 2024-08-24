@@ -75,7 +75,6 @@ export default defineComponent({
         }
     },
     setup(props) {
-        console.log(props.chart)
         const { mobile } = useDisplay()
 
         // タブの値をリアクティブにする

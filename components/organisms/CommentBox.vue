@@ -33,7 +33,7 @@
               style="width: 100%"
             >
               <v-list-item
-                :subtitle="comment.createdAt + ' ID:' + comment.ipaddrHashed"
+                :subtitle="comment.createdAt + ' ID:' + comment.hashedUserId"
                 :prepend-avatar="iconImg[comment.iconId]"
               >
                 <div style="margin: 0.5% 0">
@@ -108,7 +108,7 @@
               style="width: 100%"
             >
               <v-list-item
-                :subtitle="comment.createdAt + ' ID:' + comment.ipaddrHashed"
+                :subtitle="comment.createdAt + ' ID:' + comment.hashedUserId"
                 :prepend-avatar="iconImg[comment.iconId]"
               >
                 <div style="margin: 2% 0">
