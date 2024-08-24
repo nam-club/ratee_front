@@ -35,6 +35,12 @@ export default {
 
     const isApp = ref(false);
 
+    // 共通Store
+    const commonStore = useStore();
+    // 初回表示フラグ
+    const isLoaded = commonStore.isLoaded;
+    console.log(isLoaded.value);
+
     onMounted(() => {
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.has("app")) {
@@ -47,7 +53,7 @@ export default {
     const categories = cStore.state;
 
     // アンケート投稿
-    const qStore = useQuestionnaires(TAB_ID1);
+    const qStore = useQuestionnaires(TAB_ID1, isLoaded.value);
     const createQuestionnaire = async (
       title: string,
       choices: string[],

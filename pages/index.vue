@@ -60,6 +60,12 @@ export default {
   setup() {
     const isApp = ref(false);
 
+    // 共通Store
+    const commonStore = useStore();
+    // 初回表示フラグ
+    const isLoaded = commonStore.isLoaded;
+    console.log(isLoaded.value);
+
     onMounted(() => {
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.has("app")) {
@@ -68,7 +74,7 @@ export default {
     });
 
     // アンケート一覧取得(新着)
-    const newsStore = useQuestionnaires(TAB_ID1); // 新着
+    const newsStore = useQuestionnaires(TAB_ID1, isLoaded.value); // 新着
     const isLoading = newsStore.isLoading;
     const nQuestionnaires = ref<Questionnaire[]>([]);
 
@@ -85,7 +91,7 @@ export default {
     );
 
     // アンケート一覧取得(急上昇)
-    const trendStore = useQuestionnaires(TAB_ID2);
+    const trendStore = useQuestionnaires(TAB_ID2, isLoaded.value);
     const tQuestionnaires = ref<Questionnaire[]>([]);
 
     watch(
@@ -101,7 +107,7 @@ export default {
     );
 
     // アンケート一覧取得(ランキング)
-    const rankingStore = useQuestionnaires(TAB_ID3);
+    const rankingStore = useQuestionnaires(TAB_ID3, isLoaded.value);
     const rQuestionnaires = ref<Questionnaire[]>([]);
 
     watch(
@@ -117,7 +123,7 @@ export default {
     );
 
     // アンケート一覧取得(検索)
-    const searchStore = useQuestionnaires(TAB_ID4);
+    const searchStore = useQuestionnaires(TAB_ID4, isLoaded.value);
     const sQuestionnaires = ref<Questionnaire[]>([]);
 
     watch(

@@ -174,7 +174,6 @@
                   >
                     <IconButton
                       :icon="icons.mdiChevronRight"
-                      :size="large"
                       :variant="iconBtnVariant"
                     />
                   </nuxt-link>

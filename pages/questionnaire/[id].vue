@@ -59,6 +59,12 @@ export default defineComponent({
   setup() {
     const isApp = ref(false);
 
+    // 共通Store
+    const commonStore = useStore();
+    // 初回表示フラグ
+    const isLoaded = commonStore.isLoaded;
+    console.log(isLoaded.value);
+
     onMounted(() => {
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.has("app")) {
@@ -116,7 +122,7 @@ export default defineComponent({
     });
 
     // アンケート情報取得
-    const qStore = useQuestionnaire(questionId);
+    const qStore = useQuestionnaire(questionId, isLoaded.value);
     const questionnaire = ref({});
 
     // アンケート情報取得後、時列チャート・おすすめアンケート・コメント一覧取得を実行

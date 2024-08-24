@@ -28,7 +28,6 @@ type ResponseData = {
     message: string;
 }
 
-
 // ベースURLの読み込み
 const baseURL = import.meta.env.VITE_BASE_URL
 
@@ -251,17 +250,37 @@ const getRecommendQuestionnaires = async (questionId: string) => {
     return []; // エラーが発生した場合やレスポンスがOKでない場合は空の配列を返す
 }
 
+// 共通変数のStore定義
+export const useStore = () => {
+    // 初回表示フラグ (useStateを使ってグローバルな状態を保持)
+    const isLoaded = useState('isLoaded', () => true); // 初期値をtrueに設定
+
+    const updateLoaded = () => {
+        isLoaded.value = false;
+    }
+
+    return {
+        isLoaded,
+        updateLoaded
+    }
+}
 
 // アンケート一覧のStore定義
-export const useQuestionnaires = (tabId: string) => {
+export const useQuestionnaires = (tabId: string, isLoaded: boolean) => {
 
     const state = ref<ResponseData>({ questionnaires: [], nextToken: '' });
     const isLoading = ref(true);
     const code = ref('');
 
+    // useStoreの呼び出し
+    const { updateLoaded } = useStore();
+    updateLoaded();
+
     onMounted(async () => {
         if (state.value.questionnaires.length === 0) {
-            await updateUserId();
+            if (isLoaded) {
+                await updateUserId(); // ユーザIDの生成・更新
+            }
             if (tabId !== TAB_ID4) {
                 isLoading.value = true;
                 code.value = '';
@@ -368,6 +387,11 @@ export const useQuestionnaires = (tabId: string) => {
         }
     }
 
+    // ユーザID作成・更新
+    const actionUserId = async () => {
+        await updateUserId();
+    }
+
     return {
         state: readonly(state),
         isLoading,
@@ -377,17 +401,25 @@ export const useQuestionnaires = (tabId: string) => {
         searchQuestionnaires,
         answerQuestionnaire,
         answerSearchQuestionnaire,
-        createQuestionnaire
+        createQuestionnaire,
+        actionUserId
     }
 }
 
 // アンケート情報のStore定義
-export const useQuestionnaire = (questionId: string) => {
+export const useQuestionnaire = (questionId: string, isLoaded: boolean) => {
     const state = ref<Questionnaire>(); // 初期値は空のオブジェクト
     const isLoading = ref(true);
     const code = ref('');
 
+    // useStoreの呼び出し
+    const { updateLoaded } = useStore();
+
     onMounted(async () => {
+        if (isLoaded) {
+            updateLoaded();
+            await updateUserId(); // ユーザIDの生成・更新
+        }
         state.value = await getQuestionnaire(questionId);
         isLoading.value = false;
         code.value = state.value.code ? state.value.code : '';
@@ -411,9 +443,15 @@ export const useQuestionnaire = (questionId: string) => {
         }
     }
 
+    // ユーザID作成・更新
+    const actionUserId = async () => {
+        await updateUserId();
+    }
+
     return {
         state: readonly(state),
         answerQuestionnaire,
+        actionUserId,
         isLoading,
         code
     }
