@@ -255,32 +255,26 @@ export const useStore = () => {
     // 初回表示フラグ (useStateを使ってグローバルな状態を保持)
     const isLoaded = useState('isLoaded', () => true); // 初期値をtrueに設定
 
-    const updateLoaded = () => {
-        isLoaded.value = false;
+    const load = async () => {
+        if (isLoaded.value) {
+            await updateUserId();
+            isLoaded.value = false;
+        }
     }
 
     return {
-        isLoaded,
-        updateLoaded
+        load
     }
 }
 
 // アンケート一覧のStore定義
-export const useQuestionnaires = (tabId: string, isLoaded: boolean) => {
-
+export const useQuestionnaires = (tabId: string) => {
     const state = ref<ResponseData>({ questionnaires: [], nextToken: '' });
     const isLoading = ref(true);
     const code = ref('');
 
-    // useStoreの呼び出し
-    const { updateLoaded } = useStore();
-    updateLoaded();
-
-    onMounted(async () => {
+    const loadQuestionnaires = async () => {
         if (state.value.questionnaires.length === 0) {
-            if (isLoaded) {
-                await updateUserId(); // ユーザIDの生成・更新
-            }
             if (tabId !== TAB_ID4) {
                 isLoading.value = true;
                 code.value = '';
@@ -291,7 +285,7 @@ export const useQuestionnaires = (tabId: string, isLoaded: boolean) => {
                 isLoading.value = false;
             }
         }
-    });
+    }
 
     // 続きのアンケート一覧を取得(無限スクロール)
     const scrollQuestionnaires = async (order: string, nextToken: string) => {
@@ -387,46 +381,35 @@ export const useQuestionnaires = (tabId: string, isLoaded: boolean) => {
         }
     }
 
-    // ユーザID作成・更新
-    const actionUserId = async () => {
-        await updateUserId();
-    }
-
     return {
         state: readonly(state),
         isLoading,
         code,
+        loadQuestionnaires,
         scrollQuestionnaires,
         changeQuestionnaires,
         searchQuestionnaires,
         answerQuestionnaire,
         answerSearchQuestionnaire,
         createQuestionnaire,
-        actionUserId
     }
 }
 
 // アンケート情報のStore定義
-export const useQuestionnaire = (questionId: string, isLoaded: boolean) => {
+export const useQuestionnaire = (questionId: string) => {
     const state = ref<Questionnaire>(); // 初期値は空のオブジェクト
     const isLoading = ref(true);
     const code = ref('');
 
-    // useStoreの呼び出し
-    const { updateLoaded } = useStore();
-
-    onMounted(async () => {
-        if (isLoaded) {
-            updateLoaded();
-            await updateUserId(); // ユーザIDの生成・更新
-        }
+    const loadQuestionnaire = async () => {
         state.value = await getQuestionnaire(questionId);
+        console.log(state.value)
         isLoading.value = false;
         code.value = state.value.code ? state.value.code : '';
         if (state.value?.enableComment) {
 
         }
-    });
+    };
 
     // アンケート回答
     const answerQuestionnaire = async (questionId: string, choices: string[]) => {
@@ -443,15 +426,10 @@ export const useQuestionnaire = (questionId: string, isLoaded: boolean) => {
         }
     }
 
-    // ユーザID作成・更新
-    const actionUserId = async () => {
-        await updateUserId();
-    }
-
     return {
         state: readonly(state),
+        loadQuestionnaire,
         answerQuestionnaire,
-        actionUserId,
         isLoading,
         code
     }

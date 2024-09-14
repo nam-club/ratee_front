@@ -27,12 +27,15 @@ const getCategories = async () => {
 export const useCategories = () => {
     const state = ref<Category[]>([]); // 初期値は空の配列
 
-    onMounted(async () => {
-        state.value = [...await getCategories()];
-    });
+    const loadCategories = async () => {
+        if (state.value.length === 0) {
+            state.value = [...await getCategories()];
+        }
+    }
 
     return {
         state: readonly(state),
+        loadCategories
     }
 
 }

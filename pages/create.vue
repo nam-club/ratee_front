@@ -17,6 +17,7 @@
 <script lang="ts">
 import { useRouter } from "vue-router";
 import { mainTheme } from "@/helpers/themes";
+import { Category } from "@/types";
 import CreateForm from "@/components/templates/CreateForm.vue";
 import SnackBar from "@/components/molecules/SnackBar.vue";
 import { HOME_LINK, ERR_MSG, TAB_ID1 } from "@/constants";
@@ -35,25 +36,27 @@ export default {
 
     const isApp = ref(false);
 
-    // 共通Store
+    // Store定義
     const commonStore = useStore();
-    // 初回表示フラグ
-    const isLoaded = commonStore.isLoaded;
-    console.log(isLoaded.value);
+    const categoryStore = ref<any>();
 
-    onMounted(() => {
+    const categories = ref<Category[]>([]);
+
+    onMounted(async () => {
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.has("app")) {
         isApp.value = true;
       }
+      // commonStore.load()の完了を待つ
+      await commonStore.load();
+
+      categoryStore.value = useCategories(); // カテゴリー
+      await categoryStore.value.loadCategories();
+      categories.value = categoryStore.value.state.slice();
     });
 
-    // カテゴリ一覧取得
-    const cStore = useCategories();
-    const categories = cStore.state;
-
     // アンケート投稿
-    const qStore = useQuestionnaires(TAB_ID1, isLoaded.value);
+    const qStore = useQuestionnaires(TAB_ID1);
     const createQuestionnaire = async (
       title: string,
       choices: string[],
@@ -69,7 +72,7 @@ export default {
         options
       );
       if (qStore.code.value === "") {
-        router.push({path: HOME_LINK, query: currentQuery});
+        router.push({ path: HOME_LINK, query: currentQuery });
       }
     };
 

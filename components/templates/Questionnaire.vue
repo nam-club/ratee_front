@@ -9,7 +9,7 @@
         :chart="chart"
       />
       <RecommendBox
-        v-if="recommends && recommends.length !== 0"
+        v-if="recommends && recommends.length > 0"
         :recommends="recommends"
       />
       <CommentBox

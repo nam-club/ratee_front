@@ -320,6 +320,7 @@ export default defineComponent({
 
     return {
       iconImg,
+      isLoading,
       COMMENT_BUTTON,
       COMMENT_TITLE,
       LOADING_END,

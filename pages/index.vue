@@ -35,7 +35,7 @@
 
 <script lang="ts">
 import { ref, watchEffect } from "vue";
-import { InfiniteLoadingState } from "@/types";
+import { Category, InfiniteLoadingState } from "@/types";
 import "v3-infinite-loading/lib/style.css";
 
 import { mainTheme } from "@/helpers/themes";
@@ -60,102 +60,122 @@ export default {
   setup() {
     const isApp = ref(false);
 
-    // 共通Store
+    // Store定義
     const commonStore = useStore();
-    // 初回表示フラグ
-    const isLoaded = commonStore.isLoaded;
-    console.log(isLoaded.value);
+    const newsStore = ref<any>();
+    const trendStore = ref<any>();
+    const rankingStore = ref<any>();
+    const searchStore = ref<any>();
+    const categoryStore = ref<any>();
 
-    onMounted(() => {
+    const nQuestionnaires = ref<Questionnaire[]>([]);
+    const tQuestionnaires = ref<Questionnaire[]>([]);
+    const rQuestionnaires = ref<Questionnaire[]>([]);
+    const sQuestionnaires = ref<Questionnaire[]>([]);
+    const categories = ref<Category[]>([]);
+
+    const isLoading = ref(true);
+
+    onMounted(async() => {
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.has("app")) {
         isApp.value = true;
       }
+
+      // commonStore.load()の完了を待つ
+      await commonStore.load();
+
+      // commonStore.load()完了後にuseQuestionnairesを呼び出す
+      newsStore.value = useQuestionnaires(TAB_ID1); // 新着
+      await newsStore.value.loadQuestionnaires();
+      trendStore.value = useQuestionnaires(TAB_ID2); // 急上昇
+      await trendStore.value.loadQuestionnaires();
+      rankingStore.value = useQuestionnaires(TAB_ID3); // ランキング
+      await rankingStore.value.loadQuestionnaires();
+      searchStore.value = useQuestionnaires(TAB_ID4); // 検索
+      await searchStore.value.loadQuestionnaires();
+      categoryStore.value = useCategories(); // カテゴリー
+      await categoryStore.value.loadCategories();
+      categories.value = categoryStore.value.state.slice();
+
+      // それぞれのアンケートデータを監視
+      watch(
+        () => newsStore.value.state.questionnaires,
+        (newVal) => {
+          nQuestionnaires.value = newVal.map((q) => ({
+            ...q,
+            choices: q.choices.map((choice) => ({ ...choice })),
+            tags: [...q.tags],
+          }));
+        },
+        { deep: true }
+      );
+
+      watch(
+        () => trendStore.value.state.questionnaires,
+        (newVal) => {
+          tQuestionnaires.value = newVal.map((q) => ({
+            ...q,
+            choices: q.choices.map((choice) => ({ ...choice })),
+            tags: [...q.tags],
+          }));
+        },
+        { deep: true }
+      );
+
+      watch(
+        () => rankingStore.value.state.questionnaires,
+        (newVal) => {
+          rQuestionnaires.value = newVal.map((q) => ({
+            ...q,
+            choices: q.choices.map((choice) => ({ ...choice })),
+            tags: [...q.tags],
+          }));
+        },
+        { deep: true }
+      );
+
+      watch(
+        () => searchStore.value.state.questionnaires,
+        (newVal) => {
+          sQuestionnaires.value = newVal.map((q) => ({
+            ...q,
+            choices: q.choices.map((choice) => ({ ...choice })),
+            tags: [...q.tags],
+          }));
+        },
+        { deep: true }
+      );
+
+      isLoading.value = newsStore.value.isLoading.value;
     });
-
-    // アンケート一覧取得(新着)
-    const newsStore = useQuestionnaires(TAB_ID1, isLoaded.value); // 新着
-    const isLoading = newsStore.isLoading;
-    const nQuestionnaires = ref<Questionnaire[]>([]);
-
-    watch(
-      () => newsStore.state.value.questionnaires,
-      (newVal) => {
-        nQuestionnaires.value = newVal.map((q) => ({
-          ...q,
-          choices: q.choices.map((choice) => ({ ...choice })),
-          tags: [...q.tags], // `tags`を新しい配列に展開
-        }));
-      },
-      { deep: true }
-    );
-
-    // アンケート一覧取得(急上昇)
-    const trendStore = useQuestionnaires(TAB_ID2, isLoaded.value);
-    const tQuestionnaires = ref<Questionnaire[]>([]);
-
-    watch(
-      () => trendStore.state.value.questionnaires,
-      (newVal) => {
-        tQuestionnaires.value = newVal.map((q) => ({
-          ...q,
-          choices: q.choices.map((choice) => ({ ...choice })),
-          tags: [...q.tags], // `tags`を新しい配列に展開
-        }));
-      },
-      { deep: true }
-    );
-
-    // アンケート一覧取得(ランキング)
-    const rankingStore = useQuestionnaires(TAB_ID3, isLoaded.value);
-    const rQuestionnaires = ref<Questionnaire[]>([]);
-
-    watch(
-      () => rankingStore.state.value.questionnaires,
-      (newVal) => {
-        rQuestionnaires.value = newVal.map((q) => ({
-          ...q,
-          choices: q.choices.map((choice) => ({ ...choice })),
-          tags: [...q.tags], // `tags`を新しい配列に展開
-        }));
-      },
-      { deep: true }
-    );
-
-    // アンケート一覧取得(検索)
-    const searchStore = useQuestionnaires(TAB_ID4, isLoaded.value);
-    const sQuestionnaires = ref<Questionnaire[]>([]);
-
-    watch(
-      () => searchStore.state.value.questionnaires,
-      (newVal) => {
-        sQuestionnaires.value = newVal.map((q) => ({
-          ...q,
-          choices: q.choices.map((choice) => ({ ...choice })),
-          tags: [...q.tags], // `tags`を新しい配列に展開
-        }));
-      },
-      { deep: true }
-    );
 
     // アンケートタブ検索
     const searchQuestionnaires = (type: string, word: string) => {
-      searchStore.searchQuestionnaires(type, word);
+      if (searchStore) {
+        searchStore.value.searchQuestionnaires(type, word);
+      }
     };
 
     // アンケート回答(最新)
     const answerNewsQuestionnaire = (id: string, name: string[]) => {
-      newsStore.answerQuestionnaire(id, name);
+      if (newsStore) {
+        newsStore.value.answerQuestionnaire(id, name);
+      }
     };
 
     // アンケート回答(急上昇)
     const answerTrendQuestionnaire = (id: string, name: string[]) => {
-      trendStore.answerQuestionnaire(id, name);
+      if (trendStore) {
+        trendStore.value.answerQuestionnaire(id, name);
+      }
     };
 
     // アンケート回答(ランキング)
     const answerRankingQuestionnaire = (id: string, name: string[]) => {
-      rankingStore.answerQuestionnaire(id, name);
+      if (rankingStore) {
+        rankingStore.value.answerQuestionnaire(id, name);
+      }
     };
 
     // アンケート回答(検索タブ)
@@ -165,22 +185,20 @@ export default {
       type: string,
       word: string
     ) => {
-      searchStore.answerSearchQuestionnaire(id, name, type, word);
+      searchStore.value.answerSearchQuestionnaire(id, name, type, word);
     };
-
-    // カテゴリ一覧取得
-    const cStore = useCategories();
-    const categories = cStore.state;
 
     // 続きのアンケート一覧を取得
     const scrollQuestionnaires = async (order: string, nextToken: string) => {
-      await newsStore.scrollQuestionnaires(order, nextToken);
+      if (newsStore) {
+        await newsStore.value.scrollQuestionnaires(order, nextToken);
+      }
     };
 
     const isInfiniteDisabled = ref(false); // 無限スクロール制御変数の定義
 
     watchEffect(() => {
-      if (newsStore.state.value.nextToken === "") {
+      if (newsStore && newsStore.value && newsStore.value.state.nextToken === "") {
         isInfiniteDisabled.value = true;
       } else {
         isInfiniteDisabled.value = false;
@@ -193,11 +211,11 @@ export default {
         return; // 無限ローディングが無効の場合は関数の処理を終了
       }
       try {
-        if (newsStore.state.value.nextToken !== "") {
-          await scrollQuestionnaires(TAB_ID1, newsStore.state.value.nextToken);
+        if (newsStore && newsStore.value.state.nextToken !== "") {
+          await scrollQuestionnaires(TAB_ID1, newsStore.value.state.nextToken);
           $state.loaded();
         } else {
-          await scrollQuestionnaires(TAB_ID1, newsStore.state.value.nextToken);
+          await scrollQuestionnaires(TAB_ID1, newsStore.value.state.nextToken);
           $state.complete();
           isInfiniteDisabled.value = true;
         }
@@ -218,21 +236,21 @@ export default {
 
     // storeを監視し、エラーコードがあればスナックバーを表示
     watchEffect(() => {
-      if (newsStore.code.value !== "") {
+      if (newsStore.value && newsStore.value.state && newsStore.value.code !== "") {
         Object.entries(ERR_MSG);
-        snackbarText.value = ERR_MSG[newsStore.code.value];
+        snackbarText.value = ERR_MSG[newsStore.value.code];
         snackbar.value = true;
-      } else if (trendStore.code.value !== "") {
+      } else if (trendStore.value && trendStore.value.state && trendStore.value.code !== "") {
         Object.entries(ERR_MSG);
-        snackbarText.value = ERR_MSG[trendStore.code.value];
+        snackbarText.value = ERR_MSG[trendStore.value.code];
         snackbar.value = true;
-      } else if (rankingStore.code.value !== "") {
+      } else if (rankingStore.value && rankingStore.value.state && rankingStore.value.code !== "") {
         Object.entries(ERR_MSG);
-        snackbarText.value = ERR_MSG[rankingStore.code.value];
+        snackbarText.value = ERR_MSG[rankingStore.value.code];
         snackbar.value = true;
-      } else if (searchStore.code.value !== "") {
+      } else if (searchStore.value && searchStore.value.state && searchStore.value.code !== "") {
         Object.entries(ERR_MSG);
-        snackbarText.value = ERR_MSG[searchStore.code.value];
+        snackbarText.value = ERR_MSG[searchStore.value.code];
         snackbar.value = true;
       }
     });

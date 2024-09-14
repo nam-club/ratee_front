@@ -7,7 +7,19 @@
       :color="errorColor"
     />
   </div>
-  <div v-if="!isQuestionnaireLoading && !isChartLoading && questionnaire">
+
+  <!-- ローディング中のインジケーター -->
+  <div v-if="isQuestionnaireLoading" class="text-center center-content">
+    <v-progress-circular
+      indeterminate
+      color="primary"
+      :size="100"
+      :width="10"
+    ></v-progress-circular>
+  </div>
+
+  <!-- コンテンツが揃ったらQuestionnaireを表示 -->
+  <div v-else-if="questionnaire && comments && recommends">
     <Questionnaire
       :isApp="isApp"
       :questionnaire="questionnaire"
@@ -20,84 +32,134 @@
       :isInfiniteDisabled="isInfiniteDisabled"
     />
   </div>
-  <div v-else class="text-center center-content">
-    <v-progress-circular
-      indeterminate
-      color="primary"
-      :size="100"
-      :width="10"
-    ></v-progress-circular>
-  </div>
 </template>
-
-<style scoped>
-.center-content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  /* 画面の高さに合わせて */
-}
-</style>
 
 <script lang="ts">
 import { InfiniteLoadingState } from "@/types";
-import InfiniteLoading from "v3-infinite-loading";
 import "v3-infinite-loading/lib/style.css";
 
 import { mainTheme } from "@/helpers/themes";
 import SnackBar from "@/components/molecules/SnackBar.vue";
 import Questionnaire from "@/components/templates/Questionnaire.vue";
+import { Questionnaire as QuestionnaireType } from "@/composables/questionnaireStates"; // Questionnaire型をインポート
 import { MAX_COUNT, ERR_MSG } from "@/constants";
 
 export default defineComponent({
   components: {
     SnackBar,
     Questionnaire,
-    InfiniteLoading,
   },
   setup() {
     const isApp = ref(false);
 
     // 共通Store
     const commonStore = useStore();
-    // 初回表示フラグ
-    const isLoaded = commonStore.isLoaded;
-    console.log(isLoaded.value);
 
-    onMounted(() => {
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.has("app")) {
-        isApp.value = true;
-      }
+    // ローディングフラグ
+    const isQuestionnaireLoading = ref(true);
+    const isChartLoading = ref(true);
+    const isInfiniteDisabled = ref(false);
+    const snackbarMessages = ref<{ text: string; show: boolean }[]>([]);
+
+    // コメント、チャート、アンケート、リコメンドの各データ
+    const questionnaire = ref<QuestionnaireType>({
+      id: "",
+      content: "",
+      choices: [],
+      category: "",
+      tags: [],
+      isAnswered: false,
+      enableComment: false,
+      enableMultiAnswer: false,
+      createdAt: "",
     });
+    const comments = ref([]);
+    const chart = ref({});
+    const recommends = ref([]);
+
+    // 各データストア
+    const qStore = ref<any>(); // qStoreをrefで初期化
+    const cStore = ref<any>(); // cStoreをrefで初期化
+    const chStore = ref<any>(); // chStoreをrefで初期化
+    const rStore = ref<any>(); // rStoreをrefで初期化
+
+    // ページパラメータ
     const router = useRoute();
     const questionId = Array.isArray(router.params.id)
       ? router.params.id[0]
       : router.params.id;
-    const isQuestionnaireLoading = ref(true);
-    const isChartLoading = ref(true);
-    const snackbarMessages = ref<{ text: string; show: boolean }[]>([]); // スナックバーのメッセージを格納する配列
 
-    // コメント一覧
-    const cStore = ref(null); // cStoreをrefとして定義
-    const comments = ref([]);
+    onMounted(async () => {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has("app")) {
+          isApp.value = true;
+        }
 
-    // 時系列チャート
-    const chStore = ref(null); // chStoreをrefとして定義
-    const chart = ref({});
+        // commonStore.load()の完了を待つ
+        await commonStore.load();
 
-    // おすすめアンケート一覧
-    const rStore = ref(null);
-    const recommends = ref([]);
+        // アンケート情報の取得
+        qStore.value = useQuestionnaire(questionId);
+        await qStore.value.loadQuestionnaire();
 
-    // コメント投稿関数をsetup関数の直下で定義
+        // stateが正しく取得できたか確認
+        if (qStore.value.state) {
+          questionnaire.value = qStore.value.state;
+        }
+
+        isQuestionnaireLoading.value = false;
+
+        // 回答済みかどうかのチェックと追加データの取得
+        if (questionnaire.value.isAnswered) {
+          const [chartResult, recommendsResult, commentsResult] =
+            await Promise.all([
+              useChart(questionId),
+              useRecommends(questionId),
+              questionnaire.value.enableComment
+                ? useComments(questionId, "")
+                : Promise.resolve(null),
+            ]);
+
+          // チャート結果の処理
+          if (chartResult) {
+            chStore.value = chartResult;
+            chart.value = chStore.value.state.chart;
+            isChartLoading.value = false;
+          }
+
+          // おすすめアンケートの結果処理
+          if (recommendsResult) {
+            rStore.value = recommendsResult;
+            recommends.value = rStore.value.state;
+          }
+
+          // コメントの処理
+          if (commentsResult) {
+            cStore.value = commentsResult;
+            comments.value = cStore.value.state.comments || [];
+          }
+        } else {
+          isChartLoading.value = false;
+        }
+      } catch (error) {
+        console.error("データの取得中にエラーが発生しました:", error);
+        isQuestionnaireLoading.value = false; // エラーが発生してもロードフラグをfalseにする
+      }
+    });
+
+    // アンケート回答
+    const answerQuestionnaire = (id: string, name: string) => {
+      qStore.value.answerQuestionnaire(id, name);
+    };
+
+    // コメント投稿関数
     const postComment = async (
       questionId: string,
       iconId: number,
       comment: string
     ) => {
-      if (cStore.value) {
+      if (cStore) {
         await cStore.value.sendComment(questionId, iconId, comment);
         comments.value = cStore.value.state.comments;
       } else {
@@ -105,104 +167,38 @@ export default defineComponent({
       }
     };
 
-    // 続きのコメント一覧を取得する関数もここに移動
+    // 続きのコメント一覧を取得する関数
     const scrollComments = async (nextToken: string) => {
-      if (cStore.value) {
+      if (cStore) {
         await cStore.value.scrollComments(questionId, nextToken);
       } else {
         console.error("cStore is not initialized.");
       }
     };
 
-    // コメントのリセット
-    onBeforeUnmount(() => {
-      if (cStore.value) {
-        cStore.value.resetComment();
-      }
-    });
-
-    // アンケート情報取得
-    const qStore = useQuestionnaire(questionId, isLoaded.value);
-    const questionnaire = ref({});
-
-    // アンケート情報取得後、時列チャート・おすすめアンケート・コメント一覧取得を実行
-    watchEffect(async () => {
-      questionnaire.value = await qStore.state.value;
-      isQuestionnaireLoading.value = false;
-
-      if (questionnaire.value?.isAnswered) {
-        // useChart, useRecommends, useComments を並行して実行
-        const [chartResult, recommendsResult, commentsResult] =
-          await Promise.all([
-            useChart(questionId),
-            useRecommends(questionId),
-            questionnaire.value.enableComment
-              ? useComments(questionId, "")
-              : Promise.resolve(null),
-          ]);
-
-        // 結果を適切に処理
-        if (chartResult) {
-          chStore.value = chartResult;
-          chart.value = chStore.value.state.chart;
-          isChartLoading.value = false;
-        }
-
-        if (recommendsResult) {
-          rStore.value = recommendsResult;
-          recommends.value = rStore.value.state;
-        }
-
-        if (commentsResult) {
-          cStore.value = commentsResult;
-          if (cStore.value && cStore.value.state) {
-            comments.value = cStore.value.state.comments;
-          }
-        }
-
-        // 無限スクロールの制御
-        watchEffect(() => {
-          if (
-            cStore.value &&
-            cStore.value.state &&
-            cStore.value.state.nextToken === ""
-          ) {
-            isInfiniteDisabled.value = true;
-          } else {
-            isInfiniteDisabled.value = false;
-          }
-        });
-      } else {
-        isChartLoading.value = false;
-      }
-    });
-
-    // アンケート回答
-    const answerQuestionnaire = (id: string, name: string) => {
-      qStore.answerQuestionnaire(id, name);
-    };
-
-    const isInfiniteDisabled = ref(false); // 無限スクロール制御変数の定義
-
+    // 無限スクロール
     const load = async ($state: InfiniteLoadingState) => {
-      if (isInfiniteDisabled.value) {
-        return; // 無限ローディ���グが無効の場合は関数の処理を終了
+    console.log("load")
+    console.log(isInfiniteDisabled.value)
+    console.log(cStore.value)
+      // 無限スクロールが無効の場合や、スクロール領域がない場合は処理を終了
+      if (isInfiniteDisabled.value || !cStore) {
+        $state.complete();
+        return;
       }
+
       try {
-        if (
-          cStore.value &&
-          cStore.value.state &&
-          cStore.value.state.nextToken !== ""
-        ) {
+        // nextToken がある場合は次のコメントをロード
+        if (cStore.value.state.nextToken !== "") {
           await scrollComments(cStore.value.state.nextToken);
           $state.loaded();
         } else {
-          await scrollComments(cStore.value.state.nextToken);
           $state.complete();
           isInfiniteDisabled.value = true;
         }
-        // 最大件数に達したらローディング完了にする
-        if (comments.length >= MAX_COUNT) {
+
+        // コメントの数が最大件数に達した場合はロード完了にする
+        if (comments.value.length >= MAX_COUNT) {
           $state.complete();
           isInfiniteDisabled.value = true;
         } else {
@@ -213,34 +209,30 @@ export default defineComponent({
       }
     };
 
-    // qStoreとcStoreとrStoreを監視し、エラーコードがあればスナックバー用のメッセージ配列に追加
+    // スナックバーのエラーメッセージ処理
     watchEffect(() => {
-      if (qStore.code && qStore.code.value !== "") {
+      if (qStore.value && qStore.value.code) {
+        console.log(qStore.value.code)
         snackbarMessages.value.push({
-          text: ERR_MSG[qStore.code.value],
+          text: ERR_MSG[qStore.value.code],
           show: true,
         });
       }
-      if (
-        cStore.value &&
-        cStore.value.state &&
-        cStore.value.code &&
-        cStore.value.code !== ""
-      ) {
+      if (cStore.value && cStore.value.code) {
+        console.log(cStore.value.code)
         snackbarMessages.value.push({
           text: ERR_MSG[cStore.value.code],
           show: true,
         });
       }
-      if (rStore.code && rStore.code.value !== "") {
-        snackbarMessages.value.push({
-          text: ERR_MSG[rStore.code.value],
-          show: true,
-        });
+      if (rStore.value && rStore.value.code) {
+        console.log(rStore.value.code)
+        snackbarMessages.value.push({ text: ERR_MSG[rStore.value.code], show: true });
       }
-      if (chStore.code && chStore.code.value !== "") {
+      if (chStore.value && chStore.value.code) {
+        console.log(chStore.value.code)
         snackbarMessages.value.push({
-          text: ERR_MSG[chStore.code.value],
+          text: ERR_MSG[chStore.value.code],
           show: true,
         });
       }
