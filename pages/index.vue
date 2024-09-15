@@ -147,7 +147,7 @@ export default {
         { deep: true }
       );
 
-      isLoading.value = newsStore.value.isLoading.value;
+      isLoading.value = newsStore.value.isLoading;
     });
 
     // アンケートタブ検索
