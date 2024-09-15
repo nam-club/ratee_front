@@ -50,7 +50,6 @@ import {
   MAX_COUNT,
   ERR_MSG,
 } from "@/constants";
-import { Questionnaire } from "~/composables/questionnaireStates";
 
 export default {
   components: {
@@ -68,10 +67,10 @@ export default {
     const searchStore = ref<any>();
     const categoryStore = ref<any>();
 
-    const nQuestionnaires = ref<Questionnaire[]>([]);
-    const tQuestionnaires = ref<Questionnaire[]>([]);
-    const rQuestionnaires = ref<Questionnaire[]>([]);
-    const sQuestionnaires = ref<Questionnaire[]>([]);
+    const nQuestionnaires = ref<any>([]);
+    const tQuestionnaires = ref<any>([]);
+    const rQuestionnaires = ref<any>([]);
+    const sQuestionnaires = ref<any>([]);
     const categories = ref<Category[]>([]);
 
     const isLoading = ref(true);
