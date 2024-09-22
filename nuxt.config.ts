@@ -3,6 +3,7 @@
 import vuetify from 'vite-plugin-vuetify'
 
 export default defineNuxtConfig({
+  ssr: false,
   app: {
     head: {
       title: 'ratee -手軽にみんなの意見が見える投票サイト-',
