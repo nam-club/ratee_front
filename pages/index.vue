@@ -50,6 +50,7 @@ import {
   MAX_COUNT,
   ERR_MSG,
 } from "@/constants";
+import { Questionnaire as QuestionnaireType } from "@/composables/questionnaireStates"; // Questionnaire型をインポート
 
 export default {
   components: {
@@ -67,10 +68,10 @@ export default {
     const searchStore = ref<any>();
     const categoryStore = ref<any>();
 
-    const nQuestionnaires = ref<any>([]);
-    const tQuestionnaires = ref<any>([]);
-    const rQuestionnaires = ref<any>([]);
-    const sQuestionnaires = ref<any>([]);
+    const nQuestionnaires = ref<QuestionnaireType[]>([]);
+    const tQuestionnaires = ref<QuestionnaireType[]>([]);
+    const rQuestionnaires = ref<QuestionnaireType[]>([]);
+    const sQuestionnaires = ref<QuestionnaireType[]>([]);
     const categories = ref<Category[]>([]);
 
     const isLoading = ref(true);
