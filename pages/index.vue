@@ -74,80 +74,66 @@ export default {
     const sQuestionnaires = ref<QuestionnaireType[]>([]);
     const categories = ref<Category[]>([]);
 
-    const isLoading = ref(true);
+    const { data: commonData, pending: isLoading } = useAsyncData(
+      "commonData",
+      async () => {
+        await commonStore.load();
+        // commonStore.load()完了後にuseQuestionnairesを呼び出す
+        newsStore.value = useQuestionnaires(TAB_ID1); // 新着
+        await newsStore.value.loadQuestionnaires();
+        trendStore.value = useQuestionnaires(TAB_ID2); // 急上昇
+        await trendStore.value.loadQuestionnaires();
+        rankingStore.value = useQuestionnaires(TAB_ID3); // ランキング
+        await rankingStore.value.loadQuestionnaires();
+        searchStore.value = useQuestionnaires(TAB_ID4); // 検索
+        await searchStore.value.loadQuestionnaires();
+        categoryStore.value = useCategories(); // カテゴリー
+        await categoryStore.value.loadCategories();
+        categories.value = categoryStore.value.state.slice();
 
-    onMounted(async() => {
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.has("app")) {
-        isApp.value = true;
+        return { commonStore, newsStore, trendStore, rankingStore, searchStore };
       }
+    );
 
-      // commonStore.load()の完了を待つ
-      await commonStore.load();
+    // それぞれのアンケートデータを監視
+    watchEffect(() => {
+      if (commonData.value?.newsStore?.state?.questionnaires) {
+        nQuestionnaires.value = commonData.value.newsStore.state.questionnaires.map((q) => ({
+          ...q,
+          choices: q.choices.map((choice) => ({ ...choice })),
+          tags: [...q.tags],
+        }));
+      }
+    });
 
-      // commonStore.load()完了後にuseQuestionnairesを呼び出す
-      newsStore.value = useQuestionnaires(TAB_ID1); // 新着
-      await newsStore.value.loadQuestionnaires();
-      trendStore.value = useQuestionnaires(TAB_ID2); // 急上昇
-      await trendStore.value.loadQuestionnaires();
-      rankingStore.value = useQuestionnaires(TAB_ID3); // ランキング
-      await rankingStore.value.loadQuestionnaires();
-      searchStore.value = useQuestionnaires(TAB_ID4); // 検索
-      await searchStore.value.loadQuestionnaires();
-      categoryStore.value = useCategories(); // カテゴリー
-      await categoryStore.value.loadCategories();
-      categories.value = categoryStore.value.state.slice();
+    watchEffect(() => {
+      if (commonData.value?.trendStore?.state?.questionnaires) {
+        nQuestionnaires.value = commonData.value.trendStore.state.questionnaires.map((q) => ({
+          ...q,
+          choices: q.choices.map((choice) => ({ ...choice })),
+          tags: [...q.tags],
+        }));
+      }
+    });
 
-      // それぞれのアンケートデータを監視
-      watch(
-        () => newsStore.value.state.questionnaires,
-        (newVal) => {
-          nQuestionnaires.value = newVal.map((q) => ({
-            ...q,
-            choices: q.choices.map((choice) => ({ ...choice })),
-            tags: [...q.tags],
-          }));
-        },
-        { deep: true }
-      );
+    watchEffect(() => {
+      if (commonData.value?.rankingStore?.state?.questionnaires) {
+        nQuestionnaires.value = commonData.value.rankingStore.state.questionnaires.map((q) => ({
+          ...q,
+          choices: q.choices.map((choice) => ({ ...choice })),
+          tags: [...q.tags],
+        }));
+      }
+    });
 
-      watch(
-        () => trendStore.value.state.questionnaires,
-        (newVal) => {
-          tQuestionnaires.value = newVal.map((q) => ({
-            ...q,
-            choices: q.choices.map((choice) => ({ ...choice })),
-            tags: [...q.tags],
-          }));
-        },
-        { deep: true }
-      );
-
-      watch(
-        () => rankingStore.value.state.questionnaires,
-        (newVal) => {
-          rQuestionnaires.value = newVal.map((q) => ({
-            ...q,
-            choices: q.choices.map((choice) => ({ ...choice })),
-            tags: [...q.tags],
-          }));
-        },
-        { deep: true }
-      );
-
-      watch(
-        () => searchStore.value.state.questionnaires,
-        (newVal) => {
-          sQuestionnaires.value = newVal.map((q) => ({
-            ...q,
-            choices: q.choices.map((choice) => ({ ...choice })),
-            tags: [...q.tags],
-          }));
-        },
-        { deep: true }
-      );
-
-      isLoading.value = newsStore.value.isLoading;
+    watchEffect(() => {
+      if (commonData.value?.searchStore?.state?.questionnaires) {
+        nQuestionnaires.value = commonData.value.searchStore.state.questionnaires.map((q) => ({
+          ...q,
+          choices: q.choices.map((choice) => ({ ...choice })),
+          tags: [...q.tags],
+        }));
+      }
     });
 
     // アンケートタブ検索
@@ -198,7 +184,11 @@ export default {
     const isInfiniteDisabled = ref(false); // 無限スクロール制御変数の定義
 
     watchEffect(() => {
-      if (newsStore && newsStore.value && newsStore.value.state.nextToken === "") {
+      if (
+        newsStore &&
+        newsStore.value &&
+        newsStore.value.state.nextToken === ""
+      ) {
         isInfiniteDisabled.value = true;
       } else {
         isInfiniteDisabled.value = false;
@@ -236,19 +226,35 @@ export default {
 
     // storeを監視し、エラーコードがあればスナックバーを表示
     watchEffect(() => {
-      if (newsStore.value && newsStore.value.state && newsStore.value.code !== "") {
+      if (
+        newsStore.value &&
+        newsStore.value.state &&
+        newsStore.value.code !== ""
+      ) {
         Object.entries(ERR_MSG);
         snackbarText.value = ERR_MSG[newsStore.value.code];
         snackbar.value = true;
-      } else if (trendStore.value && trendStore.value.state && trendStore.value.code !== "") {
+      } else if (
+        trendStore.value &&
+        trendStore.value.state &&
+        trendStore.value.code !== ""
+      ) {
         Object.entries(ERR_MSG);
         snackbarText.value = ERR_MSG[trendStore.value.code];
         snackbar.value = true;
-      } else if (rankingStore.value && rankingStore.value.state && rankingStore.value.code !== "") {
+      } else if (
+        rankingStore.value &&
+        rankingStore.value.state &&
+        rankingStore.value.code !== ""
+      ) {
         Object.entries(ERR_MSG);
         snackbarText.value = ERR_MSG[rankingStore.value.code];
         snackbar.value = true;
-      } else if (searchStore.value && searchStore.value.state && searchStore.value.code !== "") {
+      } else if (
+        searchStore.value &&
+        searchStore.value.state &&
+        searchStore.value.code !== ""
+      ) {
         Object.entries(ERR_MSG);
         snackbarText.value = ERR_MSG[searchStore.value.code];
         snackbar.value = true;
