@@ -108,7 +108,7 @@ export default {
 
     watchEffect(() => {
       if (commonData.value?.trendStore?.state?.questionnaires) {
-        nQuestionnaires.value = commonData.value.trendStore.state.questionnaires.map((q) => ({
+        tQuestionnaires.value = commonData.value.trendStore.state.questionnaires.map((q) => ({
           ...q,
           choices: q.choices.map((choice) => ({ ...choice })),
           tags: [...q.tags],
@@ -118,7 +118,7 @@ export default {
 
     watchEffect(() => {
       if (commonData.value?.rankingStore?.state?.questionnaires) {
-        nQuestionnaires.value = commonData.value.rankingStore.state.questionnaires.map((q) => ({
+        rQuestionnaires.value = commonData.value.rankingStore.state.questionnaires.map((q) => ({
           ...q,
           choices: q.choices.map((choice) => ({ ...choice })),
           tags: [...q.tags],
@@ -128,7 +128,7 @@ export default {
 
     watchEffect(() => {
       if (commonData.value?.searchStore?.state?.questionnaires) {
-        nQuestionnaires.value = commonData.value.searchStore.state.questionnaires.map((q) => ({
+        sQuestionnaires.value = commonData.value.searchStore.state.questionnaires.map((q) => ({
           ...q,
           choices: q.choices.map((choice) => ({ ...choice })),
           tags: [...q.tags],
