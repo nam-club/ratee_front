@@ -100,6 +100,14 @@ export const REPORT_NULL_TEXT = 'このアンケートが不適切な理由を�
 export const TITLE_IMG = '/logo.png';
 export const ICON_IMG = ['/0.png', '/1.png', '/2.png', '/3.png', '/4.png', '/5.png', '/6.png', '/7.png', '/8.png', '/9.png', '/10.png',];
 
+/** トーストメッセージ */
+export const TOAST_MSG = {
+    ANSWERED_QUESTIONNAIRE: "アンケートに回答しました。",
+    CREATED_QUESTIONNAIRE: "アンケートを作成しました。",
+    POSTED_COMMENT: "コメントを投稿しました。",
+    REPORTED_QUESTIONNAIRE: "アンケートを通報しました。",
+}
+
 /** エラーメッセージ */
 export const ERR_MSG: Record<string, string> = {
     // リクエストで必要なパラメータが不足している

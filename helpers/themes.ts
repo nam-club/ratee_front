@@ -12,7 +12,7 @@ export const mainTheme: ThemeDefinition = {
     secondary: '#545454',
     error: '#EF5350',
     info: '#3b82f6',
-    success: '#22c55e',
+    success: '#00BFA5',
     warning: '#f59e0b',
   },
 }
@@ -29,7 +29,7 @@ export const mainDarkTheme: ThemeDefinition = {
     secondary: '#546E7A',
     error: '#ef4444',
     info: '#3b82f6',
-    success: '#22c55e',
+    success: '#00BFA5',
     warning: '#f59e0b',
   },
 }

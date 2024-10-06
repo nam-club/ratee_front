@@ -3,7 +3,7 @@
     :snackbar="snackbar"
     :snackbarText="snackbarText"
     @update:snackbar="snackbar = $event"
-    :color="errorColor"
+    :color="snackbarColor"
   />
   <div v-if="categories.length">
     <CreateForm
@@ -20,7 +20,7 @@ import { mainTheme } from "@/helpers/themes";
 import { Category } from "@/types";
 import CreateForm from "@/components/templates/CreateForm.vue";
 import SnackBar from "@/components/molecules/SnackBar.vue";
-import { HOME_LINK, ERR_MSG, TAB_ID1 } from "@/constants";
+import { HOME_LINK, TOAST_MSG, ERR_MSG, TAB_ID1 } from "@/constants";
 
 export default {
   components: {
@@ -64,26 +64,41 @@ export default {
       tags: string[],
       options: object
     ) => {
-      await qStore.createQuestionnaire(
-        title,
-        choices,
-        categoryId,
-        tags,
-        options
-      );
-      if (qStore.code.value === "") {
-        router.push({ path: HOME_LINK, query: currentQuery });
+      try {
+        await qStore.createQuestionnaire(
+          title,
+          choices,
+          categoryId,
+          tags,
+          options
+        );
+        if (qStore.code.value === "") {
+          snackbarText.value = TOAST_MSG.CREATED_QUESTIONNAIRE;
+          snackbarColor.value = "";
+          snackbar.value = true;
+          router.push({ path: HOME_LINK, query: currentQuery });
+        }
+      } catch {
+        if (qStore.code.value === "") {
+          snackbarText.value = ERR_MSG["body.q.letters.out_of_range"];
+        } else {
+          snackbarText.value = ERR_MSG[qStore.code.value];
+        }
+        snackbarColor.value = mainTheme.colors?.error;
+        snackbar.value = true;
       }
     };
 
     const snackbar = ref(false); // スナックバーの表示状態
     const snackbarText = ref(""); // スナックバーに表示するテキスト
+    const snackbarColor = ref(mainTheme.colors?.error); // スナックバーの背景色
 
     // qStoreを監視し、エラーコードがあればスナックバーを表示
     watchEffect(() => {
       if (qStore.code.value !== "") {
         Object.entries(ERR_MSG);
         snackbarText.value = ERR_MSG[qStore.code.value];
+        snackbarColor.value = mainTheme.colors?.error;
         snackbar.value = true;
       }
     });
@@ -94,7 +109,7 @@ export default {
       createQuestionnaire,
       snackbar,
       snackbarText,
-      errorColor: mainTheme.colors?.error,
+      snackbarColor,
     };
   },
 };

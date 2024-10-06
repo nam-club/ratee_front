@@ -4,7 +4,6 @@
       :snackbar="message.show"
       :snackbarText="message.text"
       @update:snackbar="message.show = $event"
-      :color="errorColor"
     />
   </div>
 
@@ -43,7 +42,7 @@ import { mainTheme } from "@/helpers/themes";
 import SnackBar from "@/components/molecules/SnackBar.vue";
 import Questionnaire from "@/components/templates/Questionnaire.vue";
 import { Questionnaire as QuestionnaireType } from "@/composables/questionnaireStates"; // Questionnaire型をインポート
-import { MAX_COUNT, ERR_MSG } from "@/constants";
+import { MAX_COUNT, ERR_MSG, TOAST_MSG } from "@/constants";
 
 export default defineComponent({
   components: {
@@ -60,7 +59,9 @@ export default defineComponent({
     const isQuestionnaireLoading = ref(true);
     const isChartLoading = ref(true);
     const isInfiniteDisabled = ref(false);
-    const snackbarMessages = ref<{ text: string; show: boolean }[]>([]);
+    const snackbarMessages = ref<
+      { text: string; show: boolean; color: string }[]
+    >([]);
 
     // コメント、チャート、アンケート、リコメンドの各データ
     const questionnaire = ref<QuestionnaireType>({
@@ -150,8 +151,21 @@ export default defineComponent({
     });
 
     // アンケート回答
-    const answerQuestionnaire = (id: string, name: string) => {
-      qStore.value.answerQuestionnaire(id, name);
+    const answerQuestionnaire = async (id: string, name: string) => {
+      try {
+        await qStore.value.answerQuestionnaire(id, name);
+        snackbarMessages.value.push({
+          text: TOAST_MSG.ANSWERED_QUESTIONNAIRE,
+          show: true,
+          color: '',
+        });
+      } catch {
+        snackbarMessages.value.push({
+          text: ERR_MSG[qStore.value.code],
+          show: true,
+          color: mainTheme.colors?.error || "error",
+        });
+      }
     };
 
     // コメント投稿関数
@@ -161,10 +175,21 @@ export default defineComponent({
       comment: string
     ) => {
       if (cStore) {
-        await cStore.value.sendComment(questionId, iconId, comment);
-        comments.value = cStore.value.state.comments;
-      } else {
-        console.error("cStore is not initialized.");
+        try {
+          await cStore.value.sendComment(questionId, iconId, comment);
+          comments.value = cStore.value.state.comments;
+          snackbarMessages.value.push({
+            text: TOAST_MSG.POSTED_COMMENT,
+            show: true,
+            color: '',
+          });
+        } catch {
+          snackbarMessages.value.push({
+            text: ERR_MSG[cStore.value.code],
+            show: true,
+            color: mainTheme.colors?.error || "error",
+          });
+        }
       }
     };
 
@@ -172,20 +197,26 @@ export default defineComponent({
     const scrollComments = async (nextToken: string) => {
       if (cStore) {
         await cStore.value.scrollComments(questionId, nextToken);
-      } else {
-        console.error("cStore is not initialized.");
       }
     };
 
     // アンケート通報関数
-    const postReport = async (
-      questionId: string,
-      reason: string
-    ) => {
+    const postReport = async (questionId: string, reason: string) => {
       if (qStore) {
+        try {
         await qStore.value.reportQuestionnaire(questionId, reason);
-      } else {
-        console.error("qStore is not initialized.");
+        snackbarMessages.value.push({
+            text: TOAST_MSG.REPORTED_QUESTIONNAIRE,
+            show: true,
+            color: '',
+          });
+        }catch {
+          snackbarMessages.value.push({
+            text: ERR_MSG[qStore.value.code],
+            show: true,
+            color: mainTheme.colors?.error || "error",
+          });
+        }
       }
     };
 
@@ -225,21 +256,28 @@ export default defineComponent({
         snackbarMessages.value.push({
           text: ERR_MSG[qStore.value.code],
           show: true,
+          color: mainTheme.colors?.error || "error",
         });
       }
       if (cStore.value && cStore.value.code) {
         snackbarMessages.value.push({
           text: ERR_MSG[cStore.value.code],
           show: true,
+          color: mainTheme.colors?.error || "error",
         });
       }
       if (rStore.value && rStore.value.code) {
-        snackbarMessages.value.push({ text: ERR_MSG[rStore.value.code], show: true });
+        snackbarMessages.value.push({
+          text: ERR_MSG[rStore.value.code],
+          show: true,
+          color: mainTheme.colors?.error || "error",
+        });
       }
       if (chStore.value && chStore.value.code) {
         snackbarMessages.value.push({
           text: ERR_MSG[chStore.value.code],
           show: true,
+          color: mainTheme.colors?.error || "error",
         });
       }
     });
@@ -258,7 +296,6 @@ export default defineComponent({
       isQuestionnaireLoading,
       isChartLoading,
       snackbarMessages,
-      errorColor: mainTheme.colors?.error,
     };
   },
 });

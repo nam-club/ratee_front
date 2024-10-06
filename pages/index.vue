@@ -3,7 +3,7 @@
     :snackbar="snackbar"
     :snackbarText="snackbarText"
     @update:snackbar="snackbar = $event"
-    :color="errorColor"
+    :color="snackbarColor"
   />
   <Top
     :isApp="isApp"
@@ -48,6 +48,7 @@ import {
   TAB_ID3,
   TAB_ID4,
   MAX_COUNT,
+  TOAST_MSG,
   ERR_MSG,
 } from "@/constants";
 import { Questionnaire as QuestionnaireType } from "@/composables/questionnaireStates"; // Questionnaire型をインポート
@@ -91,48 +92,58 @@ export default {
         await categoryStore.value.loadCategories();
         categories.value = categoryStore.value.state.slice();
 
-        return { commonStore, newsStore, trendStore, rankingStore, searchStore };
+        return {
+          commonStore,
+          newsStore,
+          trendStore,
+          rankingStore,
+          searchStore,
+        };
       }
     );
 
     // それぞれのアンケートデータを監視
     watchEffect(() => {
       if (commonData.value?.newsStore?.state?.questionnaires) {
-        nQuestionnaires.value = commonData.value.newsStore.state.questionnaires.map((q) => ({
-          ...q,
-          choices: q.choices.map((choice) => ({ ...choice })),
-          tags: [...q.tags],
-        }));
+        nQuestionnaires.value =
+          commonData.value.newsStore.state.questionnaires.map((q) => ({
+            ...q,
+            choices: q.choices.map((choice) => ({ ...choice })),
+            tags: [...q.tags],
+          }));
       }
     });
 
     watchEffect(() => {
       if (commonData.value?.trendStore?.state?.questionnaires) {
-        tQuestionnaires.value = commonData.value.trendStore.state.questionnaires.map((q) => ({
-          ...q,
-          choices: q.choices.map((choice) => ({ ...choice })),
-          tags: [...q.tags],
-        }));
+        tQuestionnaires.value =
+          commonData.value.trendStore.state.questionnaires.map((q) => ({
+            ...q,
+            choices: q.choices.map((choice) => ({ ...choice })),
+            tags: [...q.tags],
+          }));
       }
     });
 
     watchEffect(() => {
       if (commonData.value?.rankingStore?.state?.questionnaires) {
-        rQuestionnaires.value = commonData.value.rankingStore.state.questionnaires.map((q) => ({
-          ...q,
-          choices: q.choices.map((choice) => ({ ...choice })),
-          tags: [...q.tags],
-        }));
+        rQuestionnaires.value =
+          commonData.value.rankingStore.state.questionnaires.map((q) => ({
+            ...q,
+            choices: q.choices.map((choice) => ({ ...choice })),
+            tags: [...q.tags],
+          }));
       }
     });
 
     watchEffect(() => {
       if (commonData.value?.searchStore?.state?.questionnaires) {
-        sQuestionnaires.value = commonData.value.searchStore.state.questionnaires.map((q) => ({
-          ...q,
-          choices: q.choices.map((choice) => ({ ...choice })),
-          tags: [...q.tags],
-        }));
+        sQuestionnaires.value =
+          commonData.value.searchStore.state.questionnaires.map((q) => ({
+            ...q,
+            choices: q.choices.map((choice) => ({ ...choice })),
+            tags: [...q.tags],
+          }));
       }
     });
 
@@ -144,23 +155,62 @@ export default {
     };
 
     // アンケート回答(最新)
-    const answerNewsQuestionnaire = (id: string, name: string[]) => {
+    const answerNewsQuestionnaire = async (id: string, name: string[]) => {
       if (newsStore) {
-        newsStore.value.answerQuestionnaire(id, name);
+        try {
+          await newsStore.value.answerQuestionnaire(id, name);
+          snackbarText.value = TOAST_MSG.ANSWERED_QUESTIONNAIRE;
+          snackbarColor.value = '';
+        } catch {
+          if (newsStore.value.code === "") {
+            snackbarText.value = ERR_MSG["body.answer.letters.out_of_range"];
+          } else {
+            snackbarText.value = ERR_MSG[newsStore.value.code];
+          }
+          snackbarColor.value = mainTheme.colors?.error;
+        } finally {
+          snackbar.value = true;
+        }
       }
     };
 
     // アンケート回答(急上昇)
-    const answerTrendQuestionnaire = (id: string, name: string[]) => {
+    const answerTrendQuestionnaire = async (id: string, name: string[]) => {
       if (trendStore) {
-        trendStore.value.answerQuestionnaire(id, name);
+        try {
+          await trendStore.value.answerQuestionnaire(id, name);
+          snackbarText.value = TOAST_MSG.ANSWERED_QUESTIONNAIRE;
+          snackbarColor.value = '';
+        } catch {
+          if (trendStore.value.code === "") {
+            snackbarText.value = ERR_MSG["body.answer.letters.out_of_range"];
+          } else {
+            snackbarText.value = ERR_MSG[trendStore.value.code];
+          }
+          snackbarColor.value = mainTheme.colors?.error;
+        } finally {
+          snackbar.value = true;
+        }
       }
     };
 
     // アンケート回答(ランキング)
-    const answerRankingQuestionnaire = (id: string, name: string[]) => {
+    const answerRankingQuestionnaire = async (id: string, name: string[]) => {
       if (rankingStore) {
-        rankingStore.value.answerQuestionnaire(id, name);
+        try {
+          await rankingStore.value.answerQuestionnaire(id, name);
+          snackbarText.value = TOAST_MSG.ANSWERED_QUESTIONNAIRE;
+          snackbarColor.value = '';
+        } catch {
+          if (rankingStore.value.code === "") {
+            snackbarText.value = ERR_MSG["body.answer.letters.out_of_range"];
+          } else {
+            snackbarText.value = ERR_MSG[rankingStore.value.code];
+          }
+          snackbarColor.value = mainTheme.colors?.error;
+        } finally {
+          snackbar.value = true;
+        }
       }
     };
 
@@ -171,7 +221,22 @@ export default {
       type: string,
       word: string
     ) => {
-      searchStore.value.answerSearchQuestionnaire(id, name, type, word);
+      if (searchStore) {
+        try {
+          searchStore.value.answerSearchQuestionnaire(id, name, type, word);
+          snackbarText.value = TOAST_MSG.ANSWERED_QUESTIONNAIRE;
+          snackbarColor.value = '';
+        } catch {
+          if (searchStore.value.code === "") {
+            snackbarText.value = ERR_MSG["body.answer.letters.out_of_range"];
+          } else {
+            snackbarText.value = ERR_MSG[searchStore.value.code];
+          }
+          snackbarColor.value = mainTheme.colors?.error;
+        } finally {
+          snackbar.value = true;
+        }
+      }
     };
 
     // 続きのアンケート一覧を取得
@@ -223,6 +288,7 @@ export default {
 
     const snackbar = ref(false); // スナックバーの表示状態
     const snackbarText = ref(""); // スナックバーに表示するテキスト
+    const snackbarColor = ref(mainTheme.colors?.error); // スナックバーの背景色
 
     // storeを監視し、エラーコードがあればスナックバーを表示
     watchEffect(() => {
@@ -233,6 +299,7 @@ export default {
       ) {
         Object.entries(ERR_MSG);
         snackbarText.value = ERR_MSG[newsStore.value.code];
+        snackbarColor.value = mainTheme.colors?.error;
         snackbar.value = true;
       } else if (
         trendStore.value &&
@@ -241,6 +308,7 @@ export default {
       ) {
         Object.entries(ERR_MSG);
         snackbarText.value = ERR_MSG[trendStore.value.code];
+        snackbarColor.value = mainTheme.colors?.error;
         snackbar.value = true;
       } else if (
         rankingStore.value &&
@@ -249,6 +317,7 @@ export default {
       ) {
         Object.entries(ERR_MSG);
         snackbarText.value = ERR_MSG[rankingStore.value.code];
+        snackbarColor.value = mainTheme.colors?.error;
         snackbar.value = true;
       } else if (
         searchStore.value &&
@@ -257,6 +326,7 @@ export default {
       ) {
         Object.entries(ERR_MSG);
         snackbarText.value = ERR_MSG[searchStore.value.code];
+        snackbarColor.value = mainTheme.colors?.error;
         snackbar.value = true;
       }
     });
@@ -278,7 +348,7 @@ export default {
       isInfiniteDisabled,
       snackbar,
       snackbarText,
-      errorColor: mainTheme.colors?.error,
+      snackbarColor,
     };
   },
 };
