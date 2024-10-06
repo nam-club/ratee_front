@@ -150,14 +150,14 @@
         <v-btn-toggle v-if="!mobile" v-model="toggle" color="primary">
           <Button v-for="n in 10" :key="n" @click="setIcon(n)">
             <v-avatar>
-              <v-img :src="iconImg[n - 1]" />
+              <v-img :src="iconImg[n]" />
             </v-avatar>
           </Button>
         </v-btn-toggle>
         <v-tabs v-else v-model="tab" align-tabs="center">
           <v-tab :value="n" v-for="n in 10" :key="n" @click="setIcon(n)">
             <v-avatar>
-              <v-img :src="iconImg[n - 1]" />
+              <v-img :src="iconImg[n]" />
             </v-avatar>
           </v-tab>
         </v-tabs>
@@ -309,8 +309,11 @@ export default defineComponent({
         return;
       }
       try {
+        if(iconNum === 0) {
+          iconNum = 1;
+        }
         isLoading.value = true; // ローディング開始
-        await props.postComment(questionId, iconNum - 1, content);
+        await props.postComment(questionId, iconNum, content);
       } catch (error) {
         console.error("コメント投稿エラーが発生しました:", error);
       } finally {
