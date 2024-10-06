@@ -50,6 +50,10 @@ export const RECOMMEND_TITLE = "あなたにおすすめのアンケート";
 export const COMMENT_TITLE = "コメント";
 export const COMMENT_BUTTON = "コメントを投稿する";
 
+/** 通報ボックス */
+export const REPORT_BUTTON = "アンケートを通報する";
+export const REPORT_POST_BUTTON = "通報する";
+
 /** アンケート作成フォーム */
 export const FORM_CAPTION_REQUIRED_LABEL = "必須";
 export const FORM_TITLE_TEXT = "質問";
@@ -89,6 +93,8 @@ export const FORM_ERR_TEXT = '各項目を確認してください。'; // ア�
 export const COMMENT_MIN_LENGTH = 1; // アンケート質問の最低文字数
 export const COMMENT_MAX_LENGTH = 40; // アンケート質問の最大文字数
 export const COMMENT_NULL_TEXT = 'コメントを入力してください。' // コメントのデフォルトおよびエラーメッセージ
+export const REPORT_MAX_LENGTH = 100; // 通報理由の最大文字数
+export const REPORT_NULL_TEXT = 'このアンケートが不適切な理由を入力してください。' // 通報理由のデフォルトおよびエラーメッセージ
 
 /** 画像パス */
 export const TITLE_IMG = '/logo.png';

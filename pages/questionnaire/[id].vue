@@ -26,6 +26,7 @@
       :answerQuestionnaire="answerQuestionnaire"
       :comments="comments"
       :postComment="postComment"
+      :postReport="postReport"
       :recommends="recommends"
       :chart="chart"
       :load="load"
@@ -176,11 +177,20 @@ export default defineComponent({
       }
     };
 
+    // アンケート通報関数
+    const postReport = async (
+      questionId: string,
+      reason: string
+    ) => {
+      if (qStore) {
+        await qStore.value.reportQuestionnaire(questionId, reason);
+      } else {
+        console.error("qStore is not initialized.");
+      }
+    };
+
     // 無限スクロール
     const load = async ($state: InfiniteLoadingState) => {
-    console.log("load")
-    console.log(isInfiniteDisabled.value)
-    console.log(cStore.value)
       // 無限スクロールが無効の場合や、スクロール領域がない場合は処理を終了
       if (isInfiniteDisabled.value || !cStore) {
         $state.complete();
@@ -212,25 +222,21 @@ export default defineComponent({
     // スナックバーのエラーメッセージ処理
     watchEffect(() => {
       if (qStore.value && qStore.value.code) {
-        console.log(qStore.value.code)
         snackbarMessages.value.push({
           text: ERR_MSG[qStore.value.code],
           show: true,
         });
       }
       if (cStore.value && cStore.value.code) {
-        console.log(cStore.value.code)
         snackbarMessages.value.push({
           text: ERR_MSG[cStore.value.code],
           show: true,
         });
       }
       if (rStore.value && rStore.value.code) {
-        console.log(rStore.value.code)
         snackbarMessages.value.push({ text: ERR_MSG[rStore.value.code], show: true });
       }
       if (chStore.value && chStore.value.code) {
-        console.log(chStore.value.code)
         snackbarMessages.value.push({
           text: ERR_MSG[chStore.value.code],
           show: true,
@@ -245,6 +251,7 @@ export default defineComponent({
       recommends,
       comments,
       postComment,
+      postReport,
       load,
       isInfiniteDisabled,
       chart,

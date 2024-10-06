@@ -71,7 +71,6 @@ const postComment = async (questionId: string, iconId: number, comment: string) 
             credentials: 'include'
         });
         const data = await response.json();
-        console.log(data)
         if (response.ok) {
             return { code: '', message: '' };
         } else {
@@ -116,7 +115,6 @@ export const useComments = async (questionId: string, nextToken: string) => {
 
         code.value = '';
         const postResult = await postComment(questionId, iconId, comment);
-        console.log(postResult)
 
         if (postResult.code !== '') {
             code.value = postResult.code;

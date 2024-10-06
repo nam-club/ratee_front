@@ -250,6 +250,33 @@ const getRecommendQuestionnaires = async (questionId: string) => {
     return []; // エラーが発生した場合やレスポンスがOKでない場合は空の配列を返す
 }
 
+// アンケート通報API
+const postReport = async (id: string, reason: string) => {
+    try {
+        const response = await fetch(`${baseURL}/questionnaire/report`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: id,
+                reason: reason
+            }),
+            credentials: 'include'
+        });
+        const data = await response.json();
+        if (response.ok) {
+            return { code: '', message: '' };
+        } else {
+            console.error('アンケート通報APIの実行中にエラーが発生しました:', response.statusText);
+            return { code: data.code, message: data.message };
+        }
+    } catch (error) {
+        console.error('アンケート通報取得APIの実行中にエラーが発生しました:', error);
+        return { code: '', message: 'アンケート通報に失敗しました' };
+    }
+}
+
 // 共通変数のStore定義
 export const useStore = () => {
     // 初回表示フラグ (useStateを使ってグローバルな状態を保持)
@@ -403,7 +430,6 @@ export const useQuestionnaire = (questionId: string) => {
 
     const loadQuestionnaire = async () => {
         state.value = await getQuestionnaire(questionId);
-        console.log(state.value)
         isLoading.value = false;
         code.value = state.value.code ? state.value.code : '';
         if (state.value?.enableComment) {
@@ -426,10 +452,18 @@ export const useQuestionnaire = (questionId: string) => {
         }
     }
 
+    // アンケート通報
+    const reportQuestionnaire = async (questionId: string, reason: string) => {
+        code.value = '';
+        const reportResult = await postReport(questionId, reason);
+        code.value = reportResult.code ? reportResult.code : '';
+    }
+
     return {
         state: readonly(state),
         loadQuestionnaire,
         answerQuestionnaire,
+        reportQuestionnaire,
         isLoading,
         code
     }

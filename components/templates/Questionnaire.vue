@@ -13,15 +13,16 @@
         :recommends="recommends"
       />
       <CommentBox
-        v-if="
-          questionnaire.enableComment &&
-          questionnaire.isAnswered
-        "
+        v-if="questionnaire.enableComment && questionnaire.isAnswered"
         :questionId="questionnaire.id"
         :comments="comments"
         :postComment="postComment"
         :load="load"
         :isInfiniteDisabled="isInfiniteDisabled"
+      />
+      <ReportBox
+        :questionId="questionnaire.id"
+        :postReport="postReport"
       />
     </div>
     <Footer :buttonText="footerButtonText" />
@@ -46,6 +47,7 @@ import Header from "@/components/organisms/Header.vue";
 import DetailView from "@/components/organisms/DetailView.vue";
 import RecommendBox from "@/components/organisms/RecommendBox.vue";
 import CommentBox from "@/components/organisms/CommentBox.vue";
+import ReportBox from "@/components/organisms/ReportBox.vue";
 import Footer from "@/components/organisms/Footer.vue";
 import { Questionnaire, Comment } from "~/composables/questionnaireStates";
 
@@ -55,6 +57,7 @@ export default defineComponent({
     DetailView,
     RecommendBox,
     CommentBox,
+    ReportBox,
     Footer,
   },
   props: {
@@ -75,6 +78,10 @@ export default defineComponent({
       default: [],
     },
     postComment: {
+      type: Function,
+      required: true,
+    },
+    postReport: {
       type: Function,
       required: true,
     },
