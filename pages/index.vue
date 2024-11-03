@@ -61,6 +61,13 @@ export default {
   setup() {
     const isApp = ref(false);
 
+    onMounted(async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has("app")) {
+        isApp.value = true;
+      }
+    });
+
     // Store定義
     const commonStore = useStore();
     const newsStore = ref<any>();
