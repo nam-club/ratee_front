@@ -1,7 +1,7 @@
 <template>
   <v-app class="bg-background" :class="{ 'app-header': isApp }">
     <div v-if="categories.length">
-      <Header :isApp="isApp" />
+      <Header />
     </div>
     <Form
       :categories="categories"

@@ -4,7 +4,7 @@
     style="display: flex; flex-direction: column"
     :class="{ 'app-header': isApp }"
   >
-    <Header :isApp="isApp" />
+    <Header />
     <div style="margin: 0 0 20% 0">
       <ContentsView
         :nQuestionnaires="nQuestionnaires"

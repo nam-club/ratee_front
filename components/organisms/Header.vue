@@ -38,7 +38,6 @@
   <v-app-bar
     v-else
     class="px-0 app-bar"
-    :class="{ 'app-header': isApp }"
     style="display: flex"
   >
     <!-- 左端に配置されるボタン -->
@@ -78,7 +77,7 @@
     </nuxt-link>
   </v-app-bar>
   <v-navigation-drawer v-model="drawer" temporary>
-    <v-list :class="{ 'app-menu': isApp }">
+    <v-list>
       <template v-for="(item, index) in menus" :key="item.title">
         <!-- リストアイテム -->
         <nuxt-link
@@ -109,12 +108,6 @@ import { mdiMenu } from "@mdi/js";
 import { HOME_LINK, TITLE_IMG, MENUS } from "@/constants";
 
 export default defineComponent({
-  props: {
-    isApp: {
-      type: Boolean,
-      default: false,
-    },
-  },
   setup() {
     const { mobile } = useDisplay();
 
