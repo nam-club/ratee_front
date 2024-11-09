@@ -8,7 +8,7 @@
   </div>
 
   <!-- ローディング中のインジケーター -->
-  <div v-if="isQuestionnaireLoading" class="text-center center-content">
+  <div v-if="isQuestionnaireLoading" class="loading-container">
     <v-progress-circular
       indeterminate
       color="primary"
@@ -260,7 +260,7 @@ export default defineComponent({
       }
 
       try {
-        // nextToken がある場合は次のコメントをロード
+        // nextToken がある場合は次のコメントをロー��
         if (cStore.value.state.nextToken !== "") {
           await scrollComments(cStore.value.state.nextToken);
           $state.loaded();
@@ -331,3 +331,17 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+.loading-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+</style>
