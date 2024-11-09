@@ -444,11 +444,8 @@ export const useQuestionnaire = (questionId: string) => {
         code.value = postResult.code ? postResult.code : '';
 
         if (code.value === '') {
-            // アンケート回答APIが完了した後にアンケート情報取得APIを実行
-            state.value = await getQuestionnaire(questionId);
-            // state.value = postResult.questionnaires;
-            // 下を消す
-            code.value = state.value.code ? state.value.code : '';
+            // アンケート回答APIのレスポンス（最新アンケート情報）を反映
+            state.value = postResult;
         }
     }
 

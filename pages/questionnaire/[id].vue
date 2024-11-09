@@ -154,11 +154,42 @@ export default defineComponent({
     const answerQuestionnaire = async (id: string, name: string) => {
       try {
         await qStore.value.answerQuestionnaire(id, name);
+        questionnaire.value = qStore.value.state;
         snackbarMessages.value.push({
           text: TOAST_MSG.ANSWERED_QUESTIONNAIRE,
           show: true,
           color: '',
         });
+        
+        // アンケート回答後のデータ再取得
+        isQuestionnaireLoading.value = true;
+        const [chartResult, recommendsResult, commentsResult] = await Promise.all([
+          useChart(questionId),
+          useRecommends(questionId),
+          questionnaire.value.enableComment
+            ? useComments(questionId, "")
+            : Promise.resolve(null),
+        ]);
+
+        // チャート結果の処理
+        if (chartResult) {
+          chStore.value = chartResult;
+          chart.value = chStore.value.state.chart;
+        }
+
+        // おすすめアンケートの結果処理
+        if (recommendsResult) {
+          rStore.value = recommendsResult;
+          recommends.value = rStore.value.state;
+        }
+
+        // コメントの処理
+        if (commentsResult) {
+          cStore.value = commentsResult;
+          comments.value = cStore.value.state.comments || [];
+        }
+
+        isQuestionnaireLoading.value = false;
       } catch {
         snackbarMessages.value.push({
           text: ERR_MSG[qStore.value.code],
