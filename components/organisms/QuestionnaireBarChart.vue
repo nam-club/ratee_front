@@ -36,6 +36,28 @@ export default {
                 data: dataset.value,
                 backgroundColor: backgroundColors.value,
                 borderRadius: Number.MAX_VALUE,
+                datalabels: {
+                    color: (context) => {
+                        // データ値が棒グラフの幅より大きい場合は黒、そうでない場合は白
+                        const value = context.dataset.data[context.dataIndex];
+                        const meta = context.chart.getDatasetMeta(0);
+                        const w = meta.data[context.dataIndex].width;
+                        return context.chart.ctx.measureText(value).width > w ? '#000000' : '#FFFFFF';
+                    },
+                    anchor: (context) => {
+                        // データ値が棒グラフの幅より大きい場合は'end'、そうでない場合は'center'
+                        const value = context.dataset.data[context.dataIndex];
+                        const meta = context.chart.getDatasetMeta(0);
+                        const w = meta.data[context.dataIndex].width;
+                        return context.chart.ctx.measureText(value).width > w ? 'end' : 'center';
+                    },
+                    align: 'center',
+                    font: {
+                        size: 14,
+                        family: "'Kosugi Maru'",
+                    },
+                    formatter: (value) => value === 0 ? '' : value // 0の場合は空文字を返す
+                }
             }],
         }));
 
