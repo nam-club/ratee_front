@@ -260,7 +260,7 @@ export default defineComponent({
       }
 
       try {
-        // nextToken がある場合は次のコメントをロー��
+        // nextToken がある場合は次のコメントをロード
         if (cStore.value.state.nextToken !== "") {
           await scrollComments(cStore.value.state.nextToken);
           $state.loaded();

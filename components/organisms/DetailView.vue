@@ -3,7 +3,7 @@
         <v-container>
             <v-row>
                 <v-col>
-                    <Msg fontWeight="normal" :fontSize="mobile ? '1em' : '2em'" style="margin:2% 0">{{
+                    <Msg fontWeight="normal" :fontSize="mobile ? '1.5em' : '2em'" style="margin:2% 0">{{
         questionnaire.content
     }}</Msg>
                     <v-row no-gutters>
