@@ -1,10 +1,18 @@
 <template>
   <BarChart :data="chartData" :options="options" />
+  <v-container>
+    <v-row>
+      <v-col cols="12" class="text-end">
+        <Msg :color="msgColor" fontSize="0.9em">総投票数: {{ totalVotes }}</Msg>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
   
 <script>
 import { computed } from "vue";
 import BarChart from "@/components/molecules/BarChart.vue"; // Path to your BarChart component
+import { mainTheme } from "~/helpers/themes";
 
 export default {
   components: {
@@ -21,6 +29,8 @@ export default {
     },
   },
   setup(props) {
+    const msgColor = mainTheme.colors.secondary;
+
     const chartOptions = computed(() => ({
       ...props.options,
       animation: false,
@@ -114,8 +124,10 @@ export default {
     }));
 
     return {
+      msgColor,
       chartData,
       options: chartOptions,
+      totalVotes,
     };
   },
 };
