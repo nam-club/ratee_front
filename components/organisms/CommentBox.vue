@@ -4,12 +4,7 @@
       <div>
         <v-container v-if="!mobile">
           <v-row v-if="comments && comments.length !== 0">
-            <v-col cols="6">
-              <Msg fontWeight="normal" fontSize="1.5em">{{
-                COMMENT_TITLE
-              }}</Msg>
-            </v-col>
-            <v-col cols="6" class="text-end">
+            <v-col cols="12" class="text-end">
               <Button :variant="btnVariant" @click="openDialog">
                 {{ COMMENT_BUTTON }}
               </Button>
@@ -70,12 +65,7 @@
 
         <v-container v-else style="margin-top: 5%">
           <v-row v-if="comments && comments.length !== 0">
-            <v-col cols="4" />
-            <v-col cols="4" class="text-center">
-              <Msg fontWeight="normal" fontSize="1.2em">{{
-                COMMENT_TITLE
-              }}</Msg>
-            </v-col>
+            <v-col cols="8" />
             <v-col cols="4" class="text-end">
               <IconButton
                 :icon="icons.mdiCommentPlus"
@@ -210,7 +200,6 @@ import {
   COMMENT_MAX_LENGTH,
   COMMENT_NULL_TEXT,
   COMMENT_BUTTON,
-  COMMENT_TITLE,
   LOADING_END,
   CANCEL_BUTTON,
   ICON_IMG,
@@ -325,7 +314,6 @@ export default defineComponent({
       iconImg,
       isLoading,
       COMMENT_BUTTON,
-      COMMENT_TITLE,
       LOADING_END,
       CANCEL_BUTTON,
       mobile,
