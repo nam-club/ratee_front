@@ -10,6 +10,16 @@
             >{{ questionnaire.content }}</Msg
           >
           <v-row no-gutters>
+            <v-chip
+              class="ma-2"
+              :color="categoryColor"
+              label
+              text-color="white"
+            >
+              {{ questionnaire.category.name }}
+            </v-chip>
+          </v-row>
+          <v-row no-gutters>
             <v-col cols="auto" v-for="(tag, i) in questionnaire.tags" :key="i">
               <v-chip class="ma-2">
                 {{ tag }}
@@ -42,11 +52,13 @@
             style="padding: 5%"
           >
             <div v-if="n === DETAIL_TAB_NUM1">
-              <v-row>
-                <QuestionnaireBarChart
-                  :questionnaire="questionnaire"
-                  :options="options"
-                />
+              <v-row justify="center">
+                <v-col :cols="mobile ? 12 : 5">
+                  <QuestionnaireBarChart
+                    :questionnaire="questionnaire"
+                    :options="options"
+                  />
+                </v-col>
               </v-row>
             </div>
             <div v-if="n === DETAIL_TAB_NUM2">
@@ -115,13 +127,15 @@ export default defineComponent({
       },
       scales: {
         x: {
+          max: 120, // 棒グラフが右端まで到達しないようにする
           display: false, // x軸の目盛りと数値を非表示にする
         },
         y: {
+          display: false, // y軸の目盛りと数値を非表示にする
           ticks: {
             font: {
               family: "'Kosugi Maru'", // y軸のラベルにフォントを適用
-              size: 14,
+              size: mobile.value ? 10 : 12,
             },
           },
           grid: {
@@ -143,7 +157,7 @@ export default defineComponent({
             usePointStyle: true,
             font: {
               family: "'Kosugi Maru'",
-              size: 14,
+              size: mobile.value ? 10 : 12,
             },
             color: mainTheme.colors?.secondary,
           },
@@ -178,7 +192,7 @@ export default defineComponent({
           ticks: {
             font: {
               family: "'Kosugi Maru'",
-              size: 12,
+              size: mobile.value ? 10 : 12,
             },
             color: mainTheme.colors?.secondary,
           },
@@ -191,7 +205,7 @@ export default defineComponent({
           ticks: {
             font: {
               family: "'Kosugi Maru'",
-              size: 12,
+              size: mobile.value ? 10 : 12,
             },
             color: mainTheme.colors?.secondary,
             stepSize: 1, // Y軸の目盛りを整数にする場合
@@ -201,6 +215,8 @@ export default defineComponent({
         },
       },
     }));
+
+    const categoryColor = ref(mainTheme.colors!.success);
 
     return {
       mobile,
@@ -212,6 +228,7 @@ export default defineComponent({
       DETAIL_TAB_NUM1,
       DETAIL_TAB_NAME2,
       DETAIL_TAB_NUM2,
+      categoryColor
     };
   },
 });

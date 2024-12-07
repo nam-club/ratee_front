@@ -382,6 +382,7 @@ export default defineComponent({
       },
       scales: {
         x: {
+          max: mobile.value ? 130 : 120, // 棒グラフが右端まで到達しないようにする
           display: false, // x軸の目盛りと数値を非表示にする
           grid: {
             drawBorder: false, // x軸の境界線を非表示にする
@@ -389,13 +390,7 @@ export default defineComponent({
           },
         },
         y: {
-          ticks: {
-            font: {
-              family: "'Kosugi Maru'", // y軸のラベルにフォントを適用
-              size: mobile.value ? 9 : 10,
-            },
-            autoSkip: false,
-          },
+          display: false, // y軸の目盛りと数値を非表示にする
           grid: {
             drawBorder: false, // y軸の境界線を非表示にする
             display: false, // y軸のグリッド線を非表示にする

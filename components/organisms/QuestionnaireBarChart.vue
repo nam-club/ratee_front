@@ -11,6 +11,7 @@
   
 <script>
 import { computed } from "vue";
+import { useDisplay } from "vuetify";
 import BarChart from "@/components/molecules/BarChart.vue"; // Path to your BarChart component
 import { mainTheme } from "~/helpers/themes";
 
@@ -29,6 +30,7 @@ export default {
     },
   },
   setup(props) {
+    const { mobile } = useDisplay();
     const msgColor = mainTheme.colors.secondary;
 
     const chartOptions = computed(() => ({
@@ -85,38 +87,28 @@ export default {
           backgroundColor: backgroundColors.value,
           borderRadius: Number.MAX_VALUE,
           datalabels: {
-            color: (context) => {
-              // データ値が棒グラフの幅より大きい場合は黒、そうでない場合は白
-              const value = context.dataset.data[context.dataIndex];
-              const meta = context.chart.getDatasetMeta(0);
-              const w = meta.data[context.dataIndex]?.width || 0;
-              return w && context.chart.ctx.measureText(`${value}%`).width > w
-                ? "#000000"
-                : "#FFFFFF";
-            },
-            anchor: (context) => {
-              // データ値が棒グラフの幅より大きい場合は'end'、そうでない場合は'center'
-              const value = context.dataset.data[context.dataIndex];
-              const meta = context.chart.getDatasetMeta(0);
-              const w = meta.data[context.dataIndex]?.width || 0;
-              return w && context.chart.ctx.measureText(`${value}%`).width > w
-                ? "end"
-                : "center";
-            },
-            align: (context) => {
-              // データ値が棒グラフの幅より大きい場合は'end'、そうでない場合は'center'
-              const value = context.dataset.data[context.dataIndex];
-              const meta = context.chart.getDatasetMeta(0);
-              const w = meta.data[context.dataIndex]?.width || 0;
-              return w && context.chart.ctx.measureText(`${value}%`).width > w
-                ? "end"
-                : "center";
-            },
+            color: mainTheme.colors.secondary,
+            anchor: "start",
+            align: "right",
             font: {
               size: 14,
               family: "'Kosugi Maru'",
             },
-            formatter: (value) => (value === 0 ? "" : `${value}%`), // パーセント記号を追加
+            formatter: (value, context) => {
+              const choiceName = props.questionnaire.choices[context.dataIndex].name;
+              const canvas = document.createElement('canvas');
+              const context2D = canvas.getContext('2d');
+              context2D.font = "14px 'Kosugi Maru'"; // フォントを設定
+              const textWidth = context2D.measureText(choiceName).width;
+              
+              // テキスト幅に応じた空白を計算
+              console.log(window.innerWidth)
+              const canvasWidth = mobile.value ? window.innerWidth/13 : window.innerWidth/32;
+              const spaces = Math.max(0, canvasWidth - Math.floor(textWidth / 7));
+              const spaceString = ' '.repeat(spaces);
+
+              return `${choiceName}${spaceString}${value}%`;
+            },
           },
         },
       ],
