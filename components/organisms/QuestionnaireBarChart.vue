@@ -90,7 +90,6 @@ export default {
               const value = context.dataset.data[context.dataIndex];
               const meta = context.chart.getDatasetMeta(0);
               const w = meta.data[context.dataIndex]?.width || 0;
-              console.log(w);
               return w && context.chart.ctx.measureText(`${value}%`).width > w
                 ? "#000000"
                 : "#FFFFFF";

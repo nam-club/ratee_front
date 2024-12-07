@@ -1,6 +1,6 @@
 <template>
   <div style="display: flex; align-items: center">
-    <h2 v-if="caption">{{ caption }}</h2>
+    <Msg v-if="caption">{{ caption }}</Msg>
     <v-chip
       v-if="captionLabel"
       class="ma-2"
