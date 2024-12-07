@@ -94,12 +94,7 @@
                   cols="4"
                   class="text-end"
                 >
-                  <nuxt-link
-                    :to="{
-                      path: `${DETAIL_LINK}/${questionnaire.id}`,
-                      query: currentQuery,
-                    }"
-                  >
+                  <nuxt-link :to="{path: `${DETAIL_LINK}/${questionnaire.id}`, query: currentQuery}">
                     <Button
                       :textColor="detailBtnTextColor"
                       :variant="btnVariant"
@@ -174,10 +169,7 @@
                   class="text-end"
                 >
                   <nuxt-link
-                    :to="{
-                      path: `${DETAIL_LINK}/${questionnaire.id}`,
-                      query: currentQuery,
-                    }"
+                    :to="{path: `${DETAIL_LINK}/${questionnaire.id}`, query: currentQuery}"
                     style="color: black"
                   >
                     <IconButton
@@ -342,6 +334,7 @@ export default defineComponent({
           ticks: {
             font: {
               family: "'Kosugi Maru'", // y軸のラベルにフォントを適用
+              size: mobile.value ? 9 : 10,
             },
             autoSkip: false,
           },

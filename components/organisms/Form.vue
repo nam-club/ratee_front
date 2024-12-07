@@ -471,8 +471,6 @@ export default defineComponent({
         const length = value.length;
         return (
           (length >= CHOICE_MIN_LENGTH && length <= CHOICE_MAX_LENGTH) ||
-          CHOICE_MIN_LENGTH +
-            "~" +
             CHOICE_MAX_LENGTH +
             "文字以内で入力してください。"
         );
