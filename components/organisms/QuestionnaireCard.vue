@@ -31,6 +31,22 @@
                 </v-col>
               </v-row>
               <v-row no-gutters>
+                <v-chip
+                  class="ma-2"
+                  :color="categoryColor"
+                  label
+                  text-color="white"
+                  @click="
+                      () => {
+                        searchQuestionnaires(FORM_CATEGORY_TEXT, questionnaire.category.id);
+                        goToSearchTab(FORM_CATEGORY_TEXT, questionnaire.category.id);
+                      }
+                    "
+                >
+                {{ questionnaire.category.name }}
+                </v-chip>
+              </v-row>
+              <v-row no-gutters>
                 <v-col
                   cols="auto"
                   v-for="(tag, i) in questionnaire.tags"
@@ -41,7 +57,7 @@
                     @click="
                       () => {
                         searchQuestionnaires(FORM_TAG_TEXT, tag);
-                        goToSearchTab(tag);
+                        goToSearchTab(FORM_TAG_TEXT, tag);
                       }
                     "
                   >
@@ -94,7 +110,12 @@
                   cols="4"
                   class="text-end"
                 >
-                  <nuxt-link :to="{path: `${DETAIL_LINK}/${questionnaire.id}`, query: currentQuery}">
+                  <nuxt-link
+                    :to="{
+                      path: `${DETAIL_LINK}/${questionnaire.id}`,
+                      query: currentQuery,
+                    }"
+                  >
                     <Button
                       :textColor="detailBtnTextColor"
                       :variant="btnVariant"
@@ -103,6 +124,22 @@
                     </Button>
                   </nuxt-link>
                 </v-col>
+              </v-row>
+              <v-row no-gutters>
+                <v-chip
+                  class="ma-2"
+                  :color="categoryColor"
+                  label
+                  text-color="white"
+                  @click="
+                      () => {
+                        searchQuestionnaires(FORM_CATEGORY_TEXT, questionnaire.category.id);
+                        goToSearchTab(FORM_CATEGORY_TEXT, questionnaire.category.id);
+                      }
+                    "
+                >
+                {{ questionnaire.category.name }}
+                </v-chip>
               </v-row>
               <v-row no-gutters>
                 <v-col
@@ -115,7 +152,7 @@
                     @click="
                       () => {
                         searchQuestionnaires(FORM_TAG_TEXT, tag);
-                        goToSearchTab(tag);
+                        goToSearchTab(FORM_TAG_TEXT, tag);
                       }
                     "
                   >
@@ -169,7 +206,10 @@
                   class="text-end"
                 >
                   <nuxt-link
-                    :to="{path: `${DETAIL_LINK}/${questionnaire.id}`, query: currentQuery}"
+                    :to="{
+                      path: `${DETAIL_LINK}/${questionnaire.id}`,
+                      query: currentQuery,
+                    }"
                     style="color: black"
                   >
                     <IconButton
@@ -178,6 +218,22 @@
                     />
                   </nuxt-link>
                 </v-col>
+              </v-row>
+              <v-row no-gutters>
+                <v-chip
+                  class="ma-2"
+                  :color="categoryColor"
+                  label
+                  text-color="white"
+                  @click="
+                      () => {
+                        searchQuestionnaires(FORM_CATEGORY_TEXT, questionnaire.category.id);
+                        goToSearchTab(FORM_CATEGORY_TEXT, questionnaire.category.id);
+                      }
+                    "
+                >
+                {{ questionnaire.category.name }}
+                </v-chip>
               </v-row>
               <v-row no-gutters>
                 <v-col
@@ -190,7 +246,7 @@
                     @click="
                       () => {
                         searchQuestionnaires(FORM_TAG_TEXT, tag);
-                        goToSearchTab(tag);
+                        goToSearchTab(FORM_TAG_TEXT, tag);
                       }
                     "
                   >
@@ -242,7 +298,7 @@ import Button from "@/components/atoms/Button.vue";
 import AnswerBox from "@/components/organisms/AnswerBox.vue";
 import QuestionnaireBarChart from "@/components/organisms/QuestionnaireBarChart.vue";
 import { Questionnaire } from "~/composables/questionnaireStates";
-import { DETAIL_LINK, FORM_TAG_TEXT, DETAIL_BUTTON } from "@/constants";
+import { DETAIL_LINK, FORM_CATEGORY_TEXT, FORM_TAG_TEXT, DETAIL_BUTTON } from "@/constants";
 
 export default defineComponent({
   components: {
@@ -306,6 +362,8 @@ export default defineComponent({
     const iconBtnVariant = ref("text");
     const detailBtnTextColor = ref(mainTheme.colors!.primary);
 
+    const categoryColor = ref(mainTheme.colors!.success);
+
     // ウィンドウ幅の変更時にリサイズ
     const windowWidth = ref(window.innerWidth);
     window.addEventListener("resize", () => {
@@ -351,11 +409,13 @@ export default defineComponent({
       DETAIL_LINK,
       currentQuery,
       icons,
+      FORM_CATEGORY_TEXT,
       FORM_TAG_TEXT,
       DETAIL_BUTTON,
       btnVariant,
       iconBtnVariant,
       detailBtnTextColor,
+      categoryColor,
       options,
     };
   },

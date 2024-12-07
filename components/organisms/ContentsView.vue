@@ -354,16 +354,27 @@ export default {
     const tab = ref<number | null>(null);
 
     // タグを押下して検索タブに移動する関数
-    const goToSearchTab = (value: string) => {
+    const goToSearchTab = (type: string, value: string) => {
       if (tab.value !== TAB_NUM4) {
         tab.value = TAB_NUM4;
       }
       word.value = value;
-      typeName.value = FORM_TAG_TEXT;
+      typeName.value = type;
+      if (type === FORM_CATEGORY_TEXT) {
+        const category = props.categories.find(
+          (item: Category) => item.id === value
+        );
+        if (category) {
+          categoryName.value = category.name;
+        } else {
+          console.error(`Category with ID "${value}" not found`);
+        }
+      }
     };
 
     // 検索する
     const search = (word: string) => {
+      console.log(word)
       props.searchQuestionnaires(typeName.value, word);
       isSearched.value = true;
     };
