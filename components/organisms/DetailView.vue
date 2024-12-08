@@ -53,12 +53,10 @@
           >
             <div v-if="n === DETAIL_TAB_NUM1">
               <v-row justify="center">
-                <v-col :cols="mobile ? 12 : 5">
-                  <QuestionnaireBarChart
-                    :questionnaire="questionnaire"
-                    :options="options"
-                  />
-                </v-col>
+                <QuestionnaireBarChart
+                  :questionnaire="questionnaire"
+                  :options="options"
+                />
               </v-row>
             </div>
             <div v-if="n === DETAIL_TAB_NUM2">
@@ -228,7 +226,7 @@ export default defineComponent({
       DETAIL_TAB_NUM1,
       DETAIL_TAB_NAME2,
       DETAIL_TAB_NUM2,
-      categoryColor
+      categoryColor,
     };
   },
 });
