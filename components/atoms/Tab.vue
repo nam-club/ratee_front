@@ -9,6 +9,7 @@
 
 <script>
 import { defineComponent } from 'vue'
+import { mainTheme } from '~/helpers/themes';
 
 export default defineComponent({
     props: {
@@ -18,6 +19,7 @@ export default defineComponent({
         },
         color: {
             type: String,
+            default: mainTheme.colors?.secondary,
         },
     },
 })

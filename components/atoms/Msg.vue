@@ -6,13 +6,14 @@
   
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { mainTheme } from '~/helpers/themes';
 
 export default defineComponent({
     name: 'Msg',
     props: {
         color: {
             type: String,
-            default: 'black'
+            default: mainTheme.colors?.secondary,
         },
         fontSize: {
             type: String,

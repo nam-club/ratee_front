@@ -7,6 +7,7 @@
   
 <script>
 import { defineComponent } from 'vue'
+import { mainTheme } from '~/helpers/themes.ts';
 
 export default defineComponent({
     props: {
@@ -20,7 +21,7 @@ export default defineComponent({
         },
         textColor: {
             type: String,
-            default: ''
+            default: mainTheme.colors?.secondary,
         },
         clickedTextColor: {
             type: String,

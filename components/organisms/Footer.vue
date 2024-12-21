@@ -42,6 +42,7 @@ import { useRoute } from "vue-router";
 import { defineComponent } from "vue";
 import { useDisplay } from "vuetify";
 import { mdiPencilPlus } from "@mdi/js";
+import { mainTheme } from '~/helpers/themes';
 import Button from "@/components/atoms/Button.vue";
 import { CREATE_LINK } from "@/constants";
 
@@ -61,7 +62,7 @@ export default defineComponent({
     // 現在のクエリパラメータを取得
     const currentQuery = route.query;
 
-    const btnTextColor = ref("black");
+    const btnTextColor = ref(mainTheme.colors?.secondary);
     const btnVariant = ref("elevated");
     const iconBtnVariant = ref("elevated");
     const btnStyle = ref({

@@ -7,16 +7,16 @@
     align-tabs="center"
     style="margin: 4% 0% 0.5% 0%"
   >
-    <v-tab :value="TAB_NUM1"
+    <v-tab :value="TAB_NUM1" :style="{ color: color }"
       ><span style="font-size: 1.5em">{{ TAB_NAME1 }}</span></v-tab
     >
-    <v-tab :value="TAB_NUM2"
+    <v-tab :value="TAB_NUM2" :style="{ color: color }"
       ><span style="font-size: 1.5em">{{ TAB_NAME2 }}</span></v-tab
     >
-    <v-tab :value="TAB_NUM3"
+    <v-tab :value="TAB_NUM3" :style="{ color: color }"
       ><span style="font-size: 1.5em">{{ TAB_NAME3 }}</span></v-tab
     >
-    <v-tab :value="TAB_NUM4"
+    <v-tab :value="TAB_NUM4" :style="{ color: color }"
       ><span style="font-size: 1.5em">{{ TAB_NAME4 }}</span></v-tab
     >
   </v-tabs>
@@ -182,16 +182,16 @@
     align-tabs="center"
     style="text-decoration: none; color: inherit"
   >
-    <v-tab :value="TAB_NUM1"
+    <v-tab :value="TAB_NUM1" :style="{ color: color }"
       ><span style="font-size: 1em">{{ TAB_NAME1 }}</span></v-tab
     >
-    <v-tab :value="TAB_NUM2"
+    <v-tab :value="TAB_NUM2" :style="{ color: color }"
       ><span style="font-size: 1em">{{ TAB_NAME2 }}</span></v-tab
     >
-    <v-tab :value="TAB_NUM3"
+    <v-tab :value="TAB_NUM3" :style="{ color: color }"
       ><span style="font-size: 1em">{{ TAB_NAME3 }}</span></v-tab
     >
-    <v-tab :value="TAB_NUM4"
+    <v-tab :value="TAB_NUM4" :style="{ color: color }"
       ><span style="font-size: 1em">{{ TAB_NAME4 }}</span></v-tab
     >
   </v-tabs>
@@ -222,6 +222,7 @@ import { useDisplay } from "vuetify";
 import { mdiPlus, mdiMagnify } from "@mdi/js";
 import InfiniteLoading from "v3-infinite-loading";
 import "v3-infinite-loading/lib/style.css";
+import { mainTheme } from '~/helpers/themes';
 import InputSet from "@/components/molecules/InputSet.vue";
 import QuestionnaireCard from "~/components/organisms/QuestionnaireCard.vue";
 import {
@@ -379,10 +380,14 @@ export default {
       isSearched.value = true;
     };
 
+    // タブの文字色
+    const color = ref(mainTheme.colors?.secondary);
+
     return {
       mobile,
       icons,
       tab,
+      color,
       search,
       goToSearchTab,
       TAB_LENGTH,
