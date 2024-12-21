@@ -55,8 +55,8 @@
               <InputSet
                 type="switchButton"
                 :labelText="FORM_MULTI_LABEL"
-                :checkModel="enableMultiAns"
-                @update:checkModel="enableMultiAns = $event"
+                :checkModel="enableMultiAnswer"
+                @update:checkModel="enableMultiAnswer = $event"
               />
 
               <v-container>
@@ -130,7 +130,7 @@
               />
               <Paragraph
                 type="switchButton"
-                :isChecked="enableMultiAns"
+                :isChecked="enableMultiAnswer"
                 :labelText="FORM_MULTI_LABEL"
                 :paragraphStyle="switchStyle"
               />
@@ -221,8 +221,8 @@
               <InputSet
                 type="switchButton"
                 :labelText="FORM_MULTI_LABEL"
-                :checkModel="enableMultiAns"
-                @update:checkModel="enableMultiAns = $event"
+                :checkModel="enableMultiAnswer"
+                @update:checkModel="enableMultiAnswer = $event"
               />
 
               <v-container>
@@ -296,7 +296,7 @@
               />
               <Paragraph
                 type="switchButton"
-                :isChecked="enableMultiAns"
+                :isChecked="enableMultiAnswer"
                 :labelText="FORM_MULTI_LABEL"
                 :paragraphStyle="switchStyle"
               />
@@ -512,12 +512,12 @@ export default defineComponent({
     });
 
     const enableComment = ref(false);
-    const enableMultiAns = ref(false);
+    const enableMultiAnswer = ref(false);
 
     const options = ref({});
     options.value = {
       enableComment: enableComment,
-      enableMultiAns: enableMultiAns,
+      enableMultiAnswer: enableMultiAnswer,
     };
 
     const cancelBtnColor = ref("#ffffff");
@@ -594,7 +594,7 @@ export default defineComponent({
       tags,
       tagRule,
       enableComment,
-      enableMultiAns,
+      enableMultiAnswer,
       options,
       cancelBtnStyle,
       cancelBtnColor,
