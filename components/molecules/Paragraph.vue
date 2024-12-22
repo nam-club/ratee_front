@@ -1,6 +1,7 @@
 <template>
     <div :style="paragraphStyle">
-        <h2>{{ caption }}</h2>
+        <div :style="{margin: divMargin}">
+        <Msg fontSize="1.4em" :margin="msgMargin">{{ caption }}</Msg>
         <div v-if="type === 'text'">
             <Msg fontWeight="normal" fontSize="1.2em" :padding="msgPadding">{{ text }}</Msg>
         </div>
@@ -19,9 +20,11 @@
                 class="no-focus"></v-switch>
         </div>
     </div>
+    </div>
 </template>
 
 <script>
+import { useDisplay } from "vuetify";
 import { defineComponent } from 'vue'
 import Msg from '@/components/atoms/Msg.vue'
 
@@ -59,8 +62,20 @@ export default defineComponent({
         }
     },
     setup() {
+        const { mobile } = useDisplay();
+        const divMargin = ref("1%");
+        const msgMargin = ref("0.5%");
+
+        if (mobile.value) {
+            divMargin.value = "5%";
+            msgMargin.value = "2%";
+        }
+
         const msgPadding = ref("0 0 0 2%")
         return {
+            mobile,
+            divMargin,
+            msgMargin,
             msgPadding
         }
     }

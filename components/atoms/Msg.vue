@@ -1,5 +1,5 @@
 <template>
-    <p :class="['font-weight-' + fontWeight]" :style="{color: color, fontSize: fontSize, lineHeight: lineHeight, padding: padding}">
+    <p :class="['font-weight-' + fontWeight]" :style="{color: color, fontSize: fontSize, lineHeight: lineHeight, padding: padding, margin: margin}">
         <slot></slot>
     </p>
 </template>
@@ -28,6 +28,9 @@ export default defineComponent({
             default: '1'
         },
         padding: {
+            type: String
+        },
+        margin: {
             type: String
         }
     }

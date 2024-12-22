@@ -37,10 +37,10 @@
 
       <v-container v-if="questionnaire.isAnswered === true">
         <v-tabs v-model="tab" color="primary" dark align-tabs="center">
-          <v-tab :value="DETAIL_TAB_NUM1"
+          <v-tab :value="DETAIL_TAB_NUM1" :style="{ color: color }"
             ><span style="font-size: 1.5em">{{ DETAIL_TAB_NAME1 }}</span></v-tab
           >
-          <v-tab v-if="Object.keys(chart).length !== 0" :value="DETAIL_TAB_NUM2"
+          <v-tab v-if="Object.keys(chart).length !== 0" :value="DETAIL_TAB_NUM2" :style="{ color: color }"
             ><span style="font-size: 1.5em">{{ DETAIL_TAB_NAME2 }}</span></v-tab
           >
         </v-tabs>
@@ -216,6 +216,9 @@ export default defineComponent({
 
     const categoryColor = ref(mainTheme.colors!.success);
 
+    // タブの文字色
+    const color = ref(mainTheme.colors?.secondary);
+
     return {
       mobile,
       tab,
@@ -227,6 +230,7 @@ export default defineComponent({
       DETAIL_TAB_NAME2,
       DETAIL_TAB_NUM2,
       categoryColor,
+      color
     };
   },
 });
