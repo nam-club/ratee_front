@@ -45,7 +45,7 @@ export default {
             label: (context) => {
               const index = context.dataIndex;
               const choice = props.questionnaire.choices[index];
-              return `${choice.voteCount}人`;
+              return `${choice.voteCount}票`;
             },
           },
         },
@@ -102,7 +102,6 @@ export default {
               const textWidth = context2D.measureText(choiceName).width;
               
               // テキスト幅に応じた空白を計算
-              console.log(window.innerWidth)
               const canvasWidth = mobile.value ? window.innerWidth/13 : window.innerWidth/32;
               const spaces = Math.max(0, canvasWidth - Math.floor(textWidth / 7));
               const spaceString = ' '.repeat(spaces);

@@ -375,7 +375,6 @@ export default {
 
     // 検索する
     const search = (word: string) => {
-      console.log(word)
       props.searchQuestionnaires(typeName.value, word);
       isSearched.value = true;
     };

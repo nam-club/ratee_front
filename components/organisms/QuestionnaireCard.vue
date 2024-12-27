@@ -33,7 +33,7 @@
               <v-row no-gutters>
                 <v-chip
                   class="ma-2"
-                  :color="categoryColor"
+                  :color="getCategoryColor(questionnaire.category.name)"
                   label
                   text-color="white"
                   @click="
@@ -128,7 +128,7 @@
               <v-row no-gutters>
                 <v-chip
                   class="ma-2"
-                  :color="categoryColor"
+                  :color="getCategoryColor(questionnaire.category.name)"
                   label
                   text-color="white"
                   @click="
@@ -222,7 +222,7 @@
               <v-row no-gutters>
                 <v-chip
                   class="ma-2"
-                  :color="categoryColor"
+                  :color="getCategoryColor(questionnaire.category.name)"
                   label
                   text-color="white"
                   @click="
@@ -362,7 +362,35 @@ export default defineComponent({
     const iconBtnVariant = ref("text");
     const detailBtnTextColor = ref(mainTheme.colors!.primary);
 
-    const categoryColor = ref(mainTheme.colors!.success);
+    const categoryColors = {
+      '社会': '#FF1744',
+      '政治経済': '#F50057',
+      '地域': '#D500F9',
+      '文化': '#651FFF',
+      '会社・職業': '#3D5AFE',
+      'テクノロジー': '#2979FF',
+      '医療・ヘルスケア': '#00B0FF',
+      '学問': '#26C6DA',
+      '教育': '#26A69A',
+      '生活': '#2E7D32',
+      '食文化': '#558B2F',
+      'スポーツ': '#9E9D24',
+      '旅行': '#FFD600',
+      '趣味': '#FFC400',
+      'テレビ・映画・芸能': '#FF9100',
+      '本': '#FF3D00',
+      'アニメ': '#FF4081',
+      '音楽': '#FF5252',
+      'ゲーム': '#E040FB',
+      '悩み': '#FF8A80',
+      '雑談': '#4E342E',
+      'その他': '#37474F'
+    };
+
+    const getCategoryColor = (categoryName: any) => {
+      console.log(categoryName);
+      return categoryColors[categoryName] || '#FFFFFF'; // デフォルト色を白に設定
+    };
 
     // ウィンドウ幅の変更時にリサイズ
     const windowWidth = ref(window.innerWidth);
@@ -410,7 +438,7 @@ export default defineComponent({
       btnVariant,
       iconBtnVariant,
       detailBtnTextColor,
-      categoryColor,
+      getCategoryColor,
       options,
     };
   },
