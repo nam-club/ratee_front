@@ -111,9 +111,10 @@
                 :paragraphStyle="paragraphStyle"
               />
               <Paragraph
-                type="text"
+                type="label"
                 :caption="FORM_CATEGORY_TEXT"
                 :text="categoryName"
+                :color="getCategoryColor(categoryName)"
                 :paragraphStyle="paragraphStyle"
               />
               <Paragraph
@@ -277,9 +278,10 @@
                 :paragraphStyle="paragraphStyle"
               />
               <Paragraph
-                type="text"
+                type="label"
                 :caption="FORM_CATEGORY_TEXT"
                 :text="categoryName"
+                :color="getCategoryColor(categoryName)"
                 :paragraphStyle="paragraphStyle"
               />
               <Paragraph
@@ -390,6 +392,7 @@ import {
   TAGS_MIN_LENGTH,
   CANCEL_BUTTON,
   FORM_POST_BUTTON,
+  CATEGORY_COLORS
 } from "@/constants";
 
 export default defineComponent({
@@ -498,6 +501,10 @@ export default defineComponent({
       setCategoryId(value);
     };
 
+    const getCategoryColor = (categoryName: any) => {
+      return CATEGORY_COLORS[categoryName] || '#FFFFFF'; // デフォルト色を白に設定
+    };
+
     const tags = ref([]);
     const tagRule = ref({
       tagsMaxLength: TAGS_MAX_LENGTH,
@@ -591,6 +598,7 @@ export default defineComponent({
       categoryId,
       categoryName,
       setCategoryName,
+      getCategoryColor,
       tags,
       tagRule,
       enableComment,

@@ -15,6 +15,16 @@
                 {{ chip }}
             </v-chip>
         </div>
+        <div v-else-if="type === 'label'">
+            <v-chip
+                  class="ma-2"
+                  :color="color"
+                  label
+                  text-color="white"
+                >
+                {{ text }}
+                </v-chip>
+        </div>
         <div v-else-if="type === 'switchButton'">
             <v-switch color="primary" v-model="isChecked" :label="labelText" readonly hide-details
                 class="no-focus"></v-switch>
@@ -59,6 +69,9 @@ export default defineComponent({
         paragraphStyle: {
             type: Object,
             default: () => ({}),
+        },
+        color: {
+            type: String
         }
     },
     setup() {
