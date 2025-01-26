@@ -189,7 +189,7 @@ export default {
     const answerTrendQuestionnaire = async (id: string, name: string[]) => {
       if (trendStore) {
         try {
-          await trendStore.value.answerQuestionnaire(id, name);
+          const answeredQuestionnaire = await trendStore.value.answerQuestionnaire(id, name);
           snackbarText.value = TOAST_MSG.ANSWERED_QUESTIONNAIRE;
           snackbarColor.value = '';
           nQuestionnaires.value = newsStore.value.reflectAnswer(answeredQuestionnaire);
@@ -213,7 +213,7 @@ export default {
     const answerRankingQuestionnaire = async (id: string, name: string[]) => {
       if (rankingStore) {
         try {
-          await rankingStore.value.answerQuestionnaire(id, name);
+          const answeredQuestionnaire = await rankingStore.value.answerQuestionnaire(id, name);
           snackbarText.value = TOAST_MSG.ANSWERED_QUESTIONNAIRE;
           snackbarColor.value = '';
           nQuestionnaires.value = newsStore.value.reflectAnswer(answeredQuestionnaire);
@@ -242,7 +242,7 @@ export default {
     ) => {
       if (searchStore) {
         try {
-          await searchStore.value.answerSearchQuestionnaire(id, name, type, word);
+          const answeredQuestionnaire = await searchStore.value.answerSearchQuestionnaire(id, name, type, word);
           snackbarText.value = TOAST_MSG.ANSWERED_QUESTIONNAIRE;
           snackbarColor.value = '';
           nQuestionnaires.value = newsStore.value.reflectAnswer(answeredQuestionnaire);
