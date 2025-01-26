@@ -165,9 +165,13 @@ export default {
     const answerNewsQuestionnaire = async (id: string, name: string[]) => {
       if (newsStore) {
         try {
-          await newsStore.value.answerQuestionnaire(id, name);
+          const answeredQuestionnaire = await newsStore.value.answerQuestionnaire(id, name);
           snackbarText.value = TOAST_MSG.ANSWERED_QUESTIONNAIRE;
           snackbarColor.value = '';
+          nQuestionnaires.value = newsStore.value.reflectAnswer(answeredQuestionnaire);
+          tQuestionnaires.value = trendStore.value.reflectAnswer(answeredQuestionnaire);
+          rQuestionnaires.value = rankingStore.value.reflectAnswer(answeredQuestionnaire);
+          sQuestionnaires.value = searchStore.value.reflectAnswer(answeredQuestionnaire);
         } catch {
           if (newsStore.value.code === "") {
             snackbarText.value = ERR_MSG["body.answer.letters.out_of_range"];
@@ -188,6 +192,10 @@ export default {
           await trendStore.value.answerQuestionnaire(id, name);
           snackbarText.value = TOAST_MSG.ANSWERED_QUESTIONNAIRE;
           snackbarColor.value = '';
+          nQuestionnaires.value = newsStore.value.reflectAnswer(answeredQuestionnaire);
+          tQuestionnaires.value = trendStore.value.reflectAnswer(answeredQuestionnaire);
+          rQuestionnaires.value = rankingStore.value.reflectAnswer(answeredQuestionnaire);
+          sQuestionnaires.value = searchStore.value.reflectAnswer(answeredQuestionnaire);
         } catch {
           if (trendStore.value.code === "") {
             snackbarText.value = ERR_MSG["body.answer.letters.out_of_range"];
@@ -208,6 +216,10 @@ export default {
           await rankingStore.value.answerQuestionnaire(id, name);
           snackbarText.value = TOAST_MSG.ANSWERED_QUESTIONNAIRE;
           snackbarColor.value = '';
+          nQuestionnaires.value = newsStore.value.reflectAnswer(answeredQuestionnaire);
+          tQuestionnaires.value = trendStore.value.reflectAnswer(answeredQuestionnaire);
+          rQuestionnaires.value = rankingStore.value.reflectAnswer(answeredQuestionnaire);
+          sQuestionnaires.value = searchStore.value.reflectAnswer(answeredQuestionnaire);
         } catch {
           if (rankingStore.value.code === "") {
             snackbarText.value = ERR_MSG["body.answer.letters.out_of_range"];
@@ -222,7 +234,7 @@ export default {
     };
 
     // アンケート回答(検索タブ)
-    const answerSearchQuestionnaire = (
+    const answerSearchQuestionnaire = async (
       id: string,
       name: string[],
       type: string,
@@ -230,9 +242,13 @@ export default {
     ) => {
       if (searchStore) {
         try {
-          searchStore.value.answerSearchQuestionnaire(id, name, type, word);
+          await searchStore.value.answerSearchQuestionnaire(id, name, type, word);
           snackbarText.value = TOAST_MSG.ANSWERED_QUESTIONNAIRE;
           snackbarColor.value = '';
+          nQuestionnaires.value = newsStore.value.reflectAnswer(answeredQuestionnaire);
+          tQuestionnaires.value = trendStore.value.reflectAnswer(answeredQuestionnaire);
+          rQuestionnaires.value = rankingStore.value.reflectAnswer(answeredQuestionnaire);
+          sQuestionnaires.value = searchStore.value.reflectAnswer(answeredQuestionnaire);
         } catch {
           if (searchStore.value.code === "") {
             snackbarText.value = ERR_MSG["body.answer.letters.out_of_range"];

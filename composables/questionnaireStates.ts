@@ -359,12 +359,7 @@ export const useQuestionnaires = (tabId: string) => {
 
         // アンケート回答APIが完了した後に該当アンケートのみを最新状態に更新
         if (code.value === '') {
-            state.value.questionnaires = state.value.questionnaires.map(q => {
-                if (q.id === postResult.id) {
-                    return { ...q, ...postResult };
-                }
-                return q;
-            });
+            return postResult;
         }
     }
 
@@ -377,13 +372,18 @@ export const useQuestionnaires = (tabId: string) => {
 
         // アンケート回答APIが完了した後に該当アンケートのみを最新状態に更新
         if (code.value === '') {
-            state.value.questionnaires = state.value.questionnaires.map(q => {
-                if (q.id === postResult.id) {
-                    return { ...q, ...postResult };
-                }
-                return q;
-            });
+            return postResult;
         }
+    }
+
+    // アンケート回答結果反映（アンケート回答APIが完了した後に該当アンケートのみを最新状態に更新）
+    const reflectAnswer = async (questionnaire: Questionnaire) => {
+        state.value.questionnaires = state.value.questionnaires.map(q => {
+            if (q.id === questionnaire.id) {
+                return { ...q, ...questionnaire };
+            }
+            return q;
+        });
     }
 
     // アンケート作成
@@ -419,6 +419,7 @@ export const useQuestionnaires = (tabId: string) => {
         answerQuestionnaire,
         answerSearchQuestionnaire,
         createQuestionnaire,
+        reflectAnswer
     }
 }
 
